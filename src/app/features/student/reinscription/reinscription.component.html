@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar class="bg-slate-900">
+    <ion-title class="text-white">Réinscription 2026-2027</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding bg-slate-900">
+  <div class="max-w-md mx-auto">
+    <!-- Stepper -->
+    <div class="flex justify-center mb-8">
+      <div [class.bg-indigo-600]="step === 1" [class.bg-slate-700]="step !== 1" class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold">1</div>
+      <div class="w-16 h-1 bg-slate-700 mt-5"></div>
+      <div [class.bg-indigo-600]="step === 2" [class.bg-slate-700]="step !== 2" class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold">2</div>
+    </div>
+
+    <!-- Step 1: Info -->
+    <div *ngIf="step === 1" class="glass-panel p-6 rounded-2xl bg-slate-800/50 border border-slate-700">
+      <h2 class="text-white font-bold text-lg mb-4">Informations Académiques</h2>
+      <ion-item class="mb-4 bg-slate-700 rounded-lg">
+        <ion-label position="floating" class="text-slate-400">Niveau d'étude</ion-label>
+        <ion-select [(ngModel)]="formData.niveau" class="text-white">
+          <ion-select-option value="L1">Licence 1</ion-select-option>
+          <ion-select-option value="L2">Licence 2</ion-select-option>
+          <ion-select-option value="L3">Licence 3</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="mb-4 bg-slate-700 rounded-lg">
+        <ion-label position="floating" class="text-slate-400">Crédits validés</ion-label>
+        <ion-input type="number" [(ngModel)]="formData.creditsTotalValides" class="text-white"></ion-input>
+      </ion-item>
+      <ion-button expand="block" (click)="nextStep()">Suivant</ion-button>
+    </div>
+
+    <!-- Step 2: Documents -->
+    <div *ngIf="step === 2" class="glass-panel p-6 rounded-2xl bg-slate-800/50 border border-slate-700">
+      <h2 class="text-white font-bold text-lg mb-4">Justificatifs</h2>
+      <div class="border-2 border-dashed border-slate-600 rounded-2xl p-8 text-center text-slate-400 mb-6">
+        <ion-icon name="cloud-upload-outline" class="text-4xl"></ion-icon>
+        <p class="mt-2 text-sm">Upload du relevé de notes</p>
+      </div>
+      <ion-button expand="block" color="success" (click)="submit()" [disabled]="isLoading">
+        {{ isLoading ? 'Envoi...' : 'Confirmer la réinscription' }}
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
