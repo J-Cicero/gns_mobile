@@ -2,42 +2,54 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { InscriptionAnnuelleService } from '../../../core/services/inscription-annuelle.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { 
+  schoolOutline, 
+  ribbonOutline, 
+  cloudUploadOutline, 
+  arrowBackOutline, 
+  checkmarkOutline 
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-reinscription',
   standalone: true,
-  imports: [CommonModule, IonicModule, FormsModule],
-  templateUrl: './reinscription.component.html'
+  imports: [CommonModule, IonicModule, FormsModule, RouterModule],
+  templateUrl: './reinscription.component.html',
+  styleUrls: ['./reinscription.component.scss']
 })
 export class ReinscriptionComponent {
   step = 1;
   formData = {
     niveau: '',
-    creditsTotalValides: 0,
+    creditsTotalValides: null,
     anneeAcademique: '2026-2027'
   };
   isLoading = false;
 
-  constructor(private inscriptionService: InscriptionAnnuelleService, private router: Router) {}
+  constructor(private router: Router) {
+    addIcons({ schoolOutline, ribbonOutline, cloudUploadOutline, arrowBackOutline, checkmarkOutline });
+  }
 
   nextStep() {
-    this.step = 2;
+    // Petite validation rapide avant de passer à l'étape 2
+    if (this.formData.niveau && this.formData.creditsTotalValides !== null) {
+      this.step = 2;
+    }
+  }
+
+  prevStep() {
+    this.step = 1;
   }
 
   submit() {
     this.isLoading = true;
-    this.inscriptionService.create(this.formData).subscribe({
-      next: () => {
-        this.isLoading = false;
-        alert('Réinscription soumise avec succès !');
-        this.router.navigate(['/student']);
-      },
-      error: () => {
-        this.isLoading = false;
-        alert('Erreur lors de la soumission.');
-      }
-    });
+    
+    // Simulation de l'appel API pour le design
+    setTimeout(() => {
+      this.isLoading = false;
+      this.router.navigate(['/student']);
+    }, 1500);
   }
 }

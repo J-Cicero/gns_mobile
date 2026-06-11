@@ -1,0 +1,30 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/merchant/dashboard" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Historique des Ventes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="premium-dark-bg">
+  <div class="history-wrapper">
+    
+    <div *ngIf="isLoading" class="merchant-loading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <div *ngIf="!isLoading" class="transactions-list">
+      <div *ngFor="let sale of transactions" class="sale-item-card">
+        <div class="sale-info">
+          <h4>{{ sale.etudiant }}</h4>
+          <p><ion-icon name="calendar-outline"></ion-icon> {{ sale.date | date:'dd MMM yyyy - HH:mm' }}</p>
+        </div>
+        <div class="sale-amount">
+          +{{ sale.montant | number:'1.0-0' }} F
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

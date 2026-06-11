@@ -1,0 +1,94 @@
+<ion-content class="premium-dark-bg">
+  <div class="dashboard-wrapper">
+    
+    <div class="top-header">
+      <div class="user-info">
+        <ion-icon name="person-circle-outline" class="avatar-icon"></ion-icon>
+        <div class="text-info">
+          <p>Bonjour,</p>
+          <h2>Étudiant</h2>
+        </div>
+      </div>
+      <div class="notification-box">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <span class="badge"></span>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-state">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Chargement de vos données...</p>
+    </div>
+
+    <div *ngIf="!isLoading && wallet" class="animate-fade-up">
+      
+      <div class="wallet-card">
+        <div class="card-header">
+          <span class="wallet-type"><ion-icon name="wallet-outline"></ion-icon> Compte {{ wallet.typeWallet || 'Relais' }}</span>
+          <span class="wallet-status">{{ wallet.statutWallet }}</span>
+        </div>
+        
+        <div class="card-balance">
+          <p>Solde disponible</p>
+          <h1>{{ wallet.solde | number:'1.0-0' }} <span>FCFA</span></h1>
+        </div>
+
+        <div class="card-footer">
+          <span>Plafond : {{ wallet.plafond | number:'1.0-0' }} FCFA</span>
+          <div class="card-chip"></div>
+        </div>
+      </div>
+
+      <h3 class="section-title">Actions rapides</h3>
+      <div class="quick-actions-grid">
+        <div class="action-btn">
+          <div class="action-icon-wrapper scan-bg">
+            <ion-icon name="scan-outline"></ion-icon>
+          </div>
+          <span>Payer (QR)</span>
+        </div>
+
+        <div class="action-btn">
+          <div class="action-icon-wrapper school-bg">
+            <ion-icon name="school-outline"></ion-icon>
+          </div>
+          <span>Scolarité UL</span>
+        </div>
+
+        <div class="action-btn">
+          <div class="action-icon-wrapper doc-bg">
+            <ion-icon name="document-text-outline"></ion-icon>
+          </div>
+          <span>Documents</span>
+        </div>
+      </div>
+
+      <div class="transactions-header">
+        <h3 class="section-title">Activité récente</h3>
+        <a class="see-all">Voir tout</a>
+      </div>
+
+      <div class="transactions-list">
+        <div *ngIf="transactions.length === 0" class="empty-state">
+          <p>Aucune transaction récente.</p>
+        </div>
+
+        <div *ngFor="let t of transactions" class="transaction-item">
+          <div class="t-icon" [ngClass]="{'debit': t.montantDebite > 0, 'credit': !t.montantDebite}">
+            <ion-icon [name]="t.montantDebite > 0 ? 'arrow-down-outline' : 'arrow-up-outline'"></ion-icon>
+          </div>
+          
+          <div class="t-details">
+            <h4>{{ t.typePaiement || 'Paiement' }}</h4>
+            <p>{{ t.date | date:'dd MMM yyyy à HH:mm' }}</p>
+          </div>
+
+          <div class="t-amount" [ngClass]="{'is-debit': t.montantDebite > 0}">
+            {{ t.montantDebite > 0 ? '-' : '+' }} {{ (t.montantDebite || t.montantCredite) | number:'1.0-0' }} F
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ion-content>

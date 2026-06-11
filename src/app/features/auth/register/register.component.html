@@ -1,0 +1,95 @@
+<ion-content scroll-y="true" class="premium-auth-content">
+  <div class="auth-wrapper">
+
+    <div *ngIf="step === 1" class="step-container fade-in">
+      
+      <div class="brand-section">
+        <h1 class="brand-title">Bienvenue</h1>
+        <p class="brand-tagline">Comment souhaitez-vous utiliser StudCash ?</p>
+      </div>
+
+      <div class="role-card" (click)="selectRole('ETUDIANT')">
+        <div class="role-icon-box student-icon">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+        <div class="role-info">
+          <h3>Je suis Étudiant</h3>
+          <p>Recevez votre bourse et payez facilement.</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
+      </div>
+
+      <div class="role-card" (click)="selectRole('COMMERCANT')">
+        <div class="role-icon-box merchant-icon">
+          <ion-icon name="storefront-outline"></ion-icon>
+        </div>
+        <div class="role-info">
+          <h3>Je suis Marchand</h3>
+          <p>Encaissez les paiements des étudiants.</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
+      </div>
+
+      <div class="switch-auth-link">
+        <p>Déjà un compte ? <a routerLink="/login">Se connecter</a></p>
+      </div>
+    </div>
+
+
+    <div *ngIf="step === 2" class="step-container fade-in">
+      
+      <div class="back-header" (click)="goBackToStep1()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        <span>Changer de profil</span>
+      </div>
+
+      <div class="brand-section" style="margin-top: 1vh; margin-bottom: 2rem;">
+        <h1 class="brand-title">Compte {{ selectedRole === 'ETUDIANT' ? 'Étudiant' : 'Marchand' }}</h1>
+        <p class="brand-tagline">Veuillez remplir vos informations</p>
+      </div>
+
+      <div class="card-form-section">
+        
+        <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
+          <ion-item class="premium-input" lines="none">
+            <ion-icon name="card-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="text" label="Matricule Universitaire" labelPlacement="floating" [(ngModel)]="registerData.matricule"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-glow-wrapper" *ngIf="selectedRole === 'COMMERCANT'">
+          <ion-item class="premium-input" lines="none">
+            <ion-icon name="storefront-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="text" label="Nom de la Boutique" labelPlacement="floating" [(ngModel)]="registerData.nomBoutique"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-glow-wrapper">
+          <ion-item class="premium-input" lines="none">
+            <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="email" label="Adresse Email" labelPlacement="floating" [(ngModel)]="registerData.email"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-glow-wrapper">
+          <ion-item class="premium-input" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="password" label="Créer un mot de passe" labelPlacement="floating" [(ngModel)]="registerData.password"></ion-input>
+          </ion-item>
+        </div>
+
+        <div *ngIf="errorMessage" class="premium-error-box">
+          <ion-icon name="alert-circle"></ion-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <ion-button expand="block" class="premium-btn" (click)="onRegister()" [disabled]="isLoading">
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          <span *ngIf="!isLoading">Créer mon compte <ion-icon name="arrow-forward" slot="end"></ion-icon></span>
+        </ion-button>
+
+      </div>
+    </div>
+
+  </div>
+</ion-content>

@@ -1,0 +1,45 @@
+ion-content { --background: #0f172a; }
+
+.caisse-wrapper {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.amount-display {
+  text-align: center;
+  margin: 3vh 0;
+  
+  p { color: #94a3b8; font-size: 14px; margin: 0; }
+  h1 { font-size: 48px; font-weight: 900; color: #ffffff; margin: 5px 0; span { font-size: 20px; color: #64748b; } }
+}
+
+.numpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 2rem;
+
+  button {
+    height: 70px;
+    background: #1e293b;
+    border: none;
+    border-radius: 18px;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 700;
+    transition: background 0.2s;
+
+    &:active { background: #334155; }
+    &.action-btn { color: #ef4444; }
+    &.empty { background: transparent; }
+  }
+}
+
+.premium-btn {
+  --background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --border-radius: 16px;
+  height: 56px;
+  font-weight: 700;
+}

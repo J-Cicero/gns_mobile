@@ -1,0 +1,102 @@
+<ion-content class="premium-dark-bg">
+  <div class="dashboard-wrapper">
+    
+    <div class="merchant-top-header" *ngIf="merchantWallet">
+      <div class="business-profile">
+        <div class="store-icon-box">
+          <ion-icon name="storefront-outline"></ion-icon>
+        </div>
+        <div class="business-text">
+          <p>Commerce</p>
+          <h2>{{ merchantWallet.nomBoutique }}</h2>
+        </div>
+      </div>
+      <div class="notif-box">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="merchant-loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Mise à jour de votre caisse...</p>
+    </div>
+
+    <div *ngIf="!isLoading && merchantWallet" class="animate-fade-up">
+      
+      <div class="business-revenue-card">
+        <div class="card-top">
+          <span class="badge-status"><ion-icon name="trending-up-outline"></ion-icon> {{ merchantWallet.statut }}</span>
+          <p>Solde à reverser</p>
+        </div>
+        
+        <div class="main-balance">
+          <h1>{{ merchantWallet.soldeTotal | number:'1.0-0' }} <span>FCFA</span></h1>
+        </div>
+
+        <div class="card-stats-row">
+          <div class="stat-block">
+            <span class="stat-label">Aujourd'hui</span>
+            <span class="stat-value text-green">+{{ merchantWallet.recettesDuJour | number:'1.0-0' }} F</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-block">
+            <span class="stat-label">Transactions</span>
+            <span class="stat-value">{{ merchantWallet.nombreVentesJour }} encaissements</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-title">Opérations caisse</h3>
+      <div class="merchant-actions-grid">
+        
+        <div class="m-action-card primary-action" routerLink="../caisse">
+          <div class="m-icon-wrapper">
+            <ion-icon name="qr-code-outline"></ion-icon>
+          </div>
+          <div class="m-action-info">
+            <h4>Encaisser</h4>
+            <p>Scanner ou saisir un montant</p>
+          </div>
+        </div>
+
+        <div class="m-action-card" routerLink="../catalogue">
+          <div class="m-icon-wrapper catalog-color">
+            <ion-icon name="fast-food-outline"></ion-icon>
+          </div>
+          <div class="m-action-info">
+            <h4>Mon Catalogue</h4>
+            <p>Gérer mes articles et prix</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-flex-header">
+        <h3 class="section-title">Ventes récentes</h3>
+        <a routerLink="../history" class="view-all-link">Voir l'historique</a>
+      </div>
+
+      <div class="sales-list">
+        <div *ngIf="recentSales.length === 0" class="empty-sales">
+          <p>Aucun encaissement aujourd'hui.</p>
+        </div>
+
+        <div *ngFor="let sale of recentSales" class="sale-item-card">
+          <div class="sale-left">
+            <div class="client-avatar">
+              {{ sale.etudiant.charAt(0) }}
+            </div>
+            <div class="sale-details">
+              <h4>{{ sale.etudiant }}</h4>
+              <p class="sale-meta">Matricule: {{ sale.matricule }} • {{ sale.details }}</p>
+              <p class="sale-time">{{ sale.date | date:'HH:mm' }}</p>
+            </div>
+          </div>
+          <div class="sale-right">
+            <span class="sale-amount">+{{ sale.montant | number:'1.0-0' }} F</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,73 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/student" icon="arrow-back-outline" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mon Profil StudCash</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="premium-dark-bg" scroll-y="true">
+  <div class="profile-wrapper fade-in">
+
+    <div class="user-main-card">
+      <div class="avatar-container">
+        <div class="initials-avatar">
+          {{ studentProfile.nom.charAt(0) }}
+        </div>
+        <span class="kyc-badge" [ngClass]="studentProfile.statutInscription.toLowerCase()">
+          <ion-icon name="shield-checkmark-outline" *ngIf="studentProfile.statutInscription === 'ACTIVE'"></ion-icon>
+          {{ studentProfile.statutInscription === 'ACTIVE' ? 'Compte Vérifié' : studentProfile.statutInscription }}
+        </span>
+      </div>
+
+      <h2 class="user-name">{{ studentProfile.nom }}</h2>
+      <p class="user-meta">{{ studentProfile.niveau }} — M: {{ studentProfile.matricule }}</p>
+      <p class="user-email">{{ studentProfile.email }}</p>
+    </div>
+
+    <h3 class="section-title">Ma carte physique StudCash</h3>
+    <div class="pvc-card-manager">
+      <div class="pvc-card-preview" [class.frozen]="studentProfile.cartePvc.statut === 'INACTIVE'">
+        <div class="pvc-header">
+          <span class="pvc-logo">Stud<span>Cash</span></span>
+          <span class="pvc-status-indicator">
+            <ion-icon name="ellipse"></ion-icon> {{ studentProfile.cartePvc.statut === 'ACTIVE' ? 'Active' : 'Bloquée' }}
+          </span>
+        </div>
+        <div class="pvc-chip-icon">
+          <ion-icon name="id-card-outline"></ion-icon>
+        </div>
+        <div class="pvc-body">
+          <p class="card-num">{{ studentProfile.cartePvc.numeroUnique }}</p>
+          <p class="card-holder">{{ studentProfile.nom }}</p>
+        </div>
+      </div>
+
+      <div class="pvc-actions" *ngIf="studentProfile.cartePvc.statut === 'ACTIVE'">
+        <ion-button expand="block" class="premium-btn danger-btn" (click)="declarerCartePerdue()" [disabled]="isLoading">
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          <span *ngIf="!isLoading">
+            <ion-icon name="alert-circle-outline" slot="start"></ion-icon> Déclarer carte perdue / volée
+          </span>
+        </ion-button>
+        <p class="action-warning-text">Attention : Cette action est irréversible et suspendra immédiatement tous les paiements physiques par carte.</p>
+      </div>
+
+      <div class="pvc-disabled-notice" *ngIf="studentProfile.cartePvc.statut === 'INACTIVE'">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>Cette carte a été signalée. Veuillez vous rendre au guichet administratif pour commander une nouvelle carte PVC physique.</p>
+      </div>
+    </div>
+
+    <div class="account-menu">
+      <div class="menu-item logout" (click)="deconnexion()">
+        <div class="menu-left">
+          <ion-icon name="log-out-outline" class="menu-icon"></ion-icon>
+          <span>Se déconnecter</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

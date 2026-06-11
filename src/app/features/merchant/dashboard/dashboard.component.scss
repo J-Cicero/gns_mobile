@@ -1,0 +1,315 @@
+/* --- STYLE TABLEAU DE BORD COMMERÇANT PREMIUM --- */
+ion-content {
+  --background: #0f172a;
+}
+
+.dashboard-wrapper {
+  padding: 1.5rem;
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+/* Animation d'entrée */
+.animate-fade-up {
+  animation: fadeUp 0.4s ease-out forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- EN-TÊTE COMMERCE --- */
+.merchant-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  .business-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+
+    .store-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(16, 185, 129, 0.15); // Vert émeraude business
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      flex-shrink: 0;
+
+      ion-icon { font-size: 22px; }
+    }
+
+    .business-text {
+      min-width: 0;
+      p { margin: 0; font-size: 12px; color: #64748b; font-weight: 500; }
+      h2 { 
+        margin: 2px 0 0 0; 
+        font-size: 16px; 
+        font-weight: 700; 
+        color: #ffffff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  .notif-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e1;
+    ion-icon { font-size: 20px; }
+  }
+}
+
+/* --- CARTE DE COMPTE FINTECH PRO --- */
+.business-revenue-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 24px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+
+  .card-top {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+
+    p { margin: 0; font-size: 13px; color: #94a3b8; font-weight: 500; }
+    
+    .badge-status {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+  }
+
+  .main-balance {
+    margin: 1.2rem 0 1.5rem 0;
+    
+    h1 {
+      margin: 0;
+      font-size: 36px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      
+      span { font-size: 16px; color: #64748b; font-weight: 600; }
+    }
+  }
+
+  .card-stats-row {
+    display: flex;
+    align-items: center;
+    padding-top: 1.2rem;
+    border-top: 1px solid #334155;
+
+    .stat-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .stat-label { font-size: 11px; color: #64748b; font-weight: 500; }
+      .stat-value { 
+        font-size: 14px; 
+        font-weight: 700; 
+        color: #f8fafc; 
+        
+        &.text-green { color: #10b981; }
+      }
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 24px;
+      background: #334155;
+      margin: 0 12px;
+    }
+  }
+}
+
+/* --- ACTIONS DU MARCHAND --- */
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 1rem 2px;
+}
+
+.merchant-actions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 2rem;
+
+  .m-action-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:active { transform: scale(0.99); background: #24334a; }
+
+    .m-icon-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      
+      ion-icon { font-size: 22px; }
+      &.catalog-color { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+    }
+
+    /* Bouton principal "Encaisser" mis en valeur */
+    &.primary-action {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+      
+      .m-icon-wrapper {
+        background: #3b82f6;
+        color: #ffffff;
+        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+      }
+    }
+
+    .m-action-info {
+      text-align: left;
+      h4 { margin: 0; font-size: 15px; font-weight: 700; color: #ffffff; }
+      p { margin: 2px 0 0 0; font-size: 12px; color: #64748b; }
+    }
+  }
+}
+
+/* --- LISTE DES VENTES --- */
+.section-flex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  
+  .section-title { margin-bottom: 0; }
+  .view-all-link { font-size: 13px; font-weight: 600; color: #3b82f6; text-decoration: none; }
+}
+
+.sales-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.sale-item-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+
+  .sale-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+
+    .client-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #334155;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sale-details {
+      min-width: 0;
+      text-align: left;
+      
+      h4 { margin: 0; font-size: 14px; font-weight: 600; color: #f8fafc; }
+      .sale-meta { 
+        margin: 4px 0 0 0; 
+        font-size: 11px; 
+        color: #64748b; 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .sale-time { margin: 2px 0 0 0; font-size: 10px; color: #475569; font-weight: 500; }
+    }
+  }
+
+  .sale-right {
+    margin-left: 8px;
+    
+    .sale-amount {
+      font-size: 14px;
+      font-weight: 800;
+      color: #10b981; // Vert recettes
+      white-space: nowrap;
+    }
+  }
+}
+
+/* États secondaires */
+.merchant-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 40vh;
+  color: #10b981;
+  p { margin-top: 1rem; color: #64748b; font-size: 13px; }
+}
+
+.empty-sales {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #64748b;
+  font-size: 13px;
+}

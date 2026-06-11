@@ -1,31 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { MerchantService } from '../../../core/services/merchant.service';
+import { RouterModule } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline, calendarOutline, cashOutline } from 'ionicons/icons';
 
 @Component({
-  selector: 'app-history',
+  selector: 'app-merchant-history',
   standalone: true,
-  imports: [CommonModule, IonicModule],
-  template: `
-    <ion-content class="ion-padding bg-slate-900">
-      <h1 class="text-2xl font-black text-white mb-6">Historique des ventes</h1>
-      <div class="space-y-3">
-        <div *ngFor="let s of sales" class="bg-slate-800/50 p-4 rounded-2xl flex justify-between items-center border border-slate-700">
-          <div>
-            <p class="text-white font-bold text-sm">{{ s.date | date:'dd/MM HH:mm' }}</p>
-            <p class="text-slate-400 text-xs">{{ s.itemsCount }} articles</p>
-          </div>
-          <p class="text-emerald-400 font-black text-lg">+{{ s.total }} FCFA</p>
-        </div>
-      </div>
-    </ion-content>
-  `
+  imports: [CommonModule, IonicModule, RouterModule],
+  templateUrl: './history.component.html',
+  styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit {
-  sales: any[] = [];
-  constructor(private merchantService: MerchantService) {}
+  transactions: any[] = [];
+  isLoading = true;
+
+  constructor() {
+    addIcons({ arrowBackOutline, calendarOutline, cashOutline });
+  }
+
   ngOnInit() {
-    this.merchantService.getSalesHistory('default-boutique-id').subscribe(res => this.sales = res);
+    this.loadMockHistory();
+  }
+
+  loadMockHistory() {
+    this.isLoading = true;
+    setTimeout(() => {
+      // Mock data pour l'historique marchand
+      this.transactions = [
+        { id: 1, etudiant: 'Koffi AMEGAVIE', montant: 1500, date: new Date(), type: 'Paiement' },
+        { id: 2, etudiant: 'Fatimata DIOP', montant: 850, date: new Date(Date.now() - 3600000), type: 'Paiement' },
+        { id: 3, etudiant: 'Abalo KOFFI', montant: 500, date: new Date(Date.now() - 7200000), type: 'Paiement' }
+      ];
+      this.isLoading = false;
+    }, 1000);
   }
 }

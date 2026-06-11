@@ -1,56 +1,63 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { AuthService } from '../../../core/services/auth.service';
-import { BanqueService } from '../../../core/services/banque.service';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { 
+  arrowBackOutline, 
+  personOutline, 
+  cardOutline, 
+  shieldCheckmarkOutline, 
+  logOutOutline, 
+  alertCircleOutline, 
+  idCardOutline,
+  ellipse
+} from 'ionicons/icons';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-student-profile',
   standalone: true,
-  imports: [CommonModule, IonicModule],
-  template: `
-    <ion-content class="ion-padding bg-slate-900 text-white">
-      <div class="flex flex-col items-center mb-8">
-        <div class="w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center text-3xl font-black mb-4">
-          {{ user?.prenom?.charAt(0) }}{{ user?.nom?.charAt(0) }}
-        </div>
-        <h2 class="text-xl font-bold">{{ user?.prenom }} {{ user?.nom }}</h2>
-        <p class="text-slate-400 text-sm">{{ user?.email }}</p>
-      </div>
-
-      <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 space-y-4">
-        <div class="flex justify-between border-b border-slate-700 pb-2">
-          <span class="text-slate-400">Statut</span>
-          <span class="font-bold text-emerald-400">Boursier Validé</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-700 pb-2" *ngIf="banque">
-          <span class="text-slate-400">Banque</span>
-          <span class="font-bold">{{ banque.banque.nom }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-slate-400">Matricule</span>
-          <span class="font-bold">...</span>
-        </div>
-      </div>
-
-      <ion-button expand="block" color="danger" class="mt-8" (click)="logout()">Déconnexion</ion-button>
-    </ion-content>
-  `
+  imports: [CommonModule, IonicModule, FormsModule, RouterModule],
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  user: any = null;
-  banque: any = null;
+  isLoading = false;
 
-  constructor(private authService: AuthService, private banqueService: BanqueService) {}
+  // Données mockées de l'étudiant et de sa carte physique PVC
+  studentProfile = {
+    nom: 'Koffi AMEGAVIE',
+    matricule: '245-UL-2025',
+    niveau: 'Licence 2 (L2)',
+    email: 'koffi.amegavie@faseg.ul.tg',
+    statutInscription: 'ACTIVE', // EN_ATTENTE, VERIFIE_UL, ACTIVE, REJETEE
+    cartePvc: {
+      numeroUnique: '4022 •••• •••• 8812',
+      statut: 'ACTIVE' // ACTIVE ou INACTIVE (Perdue/Volée)
+    }
+  };
 
-  ngOnInit() {
-    // Dans une vraie implémentation, on récupérerait l'utilisateur depuis un Store ou AuthService
-    // Ici on suppose qu'il est stocké dans le localStorage ou via une API
-    // Pour l'exemple, nous appelons le endpoint de profil
+  constructor(private router: Router) {
+    addIcons({ arrowBackOutline, personOutline, cardOutline, shieldCheckmarkOutline, logOutOutline, alertCircleOutline, idCardOutline, ellipse });
   }
-  
-  logout() {
-    this.authService.logout();
-    window.location.href = '/login';
+
+  ngOnInit(): void {}
+
+  // Fonction d'urgence pour déclarer la carte perdue/volée
+  declarerCartePerdue() {
+    this.isLoading = true;
+    
+    // Simulation du blocage instantané
+    setTimeout(() => {
+      this.isLoading = false;
+      this.studentProfile.cartePvc.statut = 'INACTIVE';
+      alert('Votre carte physique PVC a été suspendue avec succès. Rapprochez-vous du guichet GNS pour un renouvellement.');
+    }, 1200);
+  }
+
+  deconnexion() {
+    // Redirection vers le login
+    this.router.navigate(['/login']);
   }
 }

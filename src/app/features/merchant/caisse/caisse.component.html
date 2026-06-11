@@ -1,0 +1,39 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/merchant" icon="arrow-back-outline" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nouvelle Vente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="premium-dark-bg">
+  <div class="caisse-wrapper">
+    
+    <div class="amount-display">
+      <p>Montant à encaisser</p>
+      <h1>{{ montantSaisi | number:'1.0-0' }} <span>FCFA</span></h1>
+    </div>
+
+    <div class="numpad-grid">
+      <button (click)="ajouterChiffre('1')">1</button>
+      <button (click)="ajouterChiffre('2')">2</button>
+      <button (click)="ajouterChiffre('3')">3</button>
+      <button (click)="ajouterChiffre('4')">4</button>
+      <button (click)="ajouterChiffre('5')">5</button>
+      <button (click)="ajouterChiffre('6')">6</button>
+      <button (click)="ajouterChiffre('7')">7</button>
+      <button (click)="ajouterChiffre('8')">8</button>
+      <button (click)="ajouterChiffre('9')">9</button>
+      <button class="empty"></button>
+      <button (click)="ajouterChiffre('0')">0</button>
+      <button (click)="supprimerChiffre()" class="action-btn"><ion-icon name="backspace-outline"></ion-icon></button>
+    </div>
+
+    <ion-button expand="block" class="premium-btn primary-btn" (click)="genererQR()" [disabled]="montantSaisi === '0'">
+      <ion-icon name="qr-code-outline" slot="start"></ion-icon>
+      Générer le QR Code
+    </ion-button>
+
+  </div>
+</ion-content>
