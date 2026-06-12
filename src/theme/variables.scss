@@ -1,7 +1,8 @@
-/* --- FORCED DARK THEME STUDCASH (Bleu Nuit) --- */
+/* --- THEME STUDCASH (Clair / Sombre) --- */
+
 :root {
   /** 1. Bleu GNS (Boutons et accents) **/
-  --ion-color-primary: #3b82f6; // Un bleu un peu plus vif pour ressortir sur le fond sombre
+  --ion-color-primary: #3b82f6;
   --ion-color-primary-rgb: 59,130,246;
   --ion-color-primary-contrast: #ffffff;
   
@@ -15,15 +16,26 @@
   --ion-color-danger-rgb: 239,68,68;
   --ion-color-danger-contrast: #ffffff;
 
-  /** 4. Fonds et Textes (Le secret du Dark Mode élégant) **/
-  --ion-background-color: #0f172a;       // Bleu nuit très profond (Fond général)
-  --ion-item-background: #1e293b;        // Bleu nuit un peu plus clair (Pour les inputs/cartes)
-  --ion-text-color: #f8fafc;             // Texte blanc cassé (très lisible)
-  --ion-text-color-step-150: #94a3b8;    // Gris bleuté pour les sous-titres
-  --ion-border-color: #334155;           // Bordures discrètes
+  /** 4. Fonds et Textes (Mode Clair par défaut) **/
+  --ion-background-color: #f8fafc;
+  --ion-item-background: #ffffff;
+  --ion-text-color: #0f172a;
+  --ion-text-color-step-150: #64748b;
+  --ion-border-color: #e2e8f0;
 }
 
-// On s'assure que le body prend bien le fond sombre
+/* --- DARK MODE (Activé par défaut) --- */
+.dark, @media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: #0f172a;       // Bleu nuit très profond (Fond général)
+    --ion-item-background: #1e293b;        // Bleu nuit un peu plus clair (Pour les inputs/cartes)
+    --ion-text-color: #f8fafc;             // Texte blanc cassé (très lisible)
+    --ion-text-color-step-150: #94a3b8;    // Gris bleuté pour les sous-titres
+    --ion-border-color: #334155;           // Bordures discrètes
+  }
+}
+
+// Global Body Styles
 body {
   background-color: var(--ion-background-color);
   color: var(--ion-text-color);

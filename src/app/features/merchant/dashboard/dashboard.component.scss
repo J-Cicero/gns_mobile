@@ -1,7 +1,4 @@
 /* --- STYLE TABLEAU DE BORD COMMERÇANT PREMIUM --- */
-ion-content {
-  --background: #0f172a;
-}
 
 .dashboard-wrapper {
   padding: 1.5rem;
@@ -37,7 +34,7 @@ ion-content {
       height: 44px;
       border-radius: 12px;
       background: rgba(16, 185, 129, 0.15); // Vert émeraude business
-      color: #10b981;
+      color: var(--ion-color-success);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -49,12 +46,12 @@ ion-content {
 
     .business-text {
       min-width: 0;
-      p { margin: 0; font-size: 12px; color: #64748b; font-weight: 500; }
+      p { margin: 0; font-size: 12px; color: var(--ion-text-color-step-150); font-weight: 500; }
       h2 { 
         margin: 2px 0 0 0; 
         font-size: 16px; 
         font-weight: 700; 
-        color: #ffffff;
+        color: var(--ion-text-color);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -66,24 +63,25 @@ ion-content {
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: var(--ion-item-background);
+    border: 1px solid var(--ion-border-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #cbd5e1;
+    color: var(--ion-text-color);
     ion-icon { font-size: 20px; }
   }
 }
 
 /* --- CARTE DE COMPTE FINTECH PRO --- */
 .business-revenue-card {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid #334155;
+  background: linear-gradient(135deg, var(--ion-item-background) 0%, var(--ion-background-color) 100%);
+  border: 1px solid var(--ion-border-color);
   border-radius: 24px;
   padding: 1.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 
   .card-top {
     display: flex;
@@ -91,7 +89,7 @@ ion-content {
     justify-content: space-between;
     align-items: center;
 
-    p { margin: 0; font-size: 13px; color: #94a3b8; font-weight: 500; }
+    p { margin: 0; font-size: 13px; color: var(--ion-text-color-step-150); font-weight: 500; }
     
     .badge-status {
       display: flex;
@@ -100,7 +98,7 @@ ion-content {
       font-size: 11px;
       font-weight: 700;
       background: rgba(16, 185, 129, 0.12);
-      color: #10b981;
+      color: var(--ion-color-success);
       padding: 4px 10px;
       border-radius: 20px;
       text-transform: uppercase;
@@ -114,10 +112,10 @@ ion-content {
       margin: 0;
       font-size: 36px;
       font-weight: 900;
-      color: #ffffff;
+      color: var(--ion-text-color);
       letter-spacing: -0.5px;
       
-      span { font-size: 16px; color: #64748b; font-weight: 600; }
+      span { font-size: 16px; color: var(--ion-text-color-step-150); font-weight: 600; }
     }
   }
 
@@ -125,7 +123,7 @@ ion-content {
     display: flex;
     align-items: center;
     padding-top: 1.2rem;
-    border-top: 1px solid #334155;
+    border-top: 1px solid var(--ion-border-color);
 
     .stat-block {
       flex: 1;
@@ -133,20 +131,20 @@ ion-content {
       flex-direction: column;
       gap: 4px;
 
-      .stat-label { font-size: 11px; color: #64748b; font-weight: 500; }
+      .stat-label { font-size: 11px; color: var(--ion-text-color-step-150); font-weight: 500; }
       .stat-value { 
         font-size: 14px; 
         font-weight: 700; 
-        color: #f8fafc; 
+        color: var(--ion-text-color); 
         
-        &.text-green { color: #10b981; }
+        &.text-green { color: var(--ion-color-success); }
       }
     }
 
     .stat-divider {
       width: 1px;
       height: 24px;
-      background: #334155;
+      background: var(--ion-border-color);
       margin: 0 12px;
     }
   }
@@ -156,7 +154,7 @@ ion-content {
 .section-title {
   font-size: 15px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--ion-text-color-step-150);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 1rem 2px;
@@ -169,8 +167,8 @@ ion-content {
   margin-bottom: 2rem;
 
   .m-action-card {
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: var(--ion-item-background);
+    border: 1px solid var(--ion-border-color);
     border-radius: 16px;
     padding: 12px;
     display: flex;
@@ -179,14 +177,14 @@ ion-content {
     width: 100%;
     box-sizing: border-box;
 
-    &:active { transform: scale(0.99); background: #24334a; }
+    &:active { transform: scale(0.99); background: var(--ion-background-color); }
 
     .m-icon-wrapper {
       width: 44px;
       height: 44px;
       border-radius: 12px;
       background: rgba(59, 130, 246, 0.12);
-      color: #3b82f6;
+      color: var(--ion-color-primary);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -198,12 +196,12 @@ ion-content {
 
     /* Bouton principal "Encaisser" mis en valeur */
     &.primary-action {
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      background: linear-gradient(135deg, var(--ion-background-color) 0%, var(--ion-item-background) 100%);
       border-color: rgba(59, 130, 246, 0.4);
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
       
       .m-icon-wrapper {
-        background: #3b82f6;
+        background: var(--ion-color-primary);
         color: #ffffff;
         box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
       }
@@ -211,8 +209,8 @@ ion-content {
 
     .m-action-info {
       text-align: left;
-      h4 { margin: 0; font-size: 15px; font-weight: 700; color: #ffffff; }
-      p { margin: 2px 0 0 0; font-size: 12px; color: #64748b; }
+      h4 { margin: 0; font-size: 15px; font-weight: 700; color: var(--ion-text-color); }
+      p { margin: 2px 0 0 0; font-size: 12px; color: var(--ion-text-color-step-150); }
     }
   }
 }
@@ -225,7 +223,7 @@ ion-content {
   margin-bottom: 1rem;
   
   .section-title { margin-bottom: 0; }
-  .view-all-link { font-size: 13px; font-weight: 600; color: #3b82f6; text-decoration: none; }
+  .view-all-link { font-size: 13px; font-weight: 600; color: var(--ion-color-primary); text-decoration: none; }
 }
 
 .sales-list {
@@ -236,8 +234,8 @@ ion-content {
 }
 
 .sale-item-card {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--ion-item-background);
+  border: 1px solid var(--ion-border-color);
   border-radius: 14px;
   padding: 12px;
   display: flex;
@@ -257,8 +255,9 @@ ion-content {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: #334155;
-      color: #ffffff;
+      background: var(--ion-background-color);
+      color: var(--ion-text-color);
+      border: 1px solid var(--ion-border-color);
       font-size: 16px;
       font-weight: 700;
       display: flex;
@@ -271,16 +270,16 @@ ion-content {
       min-width: 0;
       text-align: left;
       
-      h4 { margin: 0; font-size: 14px; font-weight: 600; color: #f8fafc; }
+      h4 { margin: 0; font-size: 14px; font-weight: 600; color: var(--ion-text-color); }
       .sale-meta { 
         margin: 4px 0 0 0; 
         font-size: 11px; 
-        color: #64748b; 
+        color: var(--ion-text-color-step-150); 
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .sale-time { margin: 2px 0 0 0; font-size: 10px; color: #475569; font-weight: 500; }
+      .sale-time { margin: 2px 0 0 0; font-size: 10px; color: var(--ion-text-color-step-150); font-weight: 500; }
     }
   }
 
@@ -290,7 +289,7 @@ ion-content {
     .sale-amount {
       font-size: 14px;
       font-weight: 800;
-      color: #10b981; // Vert recettes
+      color: var(--ion-color-success); // Vert recettes
       white-space: nowrap;
     }
   }
@@ -303,13 +302,13 @@ ion-content {
   align-items: center;
   justify-content: center;
   height: 40vh;
-  color: #10b981;
-  p { margin-top: 1rem; color: #64748b; font-size: 13px; }
+  color: var(--ion-color-success);
+  p { margin-top: 1rem; color: var(--ion-text-color-step-150); font-size: 13px; }
 }
 
 .empty-sales {
   text-align: center;
   padding: 3rem 1rem;
-  color: #64748b;
+  color: var(--ion-text-color-step-150);
   font-size: 13px;
 }
