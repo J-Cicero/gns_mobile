@@ -1,0 +1,36 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Mon QR Code</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding qr-content">
+  <div class="qr-container">
+    <div class="qr-card">
+      <div class="card-header">
+        <h2>Scanner pour payer</h2>
+        <p>Présentez ce code aux étudiants</p>
+      </div>
+
+      <div class="qr-code-wrapper">
+        <!-- Placeholder pour le vrai QR Code généré via angularx-qrcode ou similaire -->
+        <div class="qr-placeholder">
+          <ion-icon name="qr-code-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="tracking-id-box">
+        <span class="label">ID Boutique</span>
+        <span class="value">{{ trackingId }}</span>
+      </div>
+
+      <ion-button expand="block" class="share-btn" (click)="shareQR()">
+        <ion-icon name="share-social-outline" slot="start"></ion-icon>
+        Partager
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

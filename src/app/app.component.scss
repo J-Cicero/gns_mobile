@@ -1,0 +1,81 @@
+.premium-menu {
+  --width: 280px;
+
+  ion-content {
+    --background: var(--ion-item-background);
+  }
+
+  .brand-header {
+    display: flex;
+    align-items: center;
+    padding: 24px 16px 8px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ion-text-color);
+
+    .brand-icon {
+      color: var(--ion-color-primary);
+      margin-right: 12px;
+      font-size: 28px;
+    }
+  }
+
+  .role-note {
+    padding-left: 16px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--ion-text-color-step-150);
+  }
+
+  ion-item {
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    margin-inline: 12px;
+    --background: transparent;
+    color: var(--ion-text-color);
+    font-weight: 500;
+    cursor: pointer;
+
+    &.selected {
+      --background: rgba(var(--ion-color-primary-rgb), 0.1);
+      color: var(--ion-color-primary);
+      font-weight: 600;
+
+      ion-icon {
+        color: var(--ion-color-primary);
+      }
+    }
+
+    ion-icon {
+      margin-right: 16px;
+      font-size: 20px;
+      color: var(--ion-text-color-step-150);
+    }
+  }
+
+  .theme-toggle-item {
+    margin-top: auto;
+    border-top: 1px solid var(--ion-border-color);
+    border-radius: 0;
+    margin-inline: 0;
+    padding-top: 16px;
+  }
+
+  .logout-section {
+    background: var(--ion-item-background);
+    padding: 16px 12px;
+    border-top: 1px solid var(--ion-border-color);
+
+    .logout-btn {
+      --background: rgba(var(--ion-color-danger-rgb), 0.1);
+      color: var(--ion-color-danger);
+      margin: 0;
+
+      ion-icon {
+        color: var(--ion-color-danger);
+      }
+    }
+  }
+}

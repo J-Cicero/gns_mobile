@@ -1,0 +1,29 @@
+<ion-content class="premium-dark-bg">
+  <div class="waiting-container fade-in">
+    
+    <!-- Cas Erreur : Pas d'année active -->
+    <div class="status-card" *ngIf="isError">
+      <div class="icon-wrapper error">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+      </div>
+      <h2>Aucune Année Active</h2>
+      <p>Il n'y a actuellement aucune année scolaire en cours. L'accès à la plateforme est temporairement suspendu.</p>
+    </div>
+
+    <!-- Cas B : En Attente de validation -->
+    <div class="status-card" *ngIf="!isError">
+      <div class="icon-wrapper pending">
+        <ion-icon name="time-outline"></ion-icon>
+      </div>
+      <h2>Dossier en attente</h2>
+      <p>Vos documents sont en cours de vérification par l'administration GNS.</p>
+      <p class="subtitle">Veuillez patienter. Vous pourrez accéder à votre Espace Étudiant dès que votre inscription sera validée.</p>
+    </div>
+
+    <ion-button fill="clear" class="logout-btn" (click)="logout()">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      Se déconnecter
+    </ion-button>
+
+  </div>
+</ion-content>

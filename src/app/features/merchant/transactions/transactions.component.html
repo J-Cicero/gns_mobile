@@ -1,0 +1,44 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Transactions</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding transactions-content">
+  
+  <div class="status-banner" [class.waiting]="isWaiting" [class.success]="!isWaiting">
+    <div class="status-content" *ngIf="isWaiting">
+      <ion-spinner name="dots"></ion-spinner>
+      <span>En attente de scan étudiant...</span>
+    </div>
+    
+    <div class="status-content" *ngIf="!isWaiting">
+      <ion-icon name="checkmark-circle" class="success-icon"></ion-icon>
+      <div class="success-text">
+        <h3>Paiement Validé !</h3>
+        <p>+ {{ transactions[0].amount | currency:'XOF':'symbol':'1.0-0' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="history-section">
+    <h3>Historique du jour</h3>
+    
+    <ion-list class="tx-list">
+      <ion-item *ngFor="let tx of transactions" lines="full" class="tx-item">
+        <div class="tx-details" slot="start">
+          <span class="tx-student">{{ tx.student }}</span>
+          <span class="tx-id">{{ tx.id }}</span>
+        </div>
+        
+        <div class="tx-meta" slot="end">
+          <span class="tx-amount text-success">+{{ tx.amount | currency:'XOF':'symbol':'1.0-0' }}</span>
+          <span class="tx-time"><ion-icon name="time-outline"></ion-icon> {{ tx.date | date:'shortTime' }}</span>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

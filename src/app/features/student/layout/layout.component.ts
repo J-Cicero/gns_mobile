@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { homeOutline, documentTextOutline, timeOutline, personOutline, addCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-student-layout',
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet],
   template: `
     <ion-tabs>
+      <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom" class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
         <ion-tab-button tab="dashboard" href="/student/dashboard">
           <ion-icon name="home-outline"></ion-icon>

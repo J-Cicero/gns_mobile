@@ -2,15 +2,15 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { addIcons } from 'ionicons';
-import { mailOutline, lockClosedOutline, flash, arrowForward, alertCircle } from 'ionicons/icons';
+import { personOutline, lockClosedOutline, flash, arrowForward, alertCircle } from 'ionicons/icons';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, IonicModule, FormsModule],
+  imports: [CommonModule, IonicModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -21,14 +21,21 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {
     // Enregistrement des icônes pour Angular / Ionic moderne
-    addIcons({ mailOutline, lockClosedOutline, flash, arrowForward, alertCircle });
+    addIcons({ personOutline, lockClosedOutline, flash, arrowForward, alertCircle });
+  }
+
+  goToRegister() {
+    this.router.navigate(['/register']);
   }
 
   onLogin() {
     this.isLoading = true;
     this.errorMessage = '';
     
-    this.authService.login(this.credentials).subscribe({
+    this.authService.login({
+      email: this.credentials.email,
+      password: this.credentials.password
+    }).subscribe({
       next: (res) => {
         this.isLoading = false;
         if (res.role === 'ETUDIANT') {

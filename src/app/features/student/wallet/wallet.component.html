@@ -1,0 +1,45 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Mon Wallet</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding wallet-content">
+  <div class="wallet-card">
+    <div class="card-header">
+      <ion-icon name="wallet-outline"></ion-icon>
+      <span>Solde Bourse</span>
+    </div>
+    <div class="card-balance">
+      <h1>{{ balance | currency:'XOF':'symbol':'1.0-0' }}</h1>
+    </div>
+    <div class="card-footer">
+      <span>Dernière mise à jour: Aujourd'hui</span>
+    </div>
+  </div>
+
+  <div class="transactions-section">
+    <h3>Dernières transactions</h3>
+    
+    <ion-list class="transaction-list">
+      <ion-item *ngFor="let tx of transactions" lines="full" class="transaction-item">
+        <ion-icon 
+          slot="start" 
+          [name]="tx.type === 'CREDIT' ? 'arrow-up-outline' : 'arrow-down-outline'"
+          [color]="tx.type === 'CREDIT' ? 'success' : 'danger'"
+          class="tx-icon">
+        </ion-icon>
+        <ion-label>
+          <h2>{{ tx.description }}</h2>
+          <p><ion-icon name="time-outline"></ion-icon> {{ tx.date | date:'short' }}</p>
+        </ion-label>
+        <ion-note slot="end" [color]="tx.type === 'CREDIT' ? 'success' : 'danger'" class="tx-amount">
+          {{ tx.type === 'CREDIT' ? '+' : '-' }}{{ tx.amount | currency:'XOF':'symbol':'1.0-0' }}
+        </ion-note>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

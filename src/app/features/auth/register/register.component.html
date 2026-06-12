@@ -31,7 +31,7 @@
       </div>
 
       <div class="switch-auth-link">
-        <p>Déjà un compte ? <a routerLink="/login">Se connecter</a></p>
+        <p>Déjà un compte ? <a (click)="goToLogin()" style="cursor: pointer;">Se connecter</a></p>
       </div>
     </div>
 
@@ -61,6 +61,27 @@
           <ion-item class="premium-input" lines="none">
             <ion-icon name="storefront-outline" slot="start" class="input-icon"></ion-icon>
             <ion-input type="text" label="Nom de la Boutique" labelPlacement="floating" [(ngModel)]="registerData.nomBoutique"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
+          <ion-item class="premium-input" lines="none">
+            <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="text" label="Nom" labelPlacement="floating" [(ngModel)]="registerData.nom"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
+          <ion-item class="premium-input" lines="none">
+            <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="text" label="Prénom" labelPlacement="floating" [(ngModel)]="registerData.prenom"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-glow-wrapper">
+          <ion-item class="premium-input" lines="none">
+            <ion-icon name="call-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="tel" label="Téléphone" labelPlacement="floating" [(ngModel)]="registerData.telephone"></ion-input>
           </ion-item>
         </div>
 

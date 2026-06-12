@@ -13,10 +13,10 @@
       
       <div class="input-glow-wrapper">
         <ion-item class="premium-input" lines="none">
-          <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
           <ion-input
             type="email"
-            label="Adresse Email"
+            label="Email"
             labelPlacement="floating"
             [(ngModel)]="credentials.email">
           </ion-input>
@@ -50,7 +50,7 @@
       </ion-button>
 
       <div class="switch-auth-link">
-        <p>Pas encore de compte ? <a routerLink="/register">Créer un compte</a></p>
+        <p>Pas encore de compte ? <a (click)="goToRegister()" style="cursor: pointer;">Créer un compte</a></p>
       </div>
 
     </div>

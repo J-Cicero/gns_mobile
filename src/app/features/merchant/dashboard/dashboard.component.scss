@@ -1,314 +1,84 @@
-/* --- STYLE TABLEAU DE BORD COMMERÇANT PREMIUM --- */
-
-.dashboard-wrapper {
-  padding: 1.5rem;
-  padding-top: 3rem;
-  padding-bottom: 4rem;
+.merchant-content {
+  --background: var(--ion-background-color);
 }
 
-/* Animation d'entrée */
-.animate-fade-up {
-  animation: fadeUp 0.4s ease-out forwards;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- EN-TÊTE COMMERCE --- */
-.merchant-top-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-
-  .business-profile {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-    min-width: 0;
-
-    .store-icon-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: rgba(16, 185, 129, 0.15); // Vert émeraude business
-      color: var(--ion-color-success);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      flex-shrink: 0;
-
-      ion-icon { font-size: 22px; }
-    }
-
-    .business-text {
-      min-width: 0;
-      p { margin: 0; font-size: 12px; color: var(--ion-text-color-step-150); font-weight: 500; }
-      h2 { 
-        margin: 2px 0 0 0; 
-        font-size: 16px; 
-        font-weight: 700; 
-        color: var(--ion-text-color);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-
-  .notif-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: var(--ion-item-background);
-    border: 1px solid var(--ion-border-color);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--ion-text-color);
-    ion-icon { font-size: 20px; }
-  }
-}
-
-/* --- CARTE DE COMPTE FINTECH PRO --- */
-.business-revenue-card {
-  background: linear-gradient(135deg, var(--ion-item-background) 0%, var(--ion-background-color) 100%);
-  border: 1px solid var(--ion-border-color);
-  border-radius: 24px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-
-  .card-top {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    align-items: center;
-
-    p { margin: 0; font-size: 13px; color: var(--ion-text-color-step-150); font-weight: 500; }
-    
-    .badge-status {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      background: rgba(16, 185, 129, 0.12);
-      color: var(--ion-color-success);
-      padding: 4px 10px;
-      border-radius: 20px;
-      text-transform: uppercase;
-    }
-  }
-
-  .main-balance {
-    margin: 1.2rem 0 1.5rem 0;
-    
-    h1 {
-      margin: 0;
-      font-size: 36px;
-      font-weight: 900;
-      color: var(--ion-text-color);
-      letter-spacing: -0.5px;
-      
-      span { font-size: 16px; color: var(--ion-text-color-step-150); font-weight: 600; }
-    }
-  }
-
-  .card-stats-row {
-    display: flex;
-    align-items: center;
-    padding-top: 1.2rem;
-    border-top: 1px solid var(--ion-border-color);
-
-    .stat-block {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-
-      .stat-label { font-size: 11px; color: var(--ion-text-color-step-150); font-weight: 500; }
-      .stat-value { 
-        font-size: 14px; 
-        font-weight: 700; 
-        color: var(--ion-text-color); 
-        
-        &.text-green { color: var(--ion-color-success); }
-      }
-    }
-
-    .stat-divider {
-      width: 1px;
-      height: 24px;
-      background: var(--ion-border-color);
-      margin: 0 12px;
-    }
-  }
-}
-
-/* --- ACTIONS DU MARCHAND --- */
-.section-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--ion-text-color-step-150);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0 0 1rem 2px;
-}
-
-.merchant-actions-grid {
+.stats-grid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 2rem;
+  gap: 16px;
+}
 
-  .m-action-card {
-    background: var(--ion-item-background);
-    border: 1px solid var(--ion-border-color);
-    border-radius: 16px;
-    padding: 12px;
+.stat-card {
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  .stat-header {
     display: flex;
     align-items: center;
-    gap: 14px;
-    width: 100%;
-    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    opacity: 0.9;
 
-    &:active { transform: scale(0.99); background: var(--ion-background-color); }
-
-    .m-icon-wrapper {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: rgba(59, 130, 246, 0.12);
-      color: var(--ion-color-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      
-      ion-icon { font-size: 22px; }
-      &.catalog-color { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+    ion-icon {
+      margin-right: 8px;
+      font-size: 18px;
     }
+  }
 
-    /* Bouton principal "Encaisser" mis en valeur */
-    &.primary-action {
-      background: linear-gradient(135deg, var(--ion-background-color) 0%, var(--ion-item-background) 100%);
-      border-color: rgba(59, 130, 246, 0.4);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
-      
-      .m-icon-wrapper {
-        background: var(--ion-color-primary);
-        color: #ffffff;
-        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
-      }
-    }
+  h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+  }
 
-    .m-action-info {
-      text-align: left;
-      h4 { margin: 0; font-size: 15px; font-weight: 700; color: var(--ion-text-color); }
-      p { margin: 2px 0 0 0; font-size: 12px; color: var(--ion-text-color-step-150); }
+  .stat-subtext {
+    font-size: 12px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+
+    ion-icon {
+      margin-right: 4px;
     }
   }
 }
 
-/* --- LISTE DES VENTES --- */
-.section-flex-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  
-  .section-title { margin-bottom: 0; }
-  .view-all-link { font-size: 13px; font-weight: 600; color: var(--ion-color-primary); text-decoration: none; }
+.quota-card {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+
+  .progress-bar-container {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    margin-bottom: 8px;
+    overflow: hidden;
+
+    .progress-bar {
+      height: 100%;
+      background: white;
+      border-radius: 3px;
+    }
+  }
+
+  .stat-subtext {
+    opacity: 0.8;
+  }
 }
 
-.sales-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
-
-.sale-item-card {
+.sales-card {
   background: var(--ion-item-background);
+  color: var(--ion-text-color);
   border: 1px solid var(--ion-border-color);
-  border-radius: 14px;
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  box-sizing: border-box;
 
-  .sale-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-    min-width: 0;
-
-    .client-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--ion-background-color);
-      color: var(--ion-text-color);
-      border: 1px solid var(--ion-border-color);
-      font-size: 16px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .sale-details {
-      min-width: 0;
-      text-align: left;
-      
-      h4 { margin: 0; font-size: 14px; font-weight: 600; color: var(--ion-text-color); }
-      .sale-meta { 
-        margin: 4px 0 0 0; 
-        font-size: 11px; 
-        color: var(--ion-text-color-step-150); 
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .sale-time { margin: 2px 0 0 0; font-size: 10px; color: var(--ion-text-color-step-150); font-weight: 500; }
-    }
+  .stat-header {
+    color: var(--ion-text-color-step-150);
   }
 
-  .sale-right {
-    margin-left: 8px;
-    
-    .sale-amount {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--ion-color-success); // Vert recettes
-      white-space: nowrap;
-    }
+  .text-success {
+    color: var(--ion-color-success);
+    font-weight: 500;
   }
-}
-
-/* États secondaires */
-.merchant-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 40vh;
-  color: var(--ion-color-success);
-  p { margin-top: 1rem; color: var(--ion-text-color-step-150); font-size: 13px; }
-}
-
-.empty-sales {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: var(--ion-text-color-step-150);
-  font-size: 13px;
 }
