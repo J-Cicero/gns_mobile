@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, NavController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
@@ -37,6 +37,7 @@ export class RegisterComponent {
 
   constructor(
     private router: Router,
+    private navCtrl: NavController,
     private authService: AuthService,
     private studentService: StudentService
   ) {
@@ -68,7 +69,7 @@ export class RegisterComponent {
   }
 
   goToLogin() {
-    this.router.navigate(['/login']);
+    this.navCtrl.navigateRoot('/login');
   }
 
   onRegister() {
@@ -95,7 +96,7 @@ export class RegisterComponent {
       this.studentService.registerStudent(studentPayload).subscribe({
         next: () => {
           this.isLoading = false;
-          this.router.navigate(['/login']);
+          this.navCtrl.navigateRoot('/login');
         },
         error: (err) => {
           this.isLoading = false;
@@ -117,7 +118,7 @@ export class RegisterComponent {
       this.authService.register(payload).subscribe({
         next: () => {
           this.isLoading = false;
-          this.router.navigate(['/login']);
+          this.navCtrl.navigateRoot('/login');
         },
         error: (err) => {
           this.isLoading = false;
