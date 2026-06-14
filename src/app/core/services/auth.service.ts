@@ -20,8 +20,8 @@ export class AuthService {
           if (res.trackingId) {
             localStorage.setItem('user_tracking_id', res.trackingId);
           }
-          if (res.role) {
-            localStorage.setItem('user_role', res.role);
+          if (res.roles) {
+            localStorage.setItem('user_role', res.roles);
           }
         }
       })
@@ -32,8 +32,16 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/register`, userData);
   }
 
+  registerMerchantUnified(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register/merchant`, formData);
+  }
+
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
+  }
+
+  getUserByTrackingId(trackingId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/get/${trackingId}`);
   }
 
   getCurrentUserId(): string | null {

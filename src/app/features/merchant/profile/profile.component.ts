@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../../../core/services/auth.service';
+import { MerchantService } from '../../../core/services/merchant.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-merchant-profile',
@@ -13,18 +15,22 @@ import { AuthService } from '../../../core/services/auth.service';
         <div class="w-24 h-24 bg-purple-600 rounded-full flex items-center justify-center text-3xl font-black mb-4">
           <ion-icon name="storefront-outline"></ion-icon>
         </div>
-        <h2 class="text-xl font-bold">{{ boutique?.nomBoutique || 'Ma Boutique' }}</h2>
+        <h2 class="text-xl font-bold">{{ boutique?.nomBoutique || (user?.nom + ' ' + user?.prenom) || 'Ma Boutique' }}</h2>
         <p class="text-slate-400 text-sm">{{ user?.email }}</p>
       </div>
 
-      <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 space-y-4">
+      <div *ngIf="isLoading" class="flex justify-center my-8">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+
+      <div *ngIf="!isLoading" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 space-y-4">
         <div class="flex justify-between border-b border-slate-700 pb-2">
           <span class="text-slate-400">Statut Partenaire</span>
-          <span class="font-bold text-emerald-400">Validé</span>
+          <span class="font-bold text-emerald-400">{{ boutique?.statutKYC === 'VALIDEE' ? 'Validé' : (boutique?.statutKYC || 'En attente') }}</span>
         </div>
         <div class="flex justify-between border-b border-slate-700 pb-2">
           <span class="text-slate-400">RCCM</span>
-          <span class="font-bold text-slate-200">RC-ABJ-2026-B-1234</span>
+          <span class="font-bold text-slate-200">{{ boutique?.rccm || 'Non renseigné' }}</span>
         </div>
         <div class="flex justify-between border-b border-slate-700 pb-2">
           <span class="text-slate-400">Téléphone</span>
@@ -53,11 +59,35 @@ import { AuthService } from '../../../core/services/auth.service';
 export class ProfileComponent implements OnInit {
   user: any = null;
   boutique: any = null;
+  isLoading = true;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private merchantService: MerchantService
+  ) {}
 
   ngOnInit() {
-    // Logique de récupération des données utilisateur/boutique
+    this.loadProfileData();
+  }
+
+  loadProfileData() {
+    const userId = this.authService.getCurrentUserId();
+    if (!userId) return;
+
+    this.isLoading = true;
+    forkJoin([
+      this.authService.getUserByTrackingId(userId),
+      this.merchantService.getBoutiqueByMerchant(userId)
+    ]).subscribe({
+      next: ([userRes, boutiqueRes]) => {
+        this.user = userRes;
+        this.boutique = Array.isArray(boutiqueRes.content) ? boutiqueRes.content[0] : boutiqueRes;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   logout() {

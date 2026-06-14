@@ -7,8 +7,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding merchant-content">
-  <div class="stats-grid">
+<ion-content class="ion-padding merchant-content premium-dark-bg">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="stats-grid fade-in-up">
     <div class="stat-card quota-card">
       <div class="stat-header">
         <ion-icon name="wallet-outline"></ion-icon>

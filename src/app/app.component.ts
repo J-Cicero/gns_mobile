@@ -9,7 +9,7 @@ import { addIcons } from 'ionicons';
 import { 
   homeOutline, homeSharp, walletOutline, walletSharp, documentTextOutline, documentTextSharp,
   personOutline, personSharp, logOutOutline, logOutSharp, moonOutline, moonSharp,
-  qrCodeOutline, qrCodeSharp, cashOutline, cashSharp
+  qrCodeOutline, qrCodeSharp, cashOutline, cashSharp, flash
 } from 'ionicons/icons';
 import { ThemeService } from './core/services/theme.service';
 import { AuthService } from './core/services/auth.service';
@@ -47,10 +47,13 @@ export class AppComponent {
   private router = inject(Router);
 
   constructor() {
+    // Force Dark Mode globally
+    document.body.classList.add('dark');
+    
     addIcons({ 
       homeOutline, homeSharp, walletOutline, walletSharp, documentTextOutline, documentTextSharp,
       personOutline, personSharp, logOutOutline, logOutSharp, moonOutline, moonSharp,
-      qrCodeOutline, qrCodeSharp, cashOutline, cashSharp
+      qrCodeOutline, qrCodeSharp, cashOutline, cashSharp, flash
     });
 
     this.router.events.subscribe((event) => {

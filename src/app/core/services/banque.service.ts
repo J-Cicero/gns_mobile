@@ -14,4 +14,8 @@ export class BanqueService {
   getStudentBankAccount(studentTrackingId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/proprietaire/${studentTrackingId}`);
   }
+
+  getAllBanques(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/banques`);
+  }
 }

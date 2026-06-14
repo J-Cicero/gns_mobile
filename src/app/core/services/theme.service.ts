@@ -16,9 +16,9 @@ export class ThemeService {
     if (savedTheme) {
       this._isDark = savedTheme === 'dark';
     } else {
-      // Default to system preference or dark mode
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      this._isDark = prefersDark;
+      // Par défaut on force le Dark Mode pour l'expérience GNS Premium
+      this._isDark = true;
+      localStorage.setItem(this.THEME_KEY, 'dark');
     }
     this.applyTheme();
   }

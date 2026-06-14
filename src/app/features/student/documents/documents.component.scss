@@ -77,9 +77,35 @@ ion-content {
   }
 }
 
-.upload-btn {
-  margin-top: 24px;
-  --border-radius: 8px;
-  --background: var(--ion-color-primary);
-  font-weight: 600;
+.check-btn {
+  margin-top: 16px;
+  --background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --color: var(--ion-text-color, white);
+  --border-radius: 12px;
+  --box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  font-weight: 700;
+  height: 54px;
+}
+
+.file-name {
+  display: block;
+  margin-top: 8px;
+  color: var(--ion-text-color-step-400);
+  font-style: italic;
+}
+
+.upload-area.file-selected {
+  border-style: solid;
+  background: rgba(var(--ion-color-success-rgb), 0.1);
+  border-color: var(--ion-color-success);
+
+  ion-icon, p {
+    color: var(--ion-color-success);
+  }
+}
+
+.status-info {
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 0 16px;
 }

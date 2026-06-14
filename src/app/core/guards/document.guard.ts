@@ -19,21 +19,21 @@ export const documentGuard: CanActivateFn = (route, state) => {
   // 1. Récupérer l'année scolaire active
   return studentService.getActiveYear().pipe(
     switchMap(activeYear => {
-      if (!activeYear || !activeYear.anneeAcademique) {
-        // Pas d'année active, on bloque ou on redirige vers une erreur
-        return of(router.createUrlTree(['/student/waiting'], { queryParams: { error: 'no_active_year' } }));
+      if (!activeYear || !activeYear.libelle) {
+        // Pas d'année active, on redirige vers la page dédiée
+        return of(router.createUrlTree(['/student/no-active-year']));
       }
       
       // 2. Vérifier l'inscription pour cette année
-      return studentService.getInscriptionByYear(studentId, activeYear.anneeAcademique).pipe(
+      return studentService.getInscriptionByYear(studentId, activeYear.libelle).pipe(
         map(inscription => {
-          if (inscription.statut === 'EN_ATTENTE') {
-            return router.createUrlTree(['/student/waiting']); // Cas B
-          } else if (inscription.statut === 'VALIDEE' || inscription.statut === 'INSCRIT_DEFINITIF') {
-            return true; // Cas C
-          } else {
-            return router.createUrlTree(['/student/documents']); // Cas A (autre statut non validé)
+          // Si l'inscription est déjà vérifiée et éligible, accès direct au Wallet
+          if (inscription.estEligibleBourse) {
+            return true;
           }
+
+          // Sinon, on redirige vers l'éligibilité pour vérifier
+          return router.createUrlTree(['/student/eligibility']);
         }),
         catchError(() => {
           // Cas A : Pas d'inscription (404)

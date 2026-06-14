@@ -25,9 +25,8 @@
       <div *ngFor="let t of transactions" class="transaction-card">
         <div class="card-left">
           
-          <div class="icon-wrapper" [ngClass]="t.categorie.toLowerCase()">
-            <ion-icon *ngIf="t.categorie === 'SCOLARITE'" name="school-outline"></ion-icon>
-            <ion-icon *ngIf="t.categorie === 'ACHAT'" name="cart-outline"></ion-icon>
+          <div class="icon-wrapper" [class.credit]="t.type === 'CREDIT'" [class.debit]="t.type === 'DEBIT'">
+            <ion-icon [name]="t.type === 'CREDIT' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
           </div>
 
           <div class="transaction-details">
@@ -37,8 +36,8 @@
         </div>
 
         <div class="card-right">
-          <p class="amount-text" [ngClass]="{'is-credit': t.montantCredite > 0}">
-            {{ t.montantDebite > 0 ? '-' : '+' }}{{ (t.montantDebite || t.montantCredite) | number:'1.0-0' }} F
+          <p class="amount-text" [class.is-credit]="t.type === 'CREDIT'">
+            {{ t.type === 'CREDIT' ? '+' : '-' }}{{ (t.type === 'CREDIT' ? t.montantCredite : t.montantDebite) | number:'1.0-0' }} F
           </p>
         </div>
       </div>

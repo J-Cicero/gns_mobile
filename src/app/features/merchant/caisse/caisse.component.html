@@ -30,9 +30,12 @@
       <button (click)="supprimerChiffre()" class="action-btn"><ion-icon name="backspace-outline"></ion-icon></button>
     </div>
 
-    <ion-button expand="block" class="premium-btn primary-btn" (click)="genererQR()" [disabled]="montantSaisi === '0'">
-      <ion-icon name="qr-code-outline" slot="start"></ion-icon>
-      Générer le QR Code
+    <ion-button expand="block" class="premium-btn primary-btn" (click)="scannerEtudiant()" [disabled]="montantSaisi === '0' || isScanning">
+      <ion-spinner *ngIf="isScanning" name="crescent"></ion-spinner>
+      <span *ngIf="!isScanning">
+        <ion-icon name="scan-outline" slot="start"></ion-icon>
+        Scanner l'Étudiant
+      </span>
     </ion-button>
 
   </div>

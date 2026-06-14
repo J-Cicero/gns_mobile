@@ -11,6 +11,10 @@ export class MerchantService {
 
   constructor(private http: HttpClient) {}
 
+  getBoutiqueByMerchant(merchantId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/merchant/${merchantId}`);
+  }
+
   getProducts(boutiqueId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${boutiqueId}/products`);
   }

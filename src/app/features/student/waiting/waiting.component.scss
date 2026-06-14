@@ -1,5 +1,5 @@
 .premium-dark-bg {
-  --background: #0f172a;
+  --background: var(--ion-background-color, #0f172a);
 }
 
 .waiting-container {
@@ -51,14 +51,14 @@
 }
 
 h2 {
-  color: white;
+  color: var(--ion-text-color, white);
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
 p {
-  color: #94a3b8;
+  color: var(--ion-text-color-step-150, #94a3b8);
   font-size: 1rem;
   line-height: 1.5;
   margin-bottom: 1rem;

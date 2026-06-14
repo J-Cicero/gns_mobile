@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController, NavController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
+import { StudentService } from '../../../core/services/student.service';
 import { addIcons } from 'ionicons';
 import { 
   arrowBackOutline, 
@@ -12,7 +15,9 @@ import {
   logOutOutline, 
   alertCircleOutline, 
   idCardOutline,
-  ellipse
+  ellipse,
+  moonOutline,
+  sunnyOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -24,40 +29,83 @@ import {
 })
 export class ProfileComponent implements OnInit {
   isLoading = false;
+  isDarkMode = false;
 
-  // Données mockées de l'étudiant et de sa carte physique PVC
-  studentProfile = {
-    nom: 'Koffi AMEGAVIE',
-    matricule: '245-UL-2025',
-    niveau: 'Licence 2 (L2)',
-    email: 'koffi.amegavie@faseg.ul.tg',
-    statutInscription: 'ACTIVE', // EN_ATTENTE, VERIFIE_UL, ACTIVE, REJETEE
-    cartePvc: {
-      numeroUnique: '4022 •••• •••• 8812',
-      statut: 'ACTIVE' // ACTIVE ou INACTIVE (Perdue/Volée)
-    }
+  studentProfile: any = {
+    nom: 'Chargement...',
+    niveau: '...',
+    anneeScolaire: '...'
   };
 
-  constructor(private router: Router) {
-    addIcons({ arrowBackOutline, personOutline, cardOutline, shieldCheckmarkOutline, logOutOutline, alertCircleOutline, idCardOutline, ellipse });
+  constructor(
+    private router: Router, 
+    private navCtrl: NavController,
+    private toastCtrl: ToastController,
+    private authService: AuthService,
+    private studentService: StudentService
+  ) {
+    addIcons({ arrowBackOutline, personOutline, cardOutline, shieldCheckmarkOutline, logOutOutline, alertCircleOutline, idCardOutline, ellipse, moonOutline, sunnyOutline });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isDarkMode = document.body.classList.contains('dark') || document.documentElement.classList.contains('dark');
+    this.loadProfile();
+  }
 
-  // Fonction d'urgence pour déclarer la carte perdue/volée
-  declarerCartePerdue() {
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    if (this.isDarkMode) {
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
+  loadProfile() {
+    const studentId = this.authService.getCurrentUserId();
+    if (!studentId) return;
+
     this.isLoading = true;
-    
-    // Simulation du blocage instantané
-    setTimeout(() => {
-      this.isLoading = false;
-      this.studentProfile.cartePvc.statut = 'INACTIVE';
-      alert('Votre carte physique PVC a été suspendue avec succès. Rapprochez-vous du guichet GNS pour un renouvellement.');
-    }, 1200);
+    forkJoin([
+      this.studentService.getStudentByTrackingId(studentId),
+      this.studentService.getStudentInscriptions(studentId)
+    ]).subscribe({
+      next: ([studentRes, inscriptionsRes]) => {
+        let derniereInscription = null;
+        let anneeScolaire = 'Non définie';
+
+        if (inscriptionsRes && inscriptionsRes.content && inscriptionsRes.content.length > 0) {
+          derniereInscription = inscriptionsRes.content[0];
+          // Try to extract the academic year label if it's populated
+          anneeScolaire = derniereInscription?.scolariteYear?.libelle || 
+                          derniereInscription?.scolariteYearId || 
+                          'Année académique en cours';
+        }
+
+        this.studentProfile = {
+          nom: (studentRes.nom + ' ' + studentRes.prenom) || 'Étudiant',
+          niveau: derniereInscription?.niveau || 'N/A',
+          anneeScolaire: anneeScolaire
+        };
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
+    });
   }
+
+  // Supprimé : gestion de la carte PVC
 
   deconnexion() {
-    // Redirection vers le login
-    this.router.navigate(['/login']);
+    // Nettoyer les données d'authentification
+    this.authService.logout();
+    
+    // Redirection propre à la racine avec NavController (évite les bugs d'animation/outlet)
+    this.navCtrl.navigateRoot('/login', { animated: true, animationDirection: 'back' });
   }
 }

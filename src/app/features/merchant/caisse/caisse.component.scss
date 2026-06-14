@@ -1,4 +1,4 @@
-ion-content { --background: #0f172a; }
+ion-content { --background: var(--ion-background-color, #0f172a); }
 
 .caisse-wrapper {
   padding: 1.5rem;
@@ -11,8 +11,8 @@ ion-content { --background: #0f172a; }
   text-align: center;
   margin: 3vh 0;
   
-  p { color: #94a3b8; font-size: 14px; margin: 0; }
-  h1 { font-size: 48px; font-weight: 900; color: #ffffff; margin: 5px 0; span { font-size: 20px; color: #64748b; } }
+  p { color: var(--ion-text-color-step-150, #94a3b8); font-size: 14px; margin: 0; }
+  h1 { font-size: 48px; font-weight: 900; color: var(--ion-text-color, #ffffff); margin: 5px 0; span { font-size: 20px; color: #64748b; } }
 }
 
 .numpad-grid {
@@ -23,15 +23,15 @@ ion-content { --background: #0f172a; }
 
   button {
     height: 70px;
-    background: #1e293b;
+    background: var(--ion-item-background, #1e293b);
     border: none;
     border-radius: 18px;
-    color: #ffffff;
+    color: var(--ion-text-color, #ffffff);
     font-size: 24px;
     font-weight: 700;
     transition: background 0.2s;
 
-    &:active { background: #334155; }
+    &:active { background: var(--ion-border-color, #334155); }
     &.action-btn { color: #ef4444; }
     &.empty { background: transparent; }
   }

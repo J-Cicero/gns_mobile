@@ -1,14 +1,14 @@
 /* --- DESIGN PROFIL & COMPTE PREMIUM --- */
 ion-content {
-  --background: #0f172a;
+  --background: var(--ion-background-color);
 }
 
 .premium-header {
   ion-toolbar {
-    --background: #0f172a;
-    --color: #ffffff;
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
     ion-title { font-weight: 700; font-size: 18px; }
-    ion-back-button { color: #94a3b8; }
+    ion-back-button { color: var(--ion-text-color-step-150); }
   }
 }
 
@@ -26,8 +26,8 @@ ion-content {
 
 /* --- 1. CARTE UTILISATEUR PRINCIPALE --- */
 .user-main-card {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--ion-item-background);
+  border: 1px solid var(--ion-border-color);
   border-radius: 20px;
   padding: 1.8rem 1rem;
   text-align: center;
@@ -43,7 +43,7 @@ ion-content {
       width: 76px;
       height: 76px;
       background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-      color: #ffffff;
+      color: var(--ion-text-color, #ffffff);
       font-size: 28px;
       font-weight: 800;
       border-radius: 50%;
@@ -71,7 +71,7 @@ ion-content {
 
       &.active {
         background: #15803d;
-        color: #ffffff;
+        color: var(--ion-text-color, #ffffff);
       }
     }
   }
@@ -80,13 +80,13 @@ ion-content {
     margin: 0;
     font-size: 20px;
     font-weight: 800;
-    color: #ffffff;
+    color: var(--ion-text-color);
   }
 
   .user-meta {
     margin: 6px 0 0 0;
     font-size: 13px;
-    color: #94a3b8;
+    color: var(--ion-text-color-step-150);
     font-weight: 600;
   }
 
@@ -101,7 +101,7 @@ ion-content {
 .section-title {
   font-size: 15px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--ion-text-color-step-150);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 0.8rem 4px;
@@ -112,7 +112,7 @@ ion-content {
   margin-bottom: 2rem;
 
   .pvc-card-preview {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, var(--ion-item-background, #1e293b) 0%, var(--ion-background-color, #0f172a) 100%);
     border: 1px solid #475569;
     border-radius: 16px;
     padding: 1.2rem;
@@ -126,7 +126,7 @@ ion-content {
     // Quand la carte est désactivée (effet gelé/grisé)
     &.frozen {
       filter: grayscale(1) opacity(0.4);
-      border-color: #334155;
+      border-color: var(--ion-border-color, #334155);
       
       .pvc-status-indicator { color: #ef4444 !important; }
     }
@@ -139,7 +139,7 @@ ion-content {
       .pvc-logo {
         font-weight: 800;
         font-size: 16px;
-        color: #ffffff;
+        color: var(--ion-text-color, #ffffff);
         span { color: #3b82f6; }
       }
 
@@ -175,7 +175,7 @@ ion-content {
         margin: 4px 0 0 0;
         font-size: 11px;
         text-transform: uppercase;
-        color: #94a3b8;
+        color: var(--ion-text-color-step-150, #94a3b8);
         font-weight: 600;
         letter-spacing: 0.5px;
       }
@@ -214,7 +214,7 @@ ion-content {
 /* --- BOUTON D'URGENCE --- */
 .premium-btn {
   --background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  --color: #ffffff;
+  --color: var(--ion-text-color, #ffffff);
   --border-radius: 12px;
   height: 48px;
   font-weight: 700;
@@ -228,8 +228,8 @@ ion-content {
 
 /* --- 3. MENU COMPTE --- */
 .account-menu {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--ion-item-background);
+  border: 1px solid var(--ion-border-color);
   border-radius: 16px;
   padding: 4px;
   margin-top: 1rem;
@@ -248,11 +248,11 @@ ion-content {
       display: flex;
       align-items: center;
       gap: 12px;
-      color: #ffffff;
+      color: var(--ion-text-color);
       font-size: 14px;
       font-weight: 600;
 
-      .menu-icon { font-size: 20px; color: #94a3b8; }
+      .menu-icon { font-size: 20px; color: var(--ion-text-color-step-150, #94a3b8); }
     }
 
     &.logout {

@@ -1,7 +1,7 @@
 /* --- COORDONNÉES ET POSITIONNEMENT MOBILE PREMIUM --- */
 
 ion-content {
-  --background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+  --background: linear-gradient(135deg, var(--ion-background-color, #0f172a) 0%, #020617 100%);
 }
 
 .auth-wrapper {
@@ -33,14 +33,14 @@ ion-content {
   .brand-title {
     font-size: 26px;
     font-weight: 800;
-    color: #ffffff;
+    color: var(--ion-text-color, #ffffff);
     margin: 0;
     letter-spacing: -0.5px;
   }
 
   .brand-tagline {
     font-size: 14px;
-    color: #94a3b8;
+    color: var(--ion-text-color-step-150, #94a3b8);
     margin-top: 6px;
   }
 }
@@ -49,7 +49,7 @@ ion-content {
 /* DESIGN ÉTAPE 1 : CARTES DE CHOIX        */
 /* ======================================= */
 .role-card {
-  background: var(--ion-item-background); // Bleu nuit des cartes
+  background: var(--ion-item-background, #1e293b); // Bleu nuit des cartes
   border-radius: 16px;
   padding: 1.2rem;
   display: flex;
@@ -84,13 +84,13 @@ ion-content {
 
     h3 {
       margin: 0;
-      color: #ffffff;
+      color: var(--ion-text-color, #ffffff);
       font-size: 16px;
       font-weight: 700;
     }
     p {
       margin: 4px 0 0;
-      color: #94a3b8;
+      color: var(--ion-text-color-step-150, #94a3b8);
       font-size: 13px;
       line-height: 1.3;
     }
@@ -110,7 +110,7 @@ ion-content {
 .back-header {
   display: flex;
   align-items: center;
-  color: #94a3b8;
+  color: var(--ion-text-color-step-150, #94a3b8);
   font-size: 14px;
   font-weight: 600;
   padding: 10px 0;
@@ -130,7 +130,7 @@ ion-content {
   width: 100%;
 
   .input-glow-wrapper {
-    background: var(--ion-item-background);
+    background: var(--ion-item-background, #1e293b);
     border-radius: 14px;
     margin-bottom: 0.9rem;
     border: 1px solid var(--ion-border-color);
@@ -146,7 +146,7 @@ ion-content {
 
   .premium-input {
     --background: transparent;
-    --color: #ffffff;
+    --color: var(--ion-text-color, #ffffff);
     --padding-start: 0.7rem;
     width: 100%;
     
@@ -167,7 +167,7 @@ ion-content {
 
   .premium-btn {
     --background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    --color: #ffffff;
+    --color: var(--ion-text-color, #ffffff);
     --border-radius: 14px;
     height: 50px;
     width: 100%;
@@ -183,7 +183,7 @@ ion-content {
   margin-top: 1.8rem;
 
   p {
-    color: #94a3b8;
+    color: var(--ion-text-color-step-150, #94a3b8);
     font-size: 14px;
     margin: 0;
     a { color: var(--ion-color-primary); font-weight: 700; text-decoration: none; margin-left: 4px; }

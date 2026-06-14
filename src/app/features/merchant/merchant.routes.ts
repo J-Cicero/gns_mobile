@@ -7,7 +7,7 @@ export const merchantRoutes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent) },
-      { path: 'qr', loadComponent: () => import('./qr/qr.component').then(m => m.QrComponent) },
+      { path: 'caisse', loadComponent: () => import('./caisse/caisse.component').then(m => m.CaisseComponent) },
       { path: 'transactions', loadComponent: () => import('./transactions/transactions.component').then(m => m.TransactionsComponent) },
       { path: 'profile', loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent) }
     ]

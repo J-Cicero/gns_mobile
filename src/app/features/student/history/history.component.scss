@@ -1,19 +1,19 @@
 /* --- STYLE ENTIÈREMENT FLUIDE ET COMPACT FINTECH --- */
 ion-content {
-  --background: #0f172a; // Fond bleu nuit profond
+  --background: var(--ion-background-color, #0f172a); // Fond bleu nuit profond
 }
 
 .premium-header {
   ion-toolbar {
-    --background: #0f172a;
-    --color: #ffffff;
+    --background: var(--ion-background-color, #0f172a);
+    --color: var(--ion-text-color, #ffffff);
     
     ion-title {
       font-weight: 700;
       font-size: 18px;
     }
     ion-back-button {
-      color: #94a3b8;
+      color: var(--ion-text-color-step-150, #94a3b8);
     }
   }
 }
@@ -44,7 +44,7 @@ ion-content {
   .page-title {
     font-size: 26px;
     font-weight: 800;
-    color: #ffffff;
+    color: var(--ion-text-color, #ffffff);
     margin: 0;
     letter-spacing: -0.5px;
   }
@@ -65,8 +65,8 @@ ion-content {
 }
 
 .transaction-card {
-  background: #1e293b; // Couleur d'item blanche/bleutée contrastée
-  border: 1px solid #334155;
+  background: var(--ion-item-background, #1e293b); // Couleur d'item blanche/bleutée contrastée
+  border: 1px solid var(--ion-border-color, #334155);
   border-radius: 14px; // Angles affinés pour le mobile
   padding: 12px;
   display: flex;
@@ -135,7 +135,7 @@ ion-content {
       margin: 0;
       font-size: 14px;
       font-weight: 700;
-      color: #ffffff; // Les débits restent sobres en blanc cassé
+      color: var(--ion-text-color, #ffffff); // Les débits restent sobres en blanc cassé
       white-space: nowrap;
 
       &.is-credit {
@@ -154,7 +154,7 @@ ion-content {
   height: 40vh;
   color: #3b82f6;
 
-  p { margin-top: 1rem; color: #94a3b8; font-size: 13px; }
+  p { margin-top: 1rem; color: var(--ion-text-color-step-150, #94a3b8); font-size: 13px; }
 }
 
 .empty-state {

@@ -15,6 +15,10 @@ export class StudentService {
     return this.http.post<any>(this.apiUrl, studentData);
   }
 
+  registerStudentUnified(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/users/register/student`, formData);
+  }
+
   getActiveYear(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/scolarite-years/active`);
   }
@@ -27,6 +31,10 @@ export class StudentService {
     return this.http.post<any>(`${environment.apiUrl}/inscriptions`, inscriptionData);
   }
 
+  synchronizeInscription(trackingId: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/inscriptions/${trackingId}/synchroniser`, {});
+  }
+
   getDocuments(trackingId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${trackingId}/documents`);
   }
@@ -37,5 +45,17 @@ export class StudentService {
 
   getCurrentStudent(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/me`);
+  }
+
+  getStudentByTrackingId(trackingId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${trackingId}`);
+  }
+
+  getStudentCard(trackingId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${trackingId}/card`);
+  }
+
+  getStudentInscriptions(trackingId: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/inscriptions/student/${trackingId}`);
   }
 }

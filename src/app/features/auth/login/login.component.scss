@@ -1,7 +1,7 @@
 /* --- COORDONNÉES ET POSITIONNEMENT MOBILE PREMIUM --- */
 
 ion-content {
-  --background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+  --background: linear-gradient(135deg, var(--ion-background-color, #0f172a) 0%, #020617 100%);
 }
 
 .auth-wrapper {
@@ -23,14 +23,14 @@ ion-content {
   .brand-title {
     font-size: 26px;
     font-weight: 800;
-    color: #ffffff;
+    color: var(--ion-text-color, #ffffff);
     margin: 0;
     letter-spacing: -0.5px;
   }
 
   .brand-tagline {
     font-size: 14px;
-    color: #94a3b8;
+    color: var(--ion-text-color-step-150, #94a3b8);
     margin-top: 6px;
   }
 }
@@ -41,13 +41,13 @@ ion-content {
   width: 100%;
 
   .premium-segment {
-    background: #1e293b;
+    background: var(--ion-item-background, #1e293b);
     border-radius: 12px;
     padding: 3px;
     width: 100%; // S'étire proprement sur tout l'écran du smartphone
     
     ion-segment-button {
-      --color: #94a3b8;
+      --color: var(--ion-text-color-step-150, #94a3b8);
       --color-checked: #ffffff;
       --indicator-color: var(--ion-color-primary);
       --border-radius: 9px;
@@ -65,7 +65,7 @@ ion-content {
   width: 100%; // Occupe tout l'espace horizontal sur le téléphone
 
   .input-glow-wrapper {
-    background: var(--ion-item-background);
+    background: var(--ion-item-background, #1e293b);
     border-radius: 14px;
     margin-bottom: 0.9rem; // Espacement compact et pro
     border: 1px solid var(--ion-border-color);
@@ -84,7 +84,7 @@ ion-content {
 
   .premium-input {
     --background: transparent;
-    --color: #ffffff;
+    --color: var(--ion-text-color, #ffffff);
     --padding-start: 0.7rem;
     width: 100%;
     
@@ -106,7 +106,7 @@ ion-content {
   /* --- BOUTON PRINCIPAL (Largeur 100% et bien calé) --- */
   .premium-btn {
     --background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    --color: #ffffff;
+    --color: var(--ion-text-color, #ffffff);
     --border-radius: 14px;
     height: 50px; // Épaisseur parfaite pour un clic au doigt sur smartphone
     width: 100%;
@@ -127,7 +127,7 @@ ion-content {
     margin-top: 1.8rem;
 
     p {
-      color: #94a3b8;
+      color: var(--ion-text-color-step-150, #94a3b8);
       font-size: 14px;
       margin: 0;
       

@@ -11,8 +11,15 @@ export class StudentWalletService {
 
   constructor(private http: HttpClient) {}
 
-  getStudentWallet(): Observable<any> {
-    // Dans une app réelle, l'ID serait récupéré depuis le token JWT ou l'authService
-    return this.http.get<any>(`${this.apiUrl}/my-wallet`);
+  getStudentWallet(studentId: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/students/${studentId}`);
+  }
+
+  getStudentTransactions(studentId: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/transactions/student/${studentId}`);
+  }
+
+  getStudentVersements(walletId: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/versements/wallet/${walletId}`);
   }
 }

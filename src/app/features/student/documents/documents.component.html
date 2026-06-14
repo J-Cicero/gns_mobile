@@ -9,64 +9,52 @@
 
 <ion-content class="ion-padding">
   <div class="header-section">
-    <h2>Complétez votre dossier</h2>
-    <p>Pour finaliser votre inscription, veuillez uploader les documents suivants.</p>
+    <h2>Inscription Annuelle {{ activeYear?.libelle }}</h2>
+    <p>Identité et Banque validées. Veuillez maintenant confirmer votre niveau scolaire pour activer votre bourse.</p>
   </div>
 
-<ion-card class="upload-card">
+  <!-- Étape 1 : Le Niveau -->
+  <ion-card class="upload-card">
     <ion-card-header>
-      <ion-card-title>Niveau d'Étude</ion-card-title>
+      <ion-card-title>Votre Niveau cette année</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-item lines="none">
+      <ion-item lines="none" class="premium-select">
         <ion-select label="Sélectionner un niveau" labelPlacement="floating" [(ngModel)]="selectedNiveau">
           <ion-select-option value="L1">Licence 1</ion-select-option>
           <ion-select-option value="L2">Licence 2</ion-select-option>
           <ion-select-option value="L3">Licence 3</ion-select-option>
-          <ion-select-option value="M1">Master 1</ion-select-option>
-          <ion-select-option value="M2">Master 2</ion-select-option>
-          <ion-select-option value="DOCTORAT">Doctorat</ion-select-option>
+          <ion-select-option value="L4">Licence 4</ion-select-option>
+          <ion-select-option value="L5">Licence 5</ion-select-option>
         </ion-select>
       </ion-item>
     </ion-card-content>
   </ion-card>
 
+  <!-- Étape 2 : La Carte Étudiant -->
   <ion-card class="upload-card">
     <ion-card-header>
       <ion-card-title>
-        <ion-icon name="document-outline"></ion-icon> Relevé d'Identité Bancaire (RIB)
+        <ion-icon name="card-outline"></ion-icon> Carte Étudiant / Certificat
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <div class="upload-area" (click)="takePhoto('RIB')">
-        <ion-icon name="camera-outline" class="large-icon"></ion-icon>
-        <p>Prendre une photo du RIB</p>
-      </div>
-      <div *ngIf="ribFile" class="success-message">
-        <ion-icon name="checkmark-circle-outline"></ion-icon> Fichier sélectionné
-      </div>
-    </ion-card-content>
-  </ion-card>
-
-  <ion-card class="upload-card">
-    <ion-card-header>
-      <ion-card-title>
-        <ion-icon name="document-outline"></ion-icon> Carte Étudiant
-      </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <div class="upload-area" (click)="takePhoto('CARTE')">
-        <ion-icon name="camera-outline" class="large-icon"></ion-icon>
-        <p>Prendre une photo de la carte</p>
-      </div>
-      <div *ngIf="carteFile" class="success-message">
-        <ion-icon name="checkmark-circle-outline"></ion-icon> Fichier sélectionné
+      <!-- Input file réel caché -->
+      <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*,application/pdf" style="display: none">
+      
+      <div class="upload-area" (click)="fileInput.click()" [class.file-selected]="carteFile">
+        <ion-icon [name]="carteFile ? 'checkmark-circle' : 'camera-outline'" class="large-icon"></ion-icon>
+        <p>{{ carteFile ? 'Fichier sélectionné' : 'Cliquer pour uploader ou prendre une photo' }}</p>
+        <small *ngIf="carteFile" class="file-name">{{ carteFile.name }}</small>
       </div>
     </ion-card-content>
   </ion-card>
 
   <ion-button expand="block" class="upload-btn" (click)="submitEnrollment()" [disabled]="isLoading || !selectedNiveau">
     <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
-    <span *ngIf="!isLoading"><ion-icon name="cloud-upload-outline" slot="start"></ion-icon> Soumettre l'inscription</span>
+    <span *ngIf="!isLoading">
+      <ion-icon name="cloud-upload-outline" slot="start"></ion-icon> 
+      Activer mon année scolaire
+    </span>
   </ion-button>
 </ion-content>

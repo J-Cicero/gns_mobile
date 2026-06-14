@@ -10,8 +10,13 @@ import {
   cafeOutline, 
   arrowUpOutline, 
   arrowDownOutline,
-  cashOutline
+  cashOutline,
+  walletOutline,
+  timeOutline
 } from 'ionicons/icons';
+import { forkJoin } from 'rxjs';
+import { StudentWalletService } from '../../../core/services/student-wallet.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-student-history',
@@ -24,58 +29,63 @@ export class HistoryComponent implements OnInit {
   transactions: any[] = [];
   isLoading = true;
 
-  constructor() {
-    // Enregistrement des icônes pour le thème
-    addIcons({ arrowBackOutline, schoolOutline, cartOutline, cafeOutline, arrowUpOutline, arrowDownOutline, cashOutline });
+  constructor(
+    private walletService: StudentWalletService,
+    private authService: AuthService
+  ) {
+    addIcons({ arrowBackOutline, schoolOutline, cartOutline, cafeOutline, arrowUpOutline, arrowDownOutline, cashOutline, walletOutline, timeOutline });
   }
 
   ngOnInit() {
-    this.loadMockTransactions();
+    this.loadRealTransactions();
   }
 
-  loadMockTransactions() {
+  loadRealTransactions() {
+    const studentId = this.authService.getCurrentUserId();
+    if (!studentId) return;
+
     this.isLoading = true;
+    this.walletService.getStudentWallet(studentId).subscribe({
+      next: (student) => {
+        const walletId = student.walletTrackingId;
+        if (walletId) {
+          forkJoin([
+            this.walletService.getStudentTransactions(studentId),
+            this.walletService.getStudentVersements(walletId)
+          ]).subscribe({
+            next: ([txRes, versementRes]: [any, any]) => {
+              const txList = (txRes.content || []).map((t: any) => ({
+                id: t.id,
+                libelle: 'Paiement : ' + t.boutiqueName,
+                categorie: 'ACHAT',
+                date: new Date(t.date),
+                montantDebite: t.montantDebite,
+                montantCredite: 0,
+                type: 'DEBIT'
+              }));
 
-    // Simulation d'un petit temps de chargement fluide
-    setTimeout(() => {
-      const maintenant = new Date();
+              const versementList = (versementRes.content || []).map((v: any) => ({
+                id: v.id,
+                libelle: 'Versement : ' + (v.libelle || 'Bourse'),
+                categorie: 'BOURSE',
+                date: new Date(v.createdAt),
+                montantDebite: 0,
+                montantCredite: v.montantVerse,
+                type: 'CREDIT'
+              }));
 
-      this.transactions = [
-        {
-          id: 1,
-          libelle: 'Frais de Scolarité — Université de Lomé',
-          categorie: 'SCOLARITE',
-          date: new Date(maintenant.getTime() - (1000 * 60 * 60 * 2)), // Il y a 2h
-          montantDebite: 25000,
-          montantCredite: null
-        },
-        {
-          id: 2,
-          libelle: 'Repas Campus (Resto U)',
-          categorie: 'REPAS',
-          date: new Date(maintenant.getTime() - (1000 * 60 * 60 * 5)), // Il y a 5h
-          montantDebite: 1500,
-          montantCredite: null
-        },
-        {
-          id: 3,
-          libelle: 'Avancement Bourse Tranche DBS',
-          categorie: 'BOURSE',
-          date: new Date(maintenant.getTime() - (1000 * 60 * 60 * 24 * 2)), // Il y a 2 jours
-          montantDebite: null,
-          montantCredite: 36000
-        },
-        {
-          id: 4,
-          libelle: 'Achat Polycopiés (Librairie Campus)',
-          categorie: 'ACHAT',
-          date: new Date(maintenant.getTime() - (1000 * 60 * 60 * 24 * 4)), // Il y a 4 jours
-          montantDebite: 3200,
-          montantCredite: null
+              this.transactions = [...txList, ...versementList].sort((a, b) => 
+                b.date.getTime() - a.date.getTime()
+              );
+              this.isLoading = false;
+            },
+            error: () => this.isLoading = false
+          });
+        } else {
+          this.isLoading = false;
         }
-      ];
-
-      this.isLoading = false;
-    }, 1200);
+      },
+      error: () => this.isLoading = false
+    });
   }
 }
