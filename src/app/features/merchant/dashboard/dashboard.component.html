@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border">
+<ion-header class="ion-no-border premium-header">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -7,33 +7,48 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding merchant-content premium-dark-bg">
+<ion-content class="merchant-content premium-dark-bg">
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="stats-grid fade-in-up">
+  <div class="px-4 py-6">
+    <div class="stats-grid fade-in-up">
     <div class="stat-card quota-card">
       <div class="stat-header">
         <ion-icon name="wallet-outline"></ion-icon>
         <span>Quota Restant</span>
       </div>
       <h2>{{ quotaRestant | currency:'XOF':'symbol':'1.0-0' }}</h2>
-      <div class="progress-bar-container">
+      <div class="progress-bar-container premium-progress">
         <div class="progress-bar" [style.width]="pourcentageUtilise + '%'"></div>
       </div>
       <p class="stat-subtext">{{ pourcentageUtilise | number:'1.0-0' }}% utilisé sur {{ quotaInitial | currency:'XOF':'symbol':'1.0-0' }}</p>
     </div>
 
-    <div class="stat-card sales-card">
-      <div class="stat-header">
-        <ion-icon name="trending-up-outline"></ion-icon>
-        <span>Ventes du Jour</span>
+    <div class="stats-row">
+      <div class="stat-card sales-card">
+        <div class="stat-header">
+          <ion-icon name="trending-up-outline"></ion-icon>
+          <span>Ventes du Jour</span>
+        </div>
+        <h2>{{ ventesJour | currency:'XOF':'symbol':'1.0-0' }}</h2>
+        <p class="stat-subtext text-success">
+          <ion-icon name="checkmark-circle-outline"></ion-icon> En cours
+        </p>
       </div>
-      <h2>{{ ventesJour | currency:'XOF':'symbol':'1.0-0' }}</h2>
-      <p class="stat-subtext text-success">
-        <ion-icon name="checkmark-circle-outline"></ion-icon> En cours
-      </p>
+
+      <div class="stat-card clients-card">
+        <div class="stat-header">
+          <ion-icon name="people-outline"></ion-icon>
+          <span>Clients Uniques</span>
+        </div>
+        <h2>{{ clientsUniques }}</h2>
+        <p class="stat-subtext text-primary">
+          <ion-icon name="person-add-outline"></ion-icon> Aujourd'hui
+        </p>
+      </div>
+    </div>
     </div>
   </div>
 </ion-content>

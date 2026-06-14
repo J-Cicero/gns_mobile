@@ -33,10 +33,9 @@ export class AppComponent {
     { title: 'Mon Profil', url: '/student/profile', icon: 'person' },
   ];
 
-  public merchantPages = [
-    { title: 'Dashboard', url: '/merchant/dashboard', icon: 'home' },
-    { title: 'Mon QR Code', url: '/merchant/qr', icon: 'qr-code' },
-    { title: 'Transactions', url: '/merchant/transactions', icon: 'cash' },
+  public merchantPages: any[] = [
+    // Le menu latéral pour le marchand est désormais vide de raccourcis,
+    // car toute la navigation se fait via les onglets du bas (Bottom Tabs).
   ];
 
   public userRole: string | null = null;

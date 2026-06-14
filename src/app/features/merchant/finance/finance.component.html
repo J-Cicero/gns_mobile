@@ -1,0 +1,82 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Finance & Liquidations</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="currentTab" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="ventes">
+        <ion-label>Ventes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="versements">
+        <ion-label>Versements</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding transactions-content premium-dark-bg">
+  
+  <div *ngIf="currentTab === 'ventes'">
+    <div class="status-banner" [class.waiting]="isWaiting" [class.success]="!isWaiting">
+      <div class="status-content" *ngIf="isWaiting">
+        <ion-spinner name="dots"></ion-spinner>
+        <span>En attente de scan étudiant...</span>
+      </div>
+      
+      <div class="status-content" *ngIf="!isWaiting && transactions.length > 0">
+        <ion-icon name="checkmark-circle" class="success-icon"></ion-icon>
+        <div class="success-text">
+          <h3>Paiement Validé !</h3>
+          <p>+ {{ transactions[0].montantTotal | currency:'XOF':'symbol':'1.0-0' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="history-section">
+      <h3>Historique du jour</h3>
+      
+      <ion-list class="tx-list">
+        <div *ngIf="isLoadingSales" class="flex justify-center p-4">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+        <ion-item *ngFor="let tx of transactions" lines="full" class="tx-item">
+          <div class="tx-details" slot="start">
+            <span class="tx-student">{{ tx.reference || 'REF INCONNUE' }}</span>
+            <span class="tx-id text-xs text-slate-500">{{ tx.studentTrackingId | slice:0:8 }}</span>
+          </div>
+          
+          <div class="tx-meta" slot="end">
+            <span class="tx-amount text-success">+{{ tx.montantTotal | currency:'XOF':'symbol':'1.0-0' }}</span>
+            <span class="tx-time"><ion-icon name="time-outline"></ion-icon> {{ tx.dateCommande | date:'shortTime' }}</span>
+          </div>
+        </ion-item>
+        <div *ngIf="!isLoadingSales && transactions.length === 0" class="text-center p-4 text-slate-400">
+          Aucune vente aujourd'hui.
+        </div>
+      </ion-list>
+    </div>
+  </div>
+
+  <div *ngIf="currentTab === 'versements'">
+    <div class="history-section mt-4">
+      <h3>Derniers versements reçus</h3>
+      
+      <ion-list class="tx-list">
+        <ion-item *ngFor="let payout of payouts" lines="full" class="tx-item">
+          <div class="tx-details" slot="start">
+            <span class="tx-student">{{ payout.reference }}</span>
+            <span class="tx-id">{{ payout.id }}</span>
+          </div>
+          
+          <div class="tx-meta" slot="end">
+            <span class="tx-amount payout-amount">{{ payout.amount | currency:'XOF':'symbol':'1.0-0' }}</span>
+            <span class="tx-time"><ion-icon name="time-outline"></ion-icon> {{ payout.date | date:'dd MMM yyyy' }}</span>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>

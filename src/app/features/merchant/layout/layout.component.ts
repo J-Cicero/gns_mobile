@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { gridOutline, scanOutline, listOutline, timeOutline, personOutline, storefrontOutline } from 'ionicons/icons';
+import { gridOutline, scanOutline, listOutline, timeOutline, personOutline, storefrontOutline, cashOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-merchant-layout',
@@ -20,6 +20,11 @@ import { gridOutline, scanOutline, listOutline, timeOutline, personOutline, stor
           <ion-label>Dashboard</ion-label>
         </ion-tab-button>
 
+        <ion-tab-button routerLink="/merchant/catalogue" routerLinkActive="tab-selected">
+          <ion-icon name="list-outline"></ion-icon>
+          <ion-label>Catalogue</ion-label>
+        </ion-tab-button>
+
         <ion-tab-button routerLink="/merchant/caisse" routerLinkActive="tab-selected" class="scan-tab-button">
           <div class="scan-fab">
             <ion-icon name="scan-outline"></ion-icon>
@@ -27,13 +32,13 @@ import { gridOutline, scanOutline, listOutline, timeOutline, personOutline, stor
           <ion-label>Encaisser</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button routerLink="/merchant/transactions" routerLinkActive="tab-selected">
-          <ion-icon name="time-outline"></ion-icon>
-          <ion-label>Ventes</ion-label>
+        <ion-tab-button routerLink="/merchant/finance" routerLinkActive="tab-selected">
+          <ion-icon name="cash-outline"></ion-icon>
+          <ion-label>Finance</ion-label>
         </ion-tab-button>
 
         <ion-tab-button routerLink="/merchant/profile" routerLinkActive="tab-selected">
-          <ion-icon name="person-outline"></ion-icon>
+          <ion-icon name="storefront-outline"></ion-icon>
           <ion-label>Boutique</ion-label>
         </ion-tab-button>
 
@@ -81,7 +86,7 @@ import { gridOutline, scanOutline, listOutline, timeOutline, personOutline, stor
     }
 
     .scan-fab {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
       width: 56px;
       height: 56px;
       border-radius: 18px;
@@ -89,8 +94,8 @@ import { gridOutline, scanOutline, listOutline, timeOutline, personOutline, stor
       align-items: center;
       justify-content: center;
       margin-top: -35px;
-      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.4);
-      border: 4px solid var(--ion-background-color, var(--ion-background-color, #0f172a));
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+      border: 3px solid rgba(255, 255, 255, 0.1);
       
       ion-icon {
         color: var(--ion-text-color, white);
@@ -101,7 +106,7 @@ import { gridOutline, scanOutline, listOutline, timeOutline, personOutline, stor
 
     ion-tab-button.tab-selected .scan-fab {
       transform: scale(1.1);
-      box-shadow: 0 15px 25px rgba(16, 185, 129, 0.6);
+      box-shadow: 0 15px 25px rgba(59, 130, 246, 0.6);
     }
   `]
 })

@@ -96,7 +96,7 @@ import { gridOutline, walletOutline, qrCodeOutline, timeOutline, personOutline }
       justify-content: center;
       margin-top: -35px;
       box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
-      border: 4px solid var(--ion-background-color, var(--ion-background-color, #0f172a));
+      border: 3px solid rgba(255, 255, 255, 0.1);
       
       ion-icon {
         color: var(--ion-text-color, white);

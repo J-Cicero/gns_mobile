@@ -10,33 +10,117 @@
 <ion-content class="premium-dark-bg">
   <div class="caisse-wrapper">
     
-    <div class="amount-display">
-      <p>Montant à encaisser</p>
-      <h1>{{ montantSaisi | number:'1.0-0' }} <span>FCFA</span></h1>
+    <!-- ETAPE 1 : SCANNER LE CODE QR -->
+    <div *ngIf="step === 'SCAN'" class="scan-step fade-in-up">
+      <div class="scan-illustration">
+        <ion-icon name="qr-code-outline"></ion-icon>
+      </div>
+      <h2>Nouvel Encaissement</h2>
+      <p>Veuillez d'abord scanner la carte ou le QR code de l'étudiant pour l'identifier.</p>
+      
+      <ion-button expand="block" class="premium-btn primary-btn mt-10" (click)="scannerEtudiant()" [disabled]="isScanning">
+        <ion-spinner *ngIf="isScanning" name="crescent"></ion-spinner>
+        <span *ngIf="!isScanning">
+          <ion-icon name="scan-outline" slot="start"></ion-icon>
+          Scanner l'Étudiant
+        </span>
+      </ion-button>
     </div>
 
-    <div class="numpad-grid">
-      <button (click)="ajouterChiffre('1')">1</button>
-      <button (click)="ajouterChiffre('2')">2</button>
-      <button (click)="ajouterChiffre('3')">3</button>
-      <button (click)="ajouterChiffre('4')">4</button>
-      <button (click)="ajouterChiffre('5')">5</button>
-      <button (click)="ajouterChiffre('6')">6</button>
-      <button (click)="ajouterChiffre('7')">7</button>
-      <button (click)="ajouterChiffre('8')">8</button>
-      <button (click)="ajouterChiffre('9')">9</button>
-      <button class="empty"></button>
-      <button (click)="ajouterChiffre('0')">0</button>
-      <button (click)="supprimerChiffre()" class="action-btn"><ion-icon name="backspace-outline"></ion-icon></button>
+    <!-- ETAPE 1.5 : CONFIRMATION ETUDIANT -->
+    <div *ngIf="step === 'CONFIRM'" class="confirm-step fade-in-up">
+      <div class="student-profile-card">
+        <div class="avatar-circle">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </div>
+        <h3>{{ etudiantName }}</h3>
+        <p class="text-slate-400">Étudiant identifié avec succès</p>
+      </div>
+
+      <div class="action-buttons mt-10">
+        <ion-button expand="block" fill="clear" color="danger" (click)="annulerPaiement()">Annuler</ion-button>
+        <ion-button expand="block" class="premium-btn primary-btn" (click)="step = 'AMOUNT'">
+          Confirmer & Saisir Montant
+        </ion-button>
+      </div>
     </div>
 
-    <ion-button expand="block" class="premium-btn primary-btn" (click)="scannerEtudiant()" [disabled]="montantSaisi === '0' || isScanning">
-      <ion-spinner *ngIf="isScanning" name="crescent"></ion-spinner>
-      <span *ngIf="!isScanning">
-        <ion-icon name="scan-outline" slot="start"></ion-icon>
-        Scanner l'Étudiant
-      </span>
-    </ion-button>
+    <!-- ETAPE 2 : SAISIE DU MONTANT -->
+    <div *ngIf="step === 'AMOUNT'" class="amount-step fade-in-up">
+      <div class="student-info-chip">
+        <ion-icon name="person-circle-outline"></ion-icon>
+        <span>{{ etudiantName }}</span>
+      </div>
+
+      <div class="amount-display">
+        <p>Montant à encaisser</p>
+        <h1>{{ montantSaisi | number:'1.0-0' }} <span>FCFA</span></h1>
+      </div>
+
+      <div class="numpad-grid">
+        <button (click)="ajouterChiffre('1')">1</button>
+        <button (click)="ajouterChiffre('2')">2</button>
+        <button (click)="ajouterChiffre('3')">3</button>
+        <button (click)="ajouterChiffre('4')">4</button>
+        <button (click)="ajouterChiffre('5')">5</button>
+        <button (click)="ajouterChiffre('6')">6</button>
+        <button (click)="ajouterChiffre('7')">7</button>
+        <button (click)="ajouterChiffre('8')">8</button>
+        <button (click)="ajouterChiffre('9')">9</button>
+        <button class="empty"></button>
+        <button (click)="ajouterChiffre('0')">0</button>
+        <button (click)="supprimerChiffre()" class="action-btn"><ion-icon name="backspace-outline"></ion-icon></button>
+      </div>
+
+      <div class="action-buttons">
+        <ion-button expand="block" fill="clear" color="danger" (click)="annulerPaiement()">Annuler</ion-button>
+        <ion-button expand="block" class="premium-btn primary-btn" (click)="validerMontant()">
+          Continuer <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- ETAPE 3 : SAISIE DU PIN DE L'ETUDIANT -->
+    <div *ngIf="step === 'PIN'" class="pin-step fade-in-up">
+      <div class="student-info-chip">
+        <ion-icon name="person-circle-outline"></ion-icon>
+        <span>{{ etudiantName }}</span>
+      </div>
+
+      <div class="amount-display">
+        <p>Validation Étudiant</p>
+        <div class="pin-dots">
+          <div class="dot" [class.filled]="pinSaisi.length >= 1"></div>
+          <div class="dot" [class.filled]="pinSaisi.length >= 2"></div>
+          <div class="dot" [class.filled]="pinSaisi.length >= 3"></div>
+          <div class="dot" [class.filled]="pinSaisi.length >= 4"></div>
+        </div>
+        <p class="mt-4 text-warning">L'étudiant doit saisir son code secret.</p>
+      </div>
+
+      <div class="numpad-grid">
+        <button (click)="ajouterChiffre('1')">1</button>
+        <button (click)="ajouterChiffre('2')">2</button>
+        <button (click)="ajouterChiffre('3')">3</button>
+        <button (click)="ajouterChiffre('4')">4</button>
+        <button (click)="ajouterChiffre('5')">5</button>
+        <button (click)="ajouterChiffre('6')">6</button>
+        <button (click)="ajouterChiffre('7')">7</button>
+        <button (click)="ajouterChiffre('8')">8</button>
+        <button (click)="ajouterChiffre('9')">9</button>
+        <button class="empty"></button>
+        <button (click)="ajouterChiffre('0')">0</button>
+        <button (click)="supprimerChiffre()" class="action-btn"><ion-icon name="backspace-outline"></ion-icon></button>
+      </div>
+
+      <div class="action-buttons">
+        <ion-button expand="block" fill="clear" color="medium" (click)="step = 'AMOUNT'">Retour</ion-button>
+        <ion-button expand="block" class="premium-btn primary-btn" (click)="validerPaiement()" [disabled]="pinSaisi.length !== 4 || isScanning">
+          <ion-spinner *ngIf="isScanning" name="crescent"></ion-spinner>
+          <span *ngIf="!isScanning">Confirmer le paiement</span>
+        </ion-button>
+      </div>
+    </div>
 
   </div>
 </ion-content>

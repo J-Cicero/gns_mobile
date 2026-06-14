@@ -13,3 +13,13 @@
 :root {
   /* Ionic variables... */
 }
+
+/* --- THEME POUR EN-TÊTE (FIX BANDE BLANCHE) --- */
+.premium-header {
+  ion-toolbar {
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
+    ion-title { font-weight: 700; font-size: 18px; }
+    ion-back-button, ion-menu-button { color: var(--ion-text-color-step-150); }
+  }
+}
