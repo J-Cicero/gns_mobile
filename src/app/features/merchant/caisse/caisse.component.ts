@@ -124,17 +124,15 @@ export class CaisseComponent implements OnInit, OnDestroy {
       }
     } catch (e) {
       this.isScanning = false;
-      this.showToast("Mode Simulation", "warning");
-      // Utiliser l'ID de l'étudiant boursier si possible
-      this.loadStudentInfo('93cea9b6-3ea3-4332-a6e9-b7e78d575c42');
+      this.showToast("Erreur lors de l'accès à la caméra.", "danger");
     }
   }
 
   loadStudentInfo(trackingId: string) {
     this.isScanning = true;
     this.etudiantId = trackingId;
-    this.studentService.findByTrackingId(trackingId).subscribe({
-      next: (student) => {
+    this.studentService.getStudentByTrackingId(trackingId).subscribe({
+      next: (student: any) => {
         this.etudiantName = `${student.prenom} ${student.nom}`;
         this.step = 'CONFIRM';
         this.isScanning = false;
