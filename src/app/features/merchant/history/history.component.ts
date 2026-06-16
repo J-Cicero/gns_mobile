@@ -21,19 +21,14 @@ export class HistoryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadMockHistory();
+    this.loadHistory();
   }
 
-  loadMockHistory() {
+  loadHistory() {
     this.isLoading = true;
-    setTimeout(() => {
-      // Mock data pour l'historique marchand
-      this.transactions = [
-        { id: 1, etudiant: 'Koffi AMEGAVIE', montant: 1500, date: new Date(), type: 'Paiement' },
-        { id: 2, etudiant: 'Fatimata DIOP', montant: 850, date: new Date(Date.now() - 3600000), type: 'Paiement' },
-        { id: 3, etudiant: 'Abalo KOFFI', montant: 500, date: new Date(Date.now() - 7200000), type: 'Paiement' }
-      ];
-      this.isLoading = false;
-    }, 1000);
+    // Vrai appel API à implementer (ex: this.walletService.getRecentTransactions(...))
+    // Pour l'instant on laisse vide pour ne pas avoir de mock
+    this.transactions = [];
+    this.isLoading = false;
   }
 }

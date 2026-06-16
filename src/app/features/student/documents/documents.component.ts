@@ -77,8 +77,16 @@ export class DocumentsComponent implements OnInit {
   submitEnrollment() {
     if (!this.selectedNiveau || !this.activeYear || !this.carteFile) return;
     
-    this.isLoading = true;
     const studentId = this.authService.getCurrentUserId();
+    if (!studentId) {
+      this.toastCtrl.create({
+        message: "Erreur: ID étudiant non trouvé. Veuillez vous reconnecter.",
+        duration: 3000, color: 'danger', position: 'top'
+      }).then(t => t.present());
+      return;
+    }
+
+    this.isLoading = true;
 
     const formData = new FormData();
     const request = {

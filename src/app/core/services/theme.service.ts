@@ -1,43 +1,43 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
-  private readonly THEME_KEY = 'gns_theme_preference';
-  private _isDark = false;
+  private isDarkMode = false;
 
-  constructor() {
-    this.initTheme();
+  constructor(@Inject(DOCUMENT) private document: Document) {
+    this.initializeTheme();
   }
 
-  private initTheme() {
-    const savedTheme = localStorage.getItem(this.THEME_KEY);
+  private initializeTheme() {
+    // Vérifier les préférences sauvegardées ou celles du système
+    const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
-      this._isDark = savedTheme === 'dark';
+      this.isDarkMode = savedTheme === 'dark';
     } else {
-      // Par défaut on force le Dark Mode pour l'expérience GNS Premium
-      this._isDark = true;
-      localStorage.setItem(this.THEME_KEY, 'dark');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.isDarkMode = prefersDark;
     }
     this.applyTheme();
   }
 
-  public get isDark(): boolean {
-    return this._isDark;
-  }
-
-  public toggleTheme() {
-    this._isDark = !this._isDark;
-    localStorage.setItem(this.THEME_KEY, this._isDark ? 'dark' : 'light');
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
     this.applyTheme();
   }
 
   private applyTheme() {
-    if (this._isDark) {
-      document.documentElement.classList.add('dark');
+    if (this.isDarkMode) {
+      this.document.documentElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      this.document.documentElement.classList.remove('dark');
     }
+  }
+
+  get isDark(): boolean {
+    return this.isDarkMode;
   }
 }

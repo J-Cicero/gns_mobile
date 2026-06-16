@@ -5,35 +5,45 @@ import { addIcons } from 'ionicons';
 import { checkmarkCircle, timeOutline, cashOutline, arrowDownOutline, arrowUpOutline } from 'ionicons/icons';
 import { MerchantService } from '../../../core/services/merchant.service';
 import { Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-finance',
   templateUrl: './finance.component.html',
   styleUrls: ['./finance.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule]
+  imports: [CommonModule, IonicModule, FormsModule]
 })
 export class FinanceComponent implements OnInit, OnDestroy {
   currentTab = 'ventes';
 
   transactions: any[] = [];
+  payouts: any[] = []; // Les futures liquidations
   isLoadingSales = false;
+  isSubmitting = false;
+  errorMessage = '';
+  
+  liquidationAmount: number | null = null;
+  compteBancaireId = ''; // Dans un cas réel, sélectionné via une liste
+
   private sub: Subscription | null = null;
   private boutiqueId: string | null = null;
+  private merchantId: string | null = null;
+  private walletId: string | null = null;
 
-  payouts = [
-    { id: 'PAY-102', amount: 45000, date: new Date(Date.now() - 86400000), status: 'COMPLETED', reference: 'Virement SGBS' },
-    { id: 'PAY-101', amount: 32000, date: new Date(Date.now() - 172800000), status: 'COMPLETED', reference: 'Virement Ecobank' }
-  ];
-
-  isWaiting = true;
-  private pollingInterval: any;
-
-  constructor(private merchantService: MerchantService) {
+  constructor(private merchantService: MerchantService, private toastCtrl: ToastController) {
     addIcons({ checkmarkCircle, timeOutline, cashOutline, arrowDownOutline, arrowUpOutline });
   }
 
   ngOnInit() {
+    const profileStr = localStorage.getItem('merchant_profile');
+    if (profileStr) {
+      const profile = JSON.parse(profileStr);
+      this.merchantId = profile.trackingId;
+      this.walletId = profile.walletTrackingId;
+    }
+
     this.sub = this.merchantService.selectedBoutiqueId$.subscribe(id => {
       this.boutiqueId = id;
       if (this.boutiqueId) {
@@ -62,18 +72,57 @@ export class FinanceComponent implements OnInit, OnDestroy {
     this.currentTab = event.detail.value;
   }
 
-  ngOnDestroy() {
-    if (this.pollingInterval) {
-      clearInterval(this.pollingInterval);
+  async requestLiquidation() {
+    if (!this.liquidationAmount || this.liquidationAmount <= 0) {
+      this.showToast("Saisissez un montant valide.");
+      return;
     }
-    if (this.sub) this.sub.unsubscribe();
+    if (!this.compteBancaireId) {
+      this.showToast("Saisissez un ID de compte bancaire valide.");
+      return;
+    }
+    if (!this.merchantId || !this.walletId) {
+      this.showToast("Informations du marchand incomplètes.");
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
+    const payload = {
+      merchantTrackingId: this.merchantId,
+      walletTrackingId: this.walletId,
+      montant: this.liquidationAmount,
+      compteBancaireTrackingId: this.compteBancaireId,
+      motif: "Demande de liquidation mobile"
+    };
+
+    this.merchantService.requestLiquidation(payload).subscribe({
+      next: (res) => {
+        this.isSubmitting = false;
+        this.showToast("Demande de liquidation envoyée avec succès !", "success");
+        this.liquidationAmount = null;
+        this.compteBancaireId = '';
+        // Optionnel : recharger la liste des payouts si endpoint disponible
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        this.showToast(err.error?.message || "Erreur lors de la demande de liquidation.", "danger");
+      }
+    });
   }
 
-  receiveTransaction(tx: any) {
-    this.isWaiting = false;
-    this.transactions.unshift(tx);
-    setTimeout(() => {
-      this.isWaiting = true;
-    }, 5000);
+  async showToast(message: string, color: string = 'warning') {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 3000,
+      color,
+      position: 'top'
+    });
+    toast.present();
+  }
+
+  ngOnDestroy() {
+    if (this.sub) this.sub.unsubscribe();
   }
 }

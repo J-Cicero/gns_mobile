@@ -112,6 +112,6 @@ import { gridOutline, scanOutline, listOutline, timeOutline, personOutline, stor
 })
 export class MerchantLayoutComponent {
   constructor() {
-    addIcons({ gridOutline, scanOutline, listOutline, timeOutline, personOutline, storefrontOutline });
+    addIcons({ gridOutline, scanOutline, listOutline, timeOutline, personOutline, storefrontOutline, cashOutline });
   }
 }

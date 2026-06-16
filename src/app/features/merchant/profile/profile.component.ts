@@ -14,11 +14,19 @@ import { storefrontOutline, checkmarkCircleOutline, logOutOutline, addCircleOutl
   template: `
     <ion-content class="ion-padding premium-dark-bg">
       <div class="flex flex-col items-center mb-8 mt-4">
-        <div class="w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center text-4xl text-white shadow-lg shadow-emerald-500/30 mb-4">
+        <div class="w-24 h-24 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-full flex items-center justify-center text-4xl text-white shadow-lg shadow-indigo-500/30 mb-4">
           <ion-icon name="storefront-outline"></ion-icon>
         </div>
-        <h2 class="text-2xl font-bold text-white">{{ user?.nom }} {{ user?.prenom }}</h2>
-        <p class="text-slate-400 text-sm">Espace Marchand</p>
+        <h2 class="text-2xl font-bold text-white">{{ merchantProfile?.firstName }} {{ merchantProfile?.lastName }}</h2>
+        <p class="text-slate-400 text-sm">{{ merchantProfile?.businessName || 'Espace Marchand' }}</p>
+        <div *ngIf="merchantProfile?.kycStatus" class="mt-2 text-xs px-3 py-1 rounded-full font-bold uppercase"
+             [ngClass]="{
+               'bg-yellow-500/20 text-yellow-400': merchantProfile?.kycStatus === 'PENDING',
+               'bg-emerald-500/20 text-emerald-400': merchantProfile?.kycStatus === 'VALIDATED',
+               'bg-red-500/20 text-red-400': merchantProfile?.kycStatus === 'REJECTED'
+             }">
+          KYC: {{ merchantProfile?.kycStatus }}
+        </div>
       </div>
 
       <div *ngIf="isLoading" class="flex justify-center my-8">
@@ -36,8 +44,8 @@ import { storefrontOutline, checkmarkCircleOutline, logOutOutline, addCircleOutl
                [class.bg-opacity-10]="selectedBoutiqueId === bout.trackingId"
                class="bg-slate-800 rounded-2xl p-4 border border-slate-700 transition-all cursor-pointer flex justify-between items-center hover:bg-slate-700">
             <div>
-              <h4 class="font-bold text-white text-lg">{{ bout.nomBoutique }}</h4>
-              <p class="text-sm text-slate-400">{{ bout.categorieShop === 'N/A' || !bout.categorieShop ? 'Général' : bout.categorieShop }} • {{ bout.statutKYC?.replace('_', ' ') }}</p>
+              <h4 class="font-bold text-white text-lg">{{ bout.nom }}</h4>
+              <p class="text-sm text-slate-400">{{ bout.categorie || 'Général' }} • {{ bout.statutBoutique }}</p>
             </div>
             <div class="flex items-center gap-2">
               <ion-button fill="clear" (click)="modifierBoutique(bout, $event)" class="m-0 h-8 text-slate-400 hover:text-white">
@@ -84,7 +92,7 @@ import { storefrontOutline, checkmarkCircleOutline, logOutOutline, addCircleOutl
   `]
 })
 export class ProfileComponent implements OnInit {
-  user: any = null;
+  merchantProfile: any = null;
   boutiques: any[] = [];
   selectedBoutiqueId: string | null = null;
   isLoading = true;
@@ -108,17 +116,22 @@ export class ProfileComponent implements OnInit {
   }
 
   loadProfileData() {
-    const userId = this.authService.getCurrentUserId();
-    if (!userId) return;
+    const profileStr = localStorage.getItem('merchant_profile');
+    if (!profileStr) return;
+    
+    this.merchantProfile = JSON.parse(profileStr);
+    const trackingId = this.merchantProfile.trackingId;
 
     this.isLoading = true;
     forkJoin([
-      this.authService.getUserByTrackingId(userId),
-      this.merchantService.getBoutiquesByMerchant(userId)
+      this.merchantService.getMerchantProfile(trackingId),
+      this.merchantService.getBoutiquesByMerchant(trackingId)
     ]).subscribe({
-      next: ([userRes, boutiqueRes]) => {
-        this.user = userRes;
-        this.boutiques = boutiqueRes.content || [];
+      next: ([profileRes, boutiqueRes]) => {
+        this.merchantProfile = profileRes;
+        localStorage.setItem('merchant_profile', JSON.stringify(profileRes));
+        
+        this.boutiques = boutiqueRes.content || boutiqueRes || [];
         
         // Auto-select first boutique if none is selected
         if (!this.selectedBoutiqueId && this.boutiques.length > 0) {
@@ -164,10 +177,10 @@ export class ProfileComponent implements OnInit {
             }
             
             const payload = {
-              merchantTrackingId: this.authService.getCurrentUserId(),
-              nomBoutique: data.nomBoutique,
-              categorieShop: data.categorieShop || 'Général',
-              statutKYC: 'EN_ATTENTE'
+              merchantTrackingId: this.merchantProfile.trackingId,
+              nom: data.nomBoutique,
+              categorie: data.categorieShop || 'Général',
+              statutBoutique: 'OUVERT'
             };
 
             this.merchantService.createBoutique(payload).subscribe({
@@ -197,13 +210,13 @@ export class ProfileComponent implements OnInit {
         {
           name: 'nomBoutique',
           type: 'text',
-          value: bout.nomBoutique,
+          value: bout.nom,
           placeholder: 'Nom de la boutique'
         },
         {
           name: 'categorieShop',
           type: 'text',
-          value: bout.categorieShop !== 'N/A' ? bout.categorieShop : '',
+          value: bout.categorie,
           placeholder: 'Catégorie (ex: Restauration, Mode...)'
         }
       ],
@@ -219,10 +232,9 @@ export class ProfileComponent implements OnInit {
             }
             
             const payload = {
-              nomBoutique: data.nomBoutique,
-              categorieShop: data.categorieShop || 'Général',
-              statutKYC: bout.statutKYC,
-              merchantTrackingId: this.authService.getCurrentUserId()
+              nom: data.nomBoutique,
+              categorie: data.categorieShop || 'Général',
+              merchantTrackingId: this.merchantProfile.trackingId
             };
 
             this.merchantService.updateBoutique(bout.trackingId, payload).subscribe({
@@ -255,13 +267,8 @@ export class ProfileComponent implements OnInit {
 
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // On récupère les données actuelles de la boutique pour ne pas envoyer de nulls
           this.merchantService.getBoutiqueById(this.selectedBoutiqueId!).subscribe(bout => {
             const payload = {
-              nomBoutique: bout.nomBoutique,
-              categorieShop: bout.categorieShop,
-              statutKYC: bout.statutKYC,
-              merchantTrackingId: this.authService.getCurrentUserId(),
               latitude: position.coords.latitude,
               longitude: position.coords.longitude
             };

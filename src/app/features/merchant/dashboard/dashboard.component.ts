@@ -4,6 +4,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { trendingUpOutline, walletOutline, checkmarkCircleOutline, locationOutline, navigateOutline } from 'ionicons/icons';
 import { MerchantService } from '../../../core/services/merchant.service';
+import { WalletService } from '../../../core/services/wallet.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Subscription } from 'rxjs';
 
@@ -32,6 +33,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private merchantService: MerchantService,
+    private walletService: WalletService,
     private authService: AuthService,
     private toastCtrl: ToastController
   ) {
@@ -57,18 +59,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.merchantService.getBoutiqueById(this.boutiqueId).subscribe({
       next: (boutique) => {
         if (boutique) {
-          this.quotaInitial = boutique.plafond || 0;
-          this.quotaRestant = boutique.solde || 0;
           this.hasLocation = boutique.latitude != null && boutique.longitude != null;
+          
+          if (boutique.walletTrackingId) {
+            this.walletService.getMyWallet(boutique.walletTrackingId).subscribe({
+              next: (wallet) => {
+                this.quotaInitial = wallet.plafond || 0;
+                this.quotaRestant = wallet.solde || 0;
+              }
+            });
+          }
         }
         
-        // Charger l'historique des ventes pour calculer ventesJour et clientsUniques
-        this.merchantService.getSalesHistory(this.boutiqueId!).subscribe({
-          next: (salesRes) => {
-            const sales = salesRes.content || [];
-            this.ventesJour = sales.reduce((acc: number, tx: any) => acc + (tx.montantTotal || 0), 0);
+        // Charger l'historique des transactions
+        this.walletService.getBoutiqueTransactions(this.boutiqueId!).subscribe({
+          next: (res) => {
+            const txs = res.content || [];
+            this.ventesJour = txs.reduce((acc: number, tx: any) => acc + (tx.amount || 0), 0);
             
-            const uniqueStudents = new Set(sales.map((tx: any) => tx.studentTrackingId));
+            const uniqueStudents = new Set(txs.map((tx: any) => tx.senderTrackingId));
             this.clientsUniques = uniqueStudents.size;
 
             this.isLoading = false;

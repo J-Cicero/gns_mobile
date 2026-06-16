@@ -1,0 +1,65 @@
+<ion-content class="bg-slate-50 dark:bg-slate-900">
+  <div class="flex flex-col items-center justify-center min-h-screen px-6 py-12 text-center">
+
+    <!-- CHECKING STATE -->
+    <div *ngIf="status === 'CHECKING'" class="animate-fade-in flex flex-col items-center">
+      <div class="relative w-24 h-24 mb-8">
+        <div class="absolute inset-0 rounded-full border-4 border-indigo-100 dark:border-slate-800"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-indigo-600 dark:border-indigo-400 border-t-transparent animate-spin"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+      </div>
+      <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">Vérification de votre éligibilité</h2>
+      <p class="text-slate-500 dark:text-slate-400 font-medium max-w-xs mx-auto">Veuillez patienter pendant que nous consultons la base de données académique nationale...</p>
+    </div>
+
+    <!-- ELIGIBLE STATE -->
+    <div *ngIf="status === 'ELIGIBLE'" class="animate-fade-in-up flex flex-col items-center">
+      <div class="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-6 shadow-inner border-4 border-white dark:border-slate-900">
+        <svg class="w-12 h-12 text-emerald-500 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h2 class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mb-2 tracking-tight">Félicitations !</h2>
+      <p class="text-slate-700 dark:text-slate-300 font-medium mb-6">Vous êtes éligible à la bourse GNS.</p>
+      
+      <p class="text-sm text-slate-500 dark:text-slate-400 flex items-center">
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        Redirection vers votre portefeuille...
+      </p>
+    </div>
+
+    <!-- NOT ELIGIBLE STATE -->
+    <div *ngIf="status === 'NOT_ELIGIBLE'" class="animate-fade-in-up flex flex-col items-center w-full max-w-sm">
+      <div class="w-24 h-24 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-6 shadow-inner border-4 border-white dark:border-slate-900">
+        <svg class="w-12 h-12 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+      <h2 class="text-2xl font-extrabold text-red-600 dark:text-red-400 mb-2 tracking-tight">Éligibilité Non Confirmée</h2>
+      
+      <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 mb-6 w-full text-left">
+        <p class="text-sm text-slate-700 dark:text-slate-300 font-medium mb-2">Nous n'avons pas pu valider votre statut boursier.</p>
+        <p *ngIf="errorMessage" class="text-xs text-red-500">{{ errorMessage }}</p>
+        <ul class="text-xs text-slate-500 dark:text-slate-400 list-disc pl-4 mt-2 space-y-1">
+          <li>Vérifiez votre matricule.</li>
+          <li>Assurez-vous que votre inscription académique est finalisée.</li>
+          <li>Contactez l'administration si l'erreur persiste.</li>
+        </ul>
+      </div>
+
+      <div class="flex w-full space-x-3">
+        <button (click)="logout()" class="flex-1 py-3 px-4 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-xl transition-colors hover:bg-slate-300 dark:hover:bg-slate-700">
+          Se déconnecter
+        </button>
+        <button (click)="retry()" class="flex-1 py-3 px-4 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition-all active:scale-[0.98]">
+          Réessayer
+        </button>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

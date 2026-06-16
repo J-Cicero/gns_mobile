@@ -23,6 +23,26 @@ export class MerchantService {
     return this.selectedBoutiqueSource.getValue();
   }
 
+  registerMerchant(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/merchants`, payload);
+  }
+
+  getMerchantProfile(trackingId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/merchants/${trackingId}`);
+  }
+
+  uploadDocument(merchantTrackingId: string, typeDocument: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('fichier', file);
+    formData.append('merchantTrackingId', merchantTrackingId);
+    formData.append('typeDocument', typeDocument);
+    return this.http.post<any>(`${this.apiUrl}/merchants/documents/upload`, formData);
+  }
+
+  requestLiquidation(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/liquidations`, payload);
+  }
+
   getBoutiquesByMerchant(merchantId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/boutiques/merchant/${merchantId}`);
   }
