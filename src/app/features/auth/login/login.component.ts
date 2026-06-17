@@ -25,7 +25,7 @@ export class LoginComponent {
   }
 
   goToRegister() {
-    this.navCtrl.navigateRoot('/register');
+    this.navCtrl.navigateRoot('/onboarding/registration');
   }
 
   onLogin() {
@@ -39,9 +39,9 @@ export class LoginComponent {
       next: (res) => {
         this.isLoading = false;
         if (res.roles === 'ETUDIANT') {
-          this.navCtrl.navigateRoot('/student');
+          this.router.navigate(['/main/dashboard']);
         } else if (res.roles === 'COMMERCANT') {
-          this.navCtrl.navigateRoot('/merchant');
+          this.router.navigate(['/merchant']);
         } else {
           this.errorMessage = 'Rôle non autorisé sur mobile.';
         }
