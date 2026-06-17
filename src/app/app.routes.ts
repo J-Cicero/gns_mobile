@@ -15,8 +15,16 @@ export const routes: Routes = [
     path: 'onboarding',
     children: [
       {
+        path: 'account-type-selection',
+        loadComponent: () => import('./features/onboarding/account-type-selection/account-type-selection.component').then(m => m.AccountTypeSelectionComponent)
+      },
+      {
         path: 'registration',
         loadComponent: () => import('./features/onboarding/registration/registration.component').then(m => m.RegistrationComponent)
+      },
+      {
+        path: 'merchant-registration',
+        loadComponent: () => import('./features/onboarding/merchant-registration/merchant-registration.component').then(m => m.MerchantRegistrationComponent)
       },
       {
         path: 'academic-enrollment',
@@ -57,7 +65,16 @@ export const routes: Routes = [
   // Anciennes routes conservées pour le marchand si besoin
   {
     path: 'student',
-    loadChildren: () => import('./features/student/student.routes').then(m => m.studentRoutes)
+    children: [
+      {
+        path: 'waiting',
+        loadComponent: () => import('./features/onboarding/waiting-year/waiting-year.component').then(m => m.WaitingYearComponent)
+      },
+      {
+        path: '',
+        loadChildren: () => import('./features/student/student.routes').then(m => m.studentRoutes)
+      }
+    ]
   },
   {
     path: 'merchant',

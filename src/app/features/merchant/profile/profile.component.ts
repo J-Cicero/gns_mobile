@@ -44,8 +44,8 @@ import { storefrontOutline, checkmarkCircleOutline, logOutOutline, addCircleOutl
                [class.bg-opacity-10]="selectedBoutiqueId === bout.trackingId"
                class="bg-slate-800 rounded-2xl p-4 border border-slate-700 transition-all cursor-pointer flex justify-between items-center hover:bg-slate-700">
             <div>
-              <h4 class="font-bold text-white text-lg">{{ bout.nom }}</h4>
-              <p class="text-sm text-slate-400">{{ bout.categorie || 'Général' }} • {{ bout.statutBoutique }}</p>
+              <h4 class="font-bold text-white text-lg">{{ bout.name }}</h4>
+              <p class="text-sm text-slate-400">{{ bout.description || 'Général' }} • KYC: {{ bout.kycStatus }}</p>
             </div>
             <div class="flex items-center gap-2">
               <ion-button fill="clear" (click)="modifierBoutique(bout, $event)" class="m-0 h-8 text-slate-400 hover:text-white">
@@ -155,14 +155,14 @@ export class ProfileComponent implements OnInit {
       cssClass: 'premium-alert',
       inputs: [
         {
-          name: 'nomBoutique',
+          name: 'name',
           type: 'text',
           placeholder: 'Nom de la boutique'
         },
         {
-          name: 'categorieShop',
+          name: 'description',
           type: 'text',
-          placeholder: 'Catégorie (ex: Restauration, Mode...)'
+          placeholder: 'Description / Adresse'
         }
       ],
       buttons: [
@@ -171,16 +171,16 @@ export class ProfileComponent implements OnInit {
           text: 'Créer',
           cssClass: 'text-emerald-500 font-bold',
           handler: (data) => {
-            if (!data.nomBoutique) {
+            if (!data.name) {
               this.showToast('Le nom de la boutique est obligatoire.', 'warning');
               return false;
             }
             
             const payload = {
               merchantTrackingId: this.merchantProfile.trackingId,
-              nom: data.nomBoutique,
-              categorie: data.categorieShop || 'Général',
-              statutBoutique: 'OUVERT'
+              name: data.name,
+              description: data.description || 'Général',
+              kycStatus: 'EN_ATTENTE'
             };
 
             this.merchantService.createBoutique(payload).subscribe({
@@ -208,16 +208,16 @@ export class ProfileComponent implements OnInit {
       cssClass: 'premium-alert',
       inputs: [
         {
-          name: 'nomBoutique',
+          name: 'name',
           type: 'text',
-          value: bout.nom,
+          value: bout.name,
           placeholder: 'Nom de la boutique'
         },
         {
-          name: 'categorieShop',
+          name: 'description',
           type: 'text',
-          value: bout.categorie,
-          placeholder: 'Catégorie (ex: Restauration, Mode...)'
+          value: bout.description,
+          placeholder: 'Description / Adresse'
         }
       ],
       buttons: [
@@ -226,14 +226,14 @@ export class ProfileComponent implements OnInit {
           text: 'Enregistrer',
           cssClass: 'text-emerald-500 font-bold',
           handler: (data) => {
-            if (!data.nomBoutique) {
+            if (!data.name) {
               this.showToast('Le nom de la boutique est obligatoire.', 'warning');
               return false;
             }
             
             const payload = {
-              nom: data.nomBoutique,
-              categorie: data.categorieShop || 'Général',
+              name: data.name,
+              description: data.description || 'Général',
               merchantTrackingId: this.merchantProfile.trackingId
             };
 
@@ -267,23 +267,21 @@ export class ProfileComponent implements OnInit {
 
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          this.merchantService.getBoutiqueById(this.selectedBoutiqueId!).subscribe(bout => {
-            const payload = {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
-            };
+          const payload = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
 
-            this.merchantService.updateBoutique(this.selectedBoutiqueId!, payload).subscribe({
-              next: () => {
-                this.isLocating = false;
-                this.showToast('Position GPS initialisée avec succès !', 'success');
-                this.loadProfileData();
-              },
-              error: () => {
-                this.isLocating = false;
-                this.showToast('Erreur lors de la sauvegarde de la position.', 'danger');
-              }
-            });
+          this.merchantService.updateBoutique(this.selectedBoutiqueId!, payload).subscribe({
+            next: () => {
+              this.isLocating = false;
+              this.showToast('Position GPS initialisée avec succès !', 'success');
+              this.loadProfileData();
+            },
+            error: () => {
+              this.isLocating = false;
+              this.showToast('Erreur lors de la sauvegarde de la position.', 'danger');
+            }
           });
         },
       (error) => {

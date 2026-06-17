@@ -9,25 +9,68 @@ import { environment } from '../../../environments/environment';
 export class OnboardingService {
   constructor(private http: HttpClient) {}
 
-  register(data: any): Observable<any> {
+  registerStudent(data: any, ribFile?: File, mandatFile?: File): Observable<any> {
     const payload = {
-      firstName: data.prenom,
-      lastName: data.nom,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
-      phoneNumber: data.telephone,
+      phoneNumber: data.phoneNumber,
       password: data.password,
-      dateOfBirth: "2000-01-01", // Valeur par défaut pour l'inscription mobile si non fournie
-      gender: "M" // Valeur par défaut
+      studentIdNumber: data.studentIdNumber,
+      universiteTrackingId: data.universiteTrackingId,
+      bankTrackingId: data.bankTrackingId,
+      accountNumber: data.accountNumber,
+      birthDate: data.birthDate,
+      birthPlace: data.birthPlace,
+      pinCodeHash: data.pinCodeHash // Ajout du code PIN
     };
-    return this.http.post<any>(`${environment.apiUrl}/students`, payload);
+
+    const formData = new FormData();
+    formData.append('request', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
+    
+    if (ribFile) {
+      formData.append('rib', ribFile);
+    }
+    if (mandatFile) {
+      formData.append('mandat', mandatFile);
+    }
+
+    return this.http.post<any>(`${environment.apiUrl}/users/register/student`, formData);
+  }
+
+  registerMerchant(data: any, ribFile: File): Observable<any> {
+    const payload = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+      password: data.password,
+      businessName: data.businessName,
+      bankTrackingId: data.bankTrackingId,
+      accountNumber: data.accountNumber
+    };
+
+    const formData = new FormData();
+    formData.append('request', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
+    
+    if (ribFile) {
+      formData.append('rib', ribFile);
+    }
+
+    return this.http.post<any>(`${environment.apiUrl}/users/register/merchant`, formData);
+  }
+
+  getBanques(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/banques`);
   }
 
   submitAcademicInfo(studentTrackingId: string, data: any): Observable<any> {
     const payload = {
-      studentTrackingId: studentTrackingId,
-      universiteTrackingId: data.universiteTrackingId,
+      studentTrackingId: studentTrackingId, // Cet ID est déjà fourni par le composant
+      universiteTrackingId: data.universiteTrackingId, // Vient maintenant du studentProfile
       scolariteYearTrackingId: data.scolariteYearTrackingId,
-      matricule: data.matricule,
+      matricule: data.matricule, // Vient maintenant du studentProfile
+      studyLevel: data.studyLevel, // Nouveau nom pour le niveau d'étude
       statutInscription: "EN_ATTENTE"
     };
     return this.http.post<any>(`${environment.apiUrl}/inscriptions/simple`, payload);

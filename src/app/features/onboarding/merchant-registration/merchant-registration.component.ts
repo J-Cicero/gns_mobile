@@ -2,17 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { OnboardingService } from '../../../core/services/onboarding.service';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss'],
+  selector: 'app-merchant-registration',
+  templateUrl: './merchant-registration.component.html',
+  styleUrls: ['./merchant-registration.component.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule]
 })
-export class RegistrationComponent implements OnInit {
+export class MerchantRegistrationComponent implements OnInit {
 
   registrationData = {
     nom: '',
@@ -20,43 +21,25 @@ export class RegistrationComponent implements OnInit {
     email: '',
     telephone: '',
     motDePasse: '',
-    pinCode: '', // Correction: Ajout de pinCode à registrationData
-    birthDate: '', // Nouveau champ
-    birthPlace: '', // Nouveau champ
-    studentIdNumber: '',
-    universiteTrackingId: '',
+    businessName: '',
     bankTrackingId: '',
     accountNumber: ''
   };
 
-  universites: any[] = [];
   banques: any[] = [];
   ribFile: File | null = null;
-  mandatFile: File | null = null;
-
   isSubmitting = false;
   errorMessage = '';
 
   constructor(
     private navCtrl: NavController,
+    private router: Router,
     private onboardingService: OnboardingService,
     private authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.loadUniversites();
     this.loadBanques();
-  }
-
-  loadUniversites() {
-    this.onboardingService.getUniversites().subscribe({
-      next: (res: any) => {
-        this.universites = res.content || [];
-      },
-      error: (err: any) => {
-        console.error('Erreur chargement universités', err);
-      }
-    });
   }
 
   loadBanques() {
@@ -66,6 +49,7 @@ export class RegistrationComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Erreur chargement banques', err);
+        this.errorMessage = 'Impossible de charger la liste des banques.';
       }
     });
   }
@@ -76,24 +60,13 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  onMandatSelected(event: any) {
-    if (event.target.files.length > 0) {
-      this.mandatFile = event.target.files[0];
-    }
-  }
-
   goToLogin() {
     this.navCtrl.navigateRoot('/auth/login');
   }
 
   onSubmit() {
-    if (!this.registrationData.nom || !this.registrationData.prenom || !this.registrationData.email || !this.registrationData.motDePasse || !this.registrationData.studentIdNumber || !this.registrationData.universiteTrackingId) {
-      this.errorMessage = 'Veuillez remplir les informations de base obligatoires.';
-      return;
-    }
-    
-    if (this.registrationData.bankTrackingId && !this.registrationData.accountNumber) {
-      this.errorMessage = 'Veuillez fournir un numéro de compte pour la banque sélectionnée.';
+    if (!this.registrationData.nom || !this.registrationData.prenom || !this.registrationData.email || !this.registrationData.motDePasse || !this.registrationData.businessName || !this.registrationData.bankTrackingId || !this.registrationData.accountNumber || !this.ribFile) {
+      this.errorMessage = 'Veuillez remplir tous les champs obligatoires et uploader votre RIB.';
       return;
     }
 
@@ -106,16 +79,12 @@ export class RegistrationComponent implements OnInit {
       email: this.registrationData.email,
       phoneNumber: this.registrationData.telephone,
       password: this.registrationData.motDePasse,
-      studentIdNumber: this.registrationData.studentIdNumber,
-      universiteTrackingId: this.registrationData.universiteTrackingId,
+      businessName: this.registrationData.businessName,
       bankTrackingId: this.registrationData.bankTrackingId,
-      accountNumber: this.registrationData.accountNumber,
-      birthDate: this.registrationData.birthDate ? `${this.registrationData.birthDate}T00:00:00` : undefined, // Ajout du format horaire
-      birthPlace: this.registrationData.birthPlace,
-      pinCodeHash: this.registrationData.pinCode
+      accountNumber: this.registrationData.accountNumber
     };
 
-    this.onboardingService.registerStudent(payload, this.ribFile || undefined, this.mandatFile || undefined).subscribe({
+    this.onboardingService.registerMerchant(payload, this.ribFile).subscribe({
       next: (res: any) => {
         this.authService.login({
           email: this.registrationData.email,
@@ -123,12 +92,8 @@ export class RegistrationComponent implements OnInit {
         }).subscribe({
           next: (loginRes: any) => {
             this.isSubmitting = false;
-            const profile = JSON.parse(localStorage.getItem('student_profile') || '{}');
-            profile.isOnboardingComplete = false;
-            profile.isEligible = false;
-            localStorage.setItem('student_profile', JSON.stringify(profile));
-            
-            this.navCtrl.navigateRoot('/onboarding/academic-enrollment');
+            // Rediriger le marchand vers son dashboard ou la page KYC (à définir)
+            this.navCtrl.navigateRoot('/merchant'); // Ou une autre route spécifique
           },
           error: (err: any) => {
             this.isSubmitting = false;
@@ -139,10 +104,9 @@ export class RegistrationComponent implements OnInit {
       },
       error: (err: any) => {
         this.isSubmitting = false;
-        this.errorMessage = err.error?.message || 'Erreur lors de la création du compte. Veuillez réessayer.';
+        this.errorMessage = err.error?.message || 'Erreur lors de la création du compte commerçant. Veuillez réessayer.';
       }
     });
   }
 
 }
-

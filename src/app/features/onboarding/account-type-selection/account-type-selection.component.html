@@ -1,0 +1,34 @@
+<ion-content class="bg-slate-50 dark:bg-slate-900">
+  <div class="flex flex-col min-h-screen px-6 py-12 items-center justify-center">
+    <!-- Header -->
+    <div class="mb-10 text-center animate-fade-in-up">
+      <div class="w-20 h-20 mx-auto bg-indigo-600 rounded-3xl flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30">
+        <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </div>
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Créer un compte</h1>
+      <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">Choisissez le type de compte que vous souhaitez créer.</p>
+    </div>
+
+    <div class="space-y-6 w-full max-w-sm animate-fade-in-up" style="animation-delay: 150ms;">
+      <ion-button expand="block" shape="round" class="h-14 font-bold text-lg" (click)="goToStudentRegistration()">
+        <ion-icon name="school-outline" slot="start"></ion-icon>
+        Je suis Étudiant
+      </ion-button>
+
+      <ion-button expand="block" shape="round" class="h-14 font-bold text-lg" color="success" (click)="goToMerchantRegistration()">
+        <ion-icon name="storefront-outline" slot="start"></ion-icon>
+        Je suis Commerçant
+      </ion-button>
+    </div>
+
+    <div class="mt-8 text-center animate-fade-in-up" style="animation-delay: 200ms;">
+      <p class="text-sm text-slate-500 dark:text-slate-400">
+        Déjà un compte ? 
+        <a (click)="navCtrl.navigateRoot('/auth/login')" class="font-bold text-indigo-600 dark:text-indigo-400 hover:underline" style="cursor: pointer;">Connectez-vous</a>
+      </p>
+    </div>
+
+  </div>
+</ion-content>

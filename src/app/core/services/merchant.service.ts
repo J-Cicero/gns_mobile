@@ -23,12 +23,16 @@ export class MerchantService {
     return this.selectedBoutiqueSource.getValue();
   }
 
-  registerMerchant(payload: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/merchants`, payload);
+  registerMerchant(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/users/register/merchant`, formData);
   }
 
   getMerchantProfile(trackingId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/merchants/${trackingId}`);
+  }
+
+  getBanks(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/banques`);
   }
 
   uploadDocument(merchantTrackingId: string, typeDocument: string, file: File): Observable<any> {

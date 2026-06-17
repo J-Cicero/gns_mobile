@@ -1,13 +1,10 @@
 export interface Boutique {
   trackingId: string;
-  nom: string;
-  code: string;
-  adresse: string;
+  name: string;
+  description: string;
   latitude?: number;
   longitude?: number;
-  categorie?: string;
-  telephone?: string;
-  statutBoutique: 'OUVERT' | 'FERME' | 'SUSPENDU';
+  kycStatus: string;
   merchantTrackingId: string;
 }
 

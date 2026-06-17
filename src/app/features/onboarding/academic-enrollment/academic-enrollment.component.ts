@@ -1,80 +1,81 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { IonicModule, NavController } from '@ionic/angular'; // Import NavController
+import { Router } from '@angular/router'; // Keep Router for now if still needed elsewhere
 import { OnboardingService } from '../../../core/services/onboarding.service';
 import { StudentProfile } from '../../../core/models/student.model';
 
 @Component({
   selector: 'app-academic-enrollment',
   templateUrl: './academic-enrollment.component.html',
-  styleUrls: ['./academic-enrollment.component.scss'],
+  styleUrls: ['./academic-enrollment.component.scss'], // Corrected file name
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule] // Removed RouterLink from here
 })
 export class AcademicEnrollmentComponent implements OnInit {
 
   enrollmentData = {
-    matricule: '',
-    faculte: '', // L'utilisateur saisit la faculté
-    universiteTrackingId: '', // Sélectionné via une liste déroulante
+    niveauEtude: '', // Renommé de faculte
     scolariteYearTrackingId: '' // Rempli automatiquement
   };
 
-  universites: any[] = [];
   activeYear: any = null;
+  studentProfile: StudentProfile | null = null; // Pour stocker les infos de l'étudiant
 
   isSubmitting = false;
   isLoadingData = true;
   errorMessage = '';
 
   constructor(
-    private router: Router,
+    private router: Router, // Keep Router if still used for other navigation types (e.g. within tabs)
+    private navCtrl: NavController, // Inject NavController
     private onboardingService: OnboardingService
   ) { }
 
   ngOnInit() {
-    // Si pas de profil en local, on renvoie à la registration
     const profileStr = localStorage.getItem('student_profile');
     if (!profileStr) {
-      this.router.navigate(['/onboarding/registration']);
+      this.navCtrl.navigateRoot('/onboarding/registration'); // Use navCtrl
+      return;
+    }
+    this.studentProfile = JSON.parse(profileStr);
+
+    // Vérifier si l'étudiant a déjà une université et un matricule dans son profil
+    if (!this.studentProfile?.universiteTrackingId || !this.studentProfile?.matricule) {
+      this.errorMessage = "Votre profil est incomplet. Veuillez contacter l'administration.";
+      this.isLoadingData = false;
       return;
     }
 
-    this.loadUniversitesAndYear();
+    this.loadActiveYear();
   }
 
-  loadUniversitesAndYear() {
+  loadActiveYear() {
     this.isLoadingData = true;
-    
-    // Charger l'année active
     this.onboardingService.getActiveScolariteYear().subscribe({
       next: (year) => {
+        console.log('Année académique active reçue:', year);
         this.activeYear = year;
         this.enrollmentData.scolariteYearTrackingId = year.trackingId;
-      },
-      error: () => {
-        this.errorMessage = "Impossible de récupérer l'année académique active.";
-      }
-    });
-
-    // Charger les universités
-    this.onboardingService.getUniversites().subscribe({
-      next: (res) => {
-        this.universites = res.content || [];
         this.isLoadingData = false;
       },
-      error: () => {
-        this.errorMessage = "Impossible de charger la liste des universités.";
+      error: (err) => {
+        console.error('Erreur lors de la récupération de l\'année académique active:', err);
+        this.errorMessage = "Impossible de récupérer l'année académique active. " + (err.error?.message || "Veuillez réessayer plus tard.");
         this.isLoadingData = false;
       }
     });
   }
 
   onSubmit() {
-    if (!this.enrollmentData.matricule || !this.enrollmentData.faculte || !this.enrollmentData.universiteTrackingId) {
-      this.errorMessage = 'Veuillez renseigner votre matricule, votre faculté et choisir une université.';
+    if (!this.studentProfile || !this.studentProfile.trackingId) {
+      this.errorMessage = "Informations étudiant manquantes.";
+      return;
+    }
+
+    if (!this.enrollmentData.niveauEtude) {
+      this.errorMessage = 'Veuillez renseigner votre niveau d\'étude.';
       return;
     }
     if (!this.enrollmentData.scolariteYearTrackingId) {
@@ -82,33 +83,34 @@ export class AcademicEnrollmentComponent implements OnInit {
       return;
     }
 
-    const profileStr = localStorage.getItem('student_profile');
-    if (!profileStr) return;
-    const profile: StudentProfile = JSON.parse(profileStr);
-
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    this.onboardingService.submitAcademicInfo(profile.trackingId, this.enrollmentData).subscribe({
-      next: (res) => {
+    const payload = {
+      studentTrackingId: this.studentProfile.trackingId,
+      universiteTrackingId: this.studentProfile.universiteTrackingId, // Vient du profil
+      scolariteYearTrackingId: this.enrollmentData.scolariteYearTrackingId,
+      matricule: this.studentProfile.matricule, // Vient du profil
+      studyLevel: this.enrollmentData.niveauEtude, // Nouveau nom
+    };
+
+    this.onboardingService.submitAcademicInfo(this.studentProfile.trackingId, payload).subscribe({
+      next: (res: any) => {
         this.isSubmitting = false;
         
-        // Stocker l'ID de l'inscription pour l'étape d'éligibilité
         if (res && res.trackingId) {
           localStorage.setItem('inscription_tracking_id', res.trackingId);
         }
 
-        // Mettre à jour le profil local
         const updatedProfile = {
-          ...profile,
-          isOnboardingComplete: true // L'inscription académique est terminée
+          ...this.studentProfile,
+          isOnboardingComplete: true
         };
         localStorage.setItem('student_profile', JSON.stringify(updatedProfile));
         
-        // Redirection vers l'étape de vérification d'éligibilité
-        this.router.navigate(['/onboarding/eligibility']);
+        this.navCtrl.navigateRoot('/onboarding/eligibility'); // Use navCtrl
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isSubmitting = false;
         this.errorMessage = err.error?.message || "Erreur lors de l'enregistrement académique.";
       }

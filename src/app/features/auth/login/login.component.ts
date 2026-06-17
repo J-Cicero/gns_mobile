@@ -25,7 +25,7 @@ export class LoginComponent {
   }
 
   goToRegister() {
-    this.navCtrl.navigateRoot('/onboarding/registration');
+    this.navCtrl.navigateRoot('/onboarding/account-type-selection');
   }
 
   onLogin() {
@@ -39,7 +39,9 @@ export class LoginComponent {
       next: (res) => {
         this.isLoading = false;
         if (res.roles === 'ETUDIANT') {
-          this.router.navigate(['/main/dashboard']);
+          this.authService.evaluateStudentOnboardingState().subscribe(route => {
+            this.router.navigateByUrl(route);
+          });
         } else if (res.roles === 'COMMERCANT') {
           this.router.navigate(['/merchant']);
         } else {

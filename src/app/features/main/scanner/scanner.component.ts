@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { WalletService } from '../../../core/services/wallet.service';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +22,8 @@ export class ScannerComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private walletService: WalletService
+    private walletService: WalletService,
+    private alertCtrl: AlertController
   ) { }
 
   ngOnInit() {
@@ -47,7 +48,7 @@ export class ScannerComponent implements OnInit {
     this.router.navigate(['/main/dashboard']);
   }
 
-  confirmPayment() {
+  async confirmPayment() {
     const profileStr = localStorage.getItem('student_profile');
     if (!profileStr) {
       alert("Profil introuvable, impossible de payer.");
@@ -55,20 +56,50 @@ export class ScannerComponent implements OnInit {
     }
     const profile = JSON.parse(profileStr);
 
+    const alert = await this.alertCtrl.create({
+      header: 'Confirmation de Paiement',
+      message: `Souhaitez-vous payer ${this.scanResult.amount} FCFA à ${this.scanResult.merchantName || 'cette boutique'} ?`,
+      inputs: [
+        {
+          name: 'password',
+          type: 'password',
+          placeholder: 'Entrez votre mot de passe pour autoriser'
+        }
+      ],
+      buttons: [
+        { text: 'Annuler', role: 'cancel' },
+        {
+          text: 'Confirmer',
+          handler: (data) => {
+            if (!data.password) {
+              alert.message = 'Mot de passe obligatoire !';
+              return false;
+            }
+            this.executePayment(profile.trackingId, data.password);
+            return true;
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  executePayment(senderTrackingId: string, password: string) {
     const payload = {
-      senderTrackingId: profile.trackingId,
-      receiverTrackingId: this.scanResult.merchantId, // Le QR code doit fournir le trackingId de la boutique
-      amount: this.scanResult.amount
+      senderTrackingId: senderTrackingId,
+      receiverTrackingId: this.scanResult.merchantId || this.scanResult.boutiqueTrackingId,
+      amount: this.scanResult.amount,
+      password: password
     };
 
-    // Appel backend
     this.walletService.pay(payload).subscribe({
       next: (res) => {
-        alert('Paiement confirmé !');
+        alert('Paiement confirmé avec succès !');
         this.router.navigate(['/main/dashboard']);
       },
       error: (err) => {
-        alert("Erreur lors du paiement : " + (err.error?.message || "Échec"));
+        alert("Échec du paiement : " + (err.error?.message || "Mot de passe incorrect ou solde insuffisant."));
       }
     });
   }

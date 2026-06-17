@@ -25,33 +25,13 @@
     <form (ngSubmit)="onSubmit()" class="space-y-5 flex-1 animate-fade-in-up" style="animation-delay: 100ms;">
       
       <div>
-        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Matricule Étudiant</label>
-        <input type="text" [(ngModel)]="enrollmentData.matricule" name="matricule" required
-          class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500" 
-          placeholder="Ex: 21INP00123">
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Université</label>
-        <div *ngIf="isLoadingData" class="text-sm text-slate-500 dark:text-slate-400">Chargement des universités...</div>
-        <select *ngIf="!isLoadingData" [(ngModel)]="enrollmentData.universiteTrackingId" name="universiteTrackingId" required
+        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Niveau d'Étude</label>
+        <select [(ngModel)]="enrollmentData.niveauEtude" name="niveauEtude" required
           class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 dark:text-white appearance-none">
-          <option value="" disabled selected>Sélectionner une université</option>
-          <option *ngFor="let univ of universites" [value]="univ.trackingId">{{ univ.nom }}</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Faculté / Département</label>
-        <select [(ngModel)]="enrollmentData.faculte" name="faculte" required
-          class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-900 dark:text-white appearance-none">
-          <option value="" disabled selected>Sélectionner une faculté</option>
-          <option value="SCIENCES">Sciences exactes et naturelles</option>
-          <option value="MEDECINE">Médecine</option>
-          <option value="LETTRES">Lettres, Arts et Sciences Humaines</option>
-          <option value="DROIT">Droit</option>
-          <option value="ECONOMIE">Sciences Économiques</option>
-          <option value="INPHB">Génie et Technologies (INPHB)</option>
+          <option value="" disabled selected>Sélectionner un niveau</option>
+          <option value="LICENCE_1">Licence 1</option>
+          <option value="LICENCE_2">Licence 2</option>
+          <option value="LICENCE_3">Licence 3</option>
         </select>
       </div>
 

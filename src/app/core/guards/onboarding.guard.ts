@@ -24,19 +24,12 @@ export class OnboardingGuard implements CanActivate {
 
     const profile: StudentProfile = JSON.parse(profileStr);
 
-    // Vérifier l'état d'onboarding
-    if (!profile.isOnboardingComplete) {
-      this.router.navigate(['/onboarding/registration']);
-      return false;
+    if (profile.statutKYC === 'VALIDATED' || profile.isOnboardingComplete) {
+      return true;
     }
 
-    // Si l'onboarding est terminé mais pas éligible
-    if (!profile.isEligible) {
-      this.router.navigate(['/onboarding/eligibility']);
-      return false;
-    }
-
-    // Tout est bon, on autorise l'accès à la route demandée (ex: /main/dashboard)
-    return true;
+    // Sinon, on redirige vers l'évaluation pour qu'il trouve la bonne page
+    this.router.navigate(['/auth/login']);
+    return false;
   }
 }

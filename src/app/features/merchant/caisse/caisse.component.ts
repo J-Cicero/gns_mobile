@@ -95,7 +95,7 @@ export class CaisseComponent implements OnInit, OnDestroy {
 
     // Le QR Code contiendra les informations nécessaires pour que l'étudiant paie
     const qrPayload = {
-      merchantId: this.boutiqueId, // ou un identifiant de caisse
+      boutiqueTrackingId: this.boutiqueId, // On utilise le trackingId de la boutique
       amount: parseInt(this.montantSaisi),
       timestamp: new Date().getTime()
     };

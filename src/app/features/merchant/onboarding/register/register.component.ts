@@ -21,9 +21,14 @@ export class RegisterComponent implements OnInit {
     firstName: '',
     phoneNumber: '',
     businessName: '',
-    registrationNumber: ''
+    registrationNumber: '',
+    description: '',
+    accountNumber: '',
+    bankTrackingId: ''
   };
 
+  banks: any[] = [];
+  selectedRib: File | null = null;
   isSubmitting = false;
   errorMessage = '';
 
@@ -33,19 +38,38 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadBanks();
+  }
+
+  loadBanks() {
+    this.merchantService.getBanks().subscribe({
+      next: (banks) => this.banks = banks,
+      error: () => console.error('Erreur lors du chargement des banques')
+    });
+  }
+
+  onFileSelected(event: any) {
+    this.selectedRib = event.target.files[0];
+  }
 
   onSubmit() {
-    if (!this.merchantData.email || !this.merchantData.password || !this.merchantData.businessName) {
-      this.errorMessage = 'Veuillez remplir les champs obligatoires.';
+    if (!this.merchantData.email || !this.merchantData.password || !this.merchantData.businessName || !this.selectedRib) {
+      this.errorMessage = 'Veuillez remplir les champs obligatoires et uploader votre RIB.';
       return;
     }
 
     this.isSubmitting = true;
     this.errorMessage = '';
 
+    const formData = new FormData();
+    // Création d'un blob JSON pour le payload MerchantRequest
+    const merchantBlob = new Blob([JSON.stringify(this.merchantData)], { type: 'application/json' });
+    formData.append('merchant', merchantBlob);
+    formData.append('rib', this.selectedRib);
+
     // Envoi de la demande de création de marchand
-    this.merchantService.registerMerchant(this.merchantData).subscribe({
+    this.merchantService.registerMerchant(formData).subscribe({
       next: (res) => {
         // Connexion automatique après inscription
         this.authService.login({
@@ -54,7 +78,6 @@ export class RegisterComponent implements OnInit {
         }).subscribe({
           next: (loginRes) => {
             // Le Auth service stocke un token.
-            // Il faudrait récupérer le profil marchand ici.
             this.merchantService.getMerchantProfile(loginRes.trackingId).subscribe({
               next: (profile) => {
                 localStorage.setItem('merchant_profile', JSON.stringify(profile));

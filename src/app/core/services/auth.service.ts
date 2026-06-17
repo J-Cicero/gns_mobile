@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, catchError } from 'rxjs';
 import { tap, switchMap, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
@@ -29,7 +29,10 @@ export class AuthService {
                 email: student.email,
                 telephone: student.phoneNumber,
                 matricule: student.studentIdNumber,
-                faculte: student.universiteFullName || 'Non renseigné',
+                universiteTrackingId: student.universite?.trackingId || null,
+                universiteFullName: student.universite?.fullName || 'Non renseigné',
+                birthDate: student.birthDate, // Ajouté
+                birthPlace: student.birthPlace, // Ajouté
                 statutKYC: student.kycStatus,
                 isEligible: true, // À adapter selon le backend
                 isOnboardingComplete: student.kycStatus === 'VALIDATED' // Ou selon la logique
@@ -62,5 +65,58 @@ export class AuthService {
   getCurrentUserId(): string | null {
     const profile = this.getCurrentProfile();
     return profile ? profile.trackingId : null;
+  }
+
+  evaluateStudentOnboardingState(): Observable<string> {
+    const trackingId = this.getCurrentUserId();
+    if (!trackingId) return of('/auth/login');
+
+    return this.http.get<any>(`${environment.apiUrl}/scolarite-years/active`).pipe(
+      switchMap(activeYear => {
+        if (!activeYear || !activeYear.trackingId) {
+          return of('/student/waiting');
+        }
+
+        return this.http.get<any[]>(`${environment.apiUrl}/inscriptions/student/${trackingId}`).pipe(
+          catchError((_: any) => of([] as any[])),
+          switchMap((inscriptions: any[]) => {
+            const activeInscription = inscriptions.find((i: any) => i.scolariteYearTrackingId === activeYear.trackingId);
+
+            if (!activeInscription) {
+              return of('/onboarding/academic-enrollment');
+            }
+
+            localStorage.setItem('inscription_tracking_id', activeInscription.trackingId);
+
+            return this.http.get<any>(`${environment.apiUrl}/students/${trackingId}`).pipe(
+              map(student => {
+                const kycStatus = student.kycStatus || 'PENDING';
+                
+                const currentProfile = JSON.parse(localStorage.getItem('student_profile') || '{}');
+                localStorage.setItem('student_profile', JSON.stringify({
+                  ...currentProfile, 
+                  ...student, 
+                  statutKYC: kycStatus,
+                  isOnboardingComplete: kycStatus === 'VALIDATED'
+                }));
+
+                if (kycStatus === 'VALIDATED') {
+                  return '/main/dashboard';
+                } else {
+                  return `/onboarding/eligibility?status=${kycStatus}`;
+                }
+              }),
+              catchError((_: any) => of('/onboarding/eligibility'))
+            );
+          })
+        );
+      }),
+      catchError((err: any) => {
+         if (err.status === 404) {
+             return of('/student/waiting');
+         }
+         return of('/auth/login');
+      })
+    );
   }
 }

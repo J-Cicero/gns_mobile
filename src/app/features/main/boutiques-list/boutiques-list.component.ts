@@ -51,8 +51,8 @@ export class BoutiquesListComponent implements OnInit {
   filterBoutiques() {
     const q = this.searchQuery.toLowerCase();
     this.filteredBoutiques = this.boutiques.filter(b => 
-      b.nom.toLowerCase().includes(q) || 
-      (b.categorie && b.categorie.toLowerCase().includes(q))
+      b.name.toLowerCase().includes(q) || 
+      (b.description && b.description.toLowerCase().includes(q))
     );
   }
 

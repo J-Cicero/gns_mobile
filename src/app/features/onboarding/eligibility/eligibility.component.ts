@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OnboardingService } from '../../../core/services/onboarding.service';
 import { StudentProfile } from '../../../core/models/student.model';
 
@@ -14,16 +14,26 @@ import { StudentProfile } from '../../../core/models/student.model';
 })
 export class EligibilityComponent implements OnInit {
 
-  status: 'CHECKING' | 'ELIGIBLE' | 'NOT_ELIGIBLE' = 'CHECKING';
+  status: 'CHECKING' | 'ELIGIBLE' | 'NOT_ELIGIBLE' | 'STANDBY_KYC' = 'CHECKING';
   errorMessage = '';
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private onboardingService: OnboardingService
   ) { }
 
   ngOnInit() {
-    this.checkEligibility();
+    this.route.queryParams.subscribe(params => {
+       if (params['status'] === 'PENDING') {
+           this.status = 'STANDBY_KYC';
+       } else if (params['status'] === 'REJECTED') {
+           this.status = 'NOT_ELIGIBLE';
+           this.errorMessage = "Vos documents ont été rejetés par l'administration. Veuillez les soumettre à nouveau ou nous contacter.";
+       } else {
+           this.checkEligibility();
+       }
+    });
   }
 
   checkEligibility() {
@@ -70,7 +80,8 @@ export class EligibilityComponent implements OnInit {
   retry() {
     this.status = 'CHECKING';
     this.errorMessage = '';
-    this.checkEligibility();
+    // Optional: wait a moment or check backend again
+    this.router.navigate(['/auth/login']); // Rediriger au login pour réévaluer l'état complet
   }
 
   logout() {

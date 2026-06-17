@@ -94,9 +94,11 @@ export class CatalogueComponent implements OnInit, OnDestroy {
           handler: (data) => {
             if (data.nom && data.prix) {
               this.merchantService.addProduct(this.boutiqueId!, {
-                nom: data.nom,
-                prix: parseFloat(data.prix),
-                estDisponible: true
+                boutiqueTrackingId: this.boutiqueId!,
+                name: data.nom,
+                price: parseFloat(data.prix),
+                description: 'N/A', // Ou ajouter un input
+                available: true
               }).subscribe({
                 next: () => {
                   this.loadProducts();

@@ -17,11 +17,8 @@ export class LocationSetupComponent implements OnInit {
   merchantProfile: MerchantProfile | null = null;
   
   boutiqueData: Partial<Boutique> = {
-    nom: '',
-    adresse: '',
-    categorie: '',
-    telephone: '',
-    statutBoutique: 'OUVERT'
+    name: '',
+    description: ''
   };
 
   isLocating = false;
@@ -40,6 +37,13 @@ export class LocationSetupComponent implements OnInit {
       return;
     }
     this.merchantProfile = JSON.parse(profileStr);
+
+    // Pré-remplir avec les infos du profil marchand si disponible
+    if (this.merchantProfile) {
+      this.boutiqueData.name = this.merchantProfile.businessName || '';
+      // On peut mettre l'adresse si elle a été saisie en description lors de l'inscription
+      // this.boutiqueData.description = this.merchantProfile.description || '';
+    }
   }
 
   getCurrentLocation() {
@@ -66,8 +70,8 @@ export class LocationSetupComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.boutiqueData.nom || !this.boutiqueData.adresse) {
-      this.errorMessage = "Veuillez renseigner au moins le nom et l'adresse de la boutique.";
+    if (!this.boutiqueData.name || !this.boutiqueData.description) {
+      this.errorMessage = "Veuillez renseigner au moins le nom et la description/adresse de la boutique.";
       return;
     }
 
@@ -76,16 +80,26 @@ export class LocationSetupComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    this.boutiqueData.merchantTrackingId = this.merchantProfile.trackingId;
+    const payload = {
+      merchantTrackingId: this.merchantProfile.trackingId,
+      name: this.boutiqueData.name,
+      description: this.boutiqueData.description,
+      latitude: this.boutiqueData.latitude,
+      longitude: this.boutiqueData.longitude,
+      kycStatus: 'EN_ATTENTE'
+    };
 
-    this.merchantService.createBoutique(this.boutiqueData).subscribe({
+    this.merchantService.createBoutique(payload).subscribe({
       next: (res) => {
         this.isSubmitting = false;
         
         // Mettre à jour le statut du profil pour indiquer la fin de l'onboarding
         if (this.merchantProfile) {
           this.merchantProfile.isOnboardingComplete = true;
+          this.merchantProfile.kycStatus = 'PENDING';
           localStorage.setItem('merchant_profile', JSON.stringify(this.merchantProfile));
+          // Sélectionner cette boutique par défaut
+          this.merchantService.setSelectedBoutiqueId(res.trackingId);
         }
 
         this.router.navigate(['/merchant/onboarding/waiting-screen']);
