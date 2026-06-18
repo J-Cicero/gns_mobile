@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class BanqueService {
-  private apiUrl = `${environment.apiUrl}/compte-bancaire`; // Endpoint pour les comptes bancaires unifiés
+  private apiUrl = `${environment.apiUrl}/banques/comptes-gns`; // Endpoint pour les comptes bancaires unifiés
 
   constructor(private http: HttpClient) {}
 

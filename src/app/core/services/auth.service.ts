@@ -21,21 +21,23 @@ export class AuthService {
           // Étape 2 : Récupérer le profil étudiant complet avec le trackingId
           return this.http.get<any>(`${environment.apiUrl}/students/${res.trackingId}`).pipe(
             tap(student => {
-              // Mettre à jour le statut KYC et d'autres attributs si nécessaires, puis stocker le profil
               const profileToStore = {
                 ...student,
-                prenom: student.firstName,
-                nom: student.lastName,
+                // Directement les noms de champs du backend, car student.model.ts est maintenant aligné
+                trackingId: student.trackingId,
+                lastName: student.lastName,
+                firstName: student.firstName,
                 email: student.email,
-                telephone: student.phoneNumber,
-                matricule: student.studentIdNumber,
+                phoneNumber: student.phoneNumber,
+                studentIdNumber: student.studentIdNumber,
                 universiteTrackingId: student.universite?.trackingId || null,
                 universiteFullName: student.universite?.fullName || 'Non renseigné',
-                birthDate: student.birthDate, // Ajouté
-                birthPlace: student.birthPlace, // Ajouté
-                statutKYC: student.kycStatus,
-                isEligible: true, // À adapter selon le backend
-                isOnboardingComplete: student.kycStatus === 'VALIDATED' // Ou selon la logique
+                birthDate: student.birthDate,
+                birthPlace: student.birthPlace,
+                kycStatus: student.kycStatus, // Utilise directement kycStatus
+                isActive: student.isActive, // Ajout de isActive
+                isEligible: true, // Garder comme logique frontend dérivée
+                isOnboardingComplete: student.kycStatus === 'VALIDATED' // Garder comme logique frontend dérivée
               };
               localStorage.setItem('student_profile', JSON.stringify(profileToStore));
             }),

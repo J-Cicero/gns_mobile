@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { TransactionRequest, TransactionResponse } from '../models/transaction.model'; // Import Transaction models
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class MerchantService {
   }
 
   registerMerchant(formData: FormData): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/users/register/merchant`, formData);
+    return this.http.post<any>(`${this.apiUrl}/merchants`, formData);
   }
 
   getMerchantProfile(trackingId: string): Observable<any> {
@@ -64,21 +65,21 @@ export class MerchantService {
   }
 
   getSalesHistory(boutiqueId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/commandes/boutique/${boutiqueId}`);
+    return this.http.get<any>(`${this.apiUrl}/transactions/boutique/${boutiqueId}`); // Updated to use TransactionController
   }
 
   addProduct(boutiqueId: string, productData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/products`, productData); // Adjust if specific path requires boutiqueId in URL, usually DTO has it
+    return this.http.post<any>(`${this.apiUrl}/products`, productData);
   }
 
-  createOrder(orderData: any): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/commandes`, orderData);
+  // Renamed from createOrder to initiateDirectPayment, now calls backend TransactionController's createPayment
+  initiateDirectPayment(request: TransactionRequest): Observable<TransactionResponse> {
+    return this.http.post<TransactionResponse>(`${this.apiUrl}/transactions`, request);
   }
-
-  payerCommande(trackingId: string, pinCode: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/commandes/${trackingId}/payer`, { pinCode });
-  }
-
+  
+  // createBoutique method should be part of MerchantService.create or a dedicated BoutiqueService
+  // but it's currently defined here. For a student app, it might not be relevant.
+  // Assuming it stays here for now if needed, but consider moving it to MerchantService create method.
   createBoutique(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/boutiques`, data);
   }

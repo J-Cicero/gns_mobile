@@ -51,7 +51,7 @@
             </div>
             <div>
               <p class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">{{ tx.senderName === 'Moi' ? tx.receiverName : tx.senderName }}</p>
-              <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400">{{ tx.createdAt | date:'dd MMM yyyy, HH:mm' }} • {{ tx.typeTransaction }}</p>
+              <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400">{{ tx.createdAt | date:'dd MMM yyyy, HH:mm' }} • {{ tx.status }}</p>
             </div>
           </div>
           <div class="text-right">

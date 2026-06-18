@@ -1,18 +1,36 @@
 export interface StudentProfile {
   trackingId: string;
-  nom: string;
-  prenom: string;
+  lastName: string;
+  firstName: string;
   email: string;
-  telephone: string;
-  birthDate?: string; // Ajouté
-  birthPlace?: string; // Ajouté
-  matricule: string;
-  universiteTrackingId?: string;
-  universiteFullName?: string; // Ajouté
-  universiteCode?: string; // Ajouté
-  statutKYC: 'PENDING' | 'VALIDATED' | 'REJECTED';
-  isEligible: boolean;
-  isOnboardingComplete: boolean;
+  phoneNumber: string;
+  birthDate?: string;
+  birthPlace?: string;
+  studentIdNumber: string; // Corresponds to matricule
+  kycStatus: 'PENDING' | 'VALIDATED' | 'REJECTED'; // Corresponds to statutKYC
+  isActive: boolean; // Added from backend
+  isEligible: boolean; // Derived frontend logic
+  isOnboardingComplete: boolean; // Derived frontend logic
   walletTrackingId?: string;
   balance?: number;
+  universiteTrackingId?: string;
+  universiteFullName?: string;
+  // universiteCode?: string; // Removed as not in backend DTO
+}
+
+export interface StudentRequest {
+  email: string;
+  password?: string;
+  lastName: string;
+  firstName: string;
+  isActive?: boolean;
+  phoneNumber: string;
+  birthDate?: string;
+  birthPlace?: string;
+  studentIdNumber?: string;
+  kycStatus?: 'PENDING' | 'VALIDATED' | 'REJECTED';
+  walletTrackingId?: string;
+  bankTrackingId?: string;
+  accountNumber?: string;
+  universiteTrackingId?: string;
 }

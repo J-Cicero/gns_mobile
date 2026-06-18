@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { WalletService } from '../../../core/services/wallet.service';
-import { Transaction } from '../../../core/models/transaction.model';
+import { TransactionResponse } from '../../../core/models/transaction.model'; // Updated import
+import { Page } from '../../../core/models/page.model'; // Import Page
+import { StudentProfile } from '../../../core/models/student.model'; // Import StudentProfile for profile.trackingId
 
 @Component({
   selector: 'app-history',
@@ -14,9 +16,10 @@ import { Transaction } from '../../../core/models/transaction.model';
 })
 export class HistoryComponent implements OnInit {
 
-  transactions: Transaction[] = [];
+  transactions: TransactionResponse[] = []; // Updated type
   isLoading = true;
   page = 0;
+  private readonly PAGE_SIZE = 10; // Define page size
   hasMore = true;
 
   constructor(private walletService: WalletService) { }
@@ -32,22 +35,17 @@ export class HistoryComponent implements OnInit {
       if (event) event.target.complete();
       return;
     }
-    const profile = JSON.parse(profileStr);
+    const profile: StudentProfile = JSON.parse(profileStr); // Cast to StudentProfile
 
-    // Vrai appel paginé. Le paramètre limite est utilisé ici pour la pagination : on simule 'size' avec le service,
-    // mais pour une vraie pagination on ajouterait 'page' au service.
-    // Modifions walletService pour accepter la page, mais pour l'instant utilisons 15.
-    this.walletService.getRecentTransactions(profile.trackingId, 15).subscribe({
-      next: (res) => {
+    this.walletService.getRecentTransactions(profile.trackingId, this.page, this.PAGE_SIZE).subscribe({ // Use page and PAGE_SIZE
+      next: (res: Page<TransactionResponse>) => { // Updated type
         if (this.page === 0) {
           this.transactions = res.content || [];
         } else {
           this.transactions = [...this.transactions, ...(res.content || [])];
         }
         
-        if (!res.content || res.content.length < 15) {
-          this.hasMore = false;
-        }
+        this.hasMore = res.last === false; // Update hasMore based on backend response
 
         this.isLoading = false;
         if (event) event.target.complete();

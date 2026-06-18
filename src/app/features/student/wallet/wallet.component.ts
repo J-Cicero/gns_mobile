@@ -8,6 +8,10 @@ import { forkJoin } from 'rxjs';
 
 import { StudentWalletService } from '../../../core/services/student-wallet.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { StudentProfile } from '../../../core/models/student.model'; // Import StudentProfile
+import { TransactionResponse } from '../../../core/models/transaction.model'; // Import TransactionResponse
+import { VersementResponse } from '../../../core/models/versement.model'; // Import VersementResponse
+import { Page } from '../../../core/models/page.model'; // Import Page
 
 @Component({
   selector: 'app-wallet',
@@ -41,7 +45,7 @@ export class WalletComponent implements OnInit {
     // 1. Charger les infos de l'étudiant (pour le solde et le walletId)
     this.walletService.getStudentWallet(studentId).subscribe({
       next: (student) => {
-        this.balance = student.solde || 0;
+        this.balance = student.balance || 0;
         const walletId = student.walletTrackingId;
 
         // 2. Charger parallèlement Transactions et Versements
@@ -50,19 +54,19 @@ export class WalletComponent implements OnInit {
             this.walletService.getStudentTransactions(studentId),
             this.walletService.getStudentVersements(walletId)
           ]).subscribe({
-            next: ([txRes, versementRes]: [any, any]) => {
-              const txList = (txRes.content || []).map((t: any) => ({
+            next: ([txResPage, versementResPage]: [Page<TransactionResponse>, Page<VersementResponse>]) => { // Typed responses
+              const txList = (txResPage.content || []).map((t: TransactionResponse) => ({
                 type: 'DEBIT',
-                amount: t.montantDebite,
-                date: new Date(t.date),
-                description: 'Paiement : ' + t.boutiqueName
+                amount: t.amountDebited, // Changed from montantDebite
+                date: new Date(t.createdAt), // Changed from date to createdAt
+                description: 'Paiement : ' + t.receiverName // Changed from boutiqueName to receiverName
               }));
 
-              const versementList = (versementRes.content || []).map((v: any) => ({
+              const versementList = (versementResPage.content || []).map((v: VersementResponse) => ({
                 type: 'CREDIT',
-                amount: v.montantVerse,
-                date: new Date(v.createdAt),
-                description: 'Versement GNS : ' + (v.libelle || 'Bourse')
+                amount: v.amount, // Changed from montantVerse
+                date: new Date(v.paymentDate), // Changed from createdAt to paymentDate
+                description: 'Versement GNS : ' + (v.paymentType || 'Bourse') // Changed from libelle to paymentType
               }));
 
               // Fusionner et trier par date décroissante
@@ -96,7 +100,7 @@ export class WalletComponent implements OnInit {
 
     this.walletService.getStudentWallet(studentId).subscribe({
       next: (student) => {
-        this.balance = student.solde || 0;
+        this.balance = student.balance || 0;
         const walletId = student.walletTrackingId;
 
         if (walletId) {
@@ -104,19 +108,19 @@ export class WalletComponent implements OnInit {
             this.walletService.getStudentTransactions(studentId),
             this.walletService.getStudentVersements(walletId)
           ]).subscribe({
-            next: ([txRes, versementRes]: [any, any]) => {
-              const txList = (txRes.content || []).map((t: any) => ({
+            next: ([txResPage, versementResPage]: [Page<TransactionResponse>, Page<VersementResponse>]) => { // Typed responses
+              const txList = (txResPage.content || []).map((t: TransactionResponse) => ({
                 type: 'DEBIT',
-                amount: t.montantDebite,
-                date: new Date(t.date),
-                description: 'Paiement : ' + t.boutiqueName
+                amount: t.amountDebited,
+                date: new Date(t.createdAt),
+                description: 'Paiement : ' + t.receiverName
               }));
 
-              const versementList = (versementRes.content || []).map((v: any) => ({
+              const versementList = (versementResPage.content || []).map((v: VersementResponse) => ({
                 type: 'CREDIT',
-                amount: v.montantVerse,
-                date: new Date(v.createdAt),
-                description: 'Versement GNS : ' + (v.libelle || 'Bourse')
+                amount: v.amount,
+                date: new Date(v.paymentDate),
+                description: 'Versement GNS : ' + (v.paymentType || 'Bourse')
               }));
 
               this.transactions = [...txList, ...versementList].sort((a, b) => 

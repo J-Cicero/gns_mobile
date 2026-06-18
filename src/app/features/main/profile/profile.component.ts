@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ViewWillEnter } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
 import { StudentProfile } from '../../../core/models/student.model';
 import { ThemeService } from '../../../core/services/theme.service';
@@ -13,7 +13,7 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, IonicModule, RouterModule]
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, ViewWillEnter {
 
   profile: StudentProfile | null = null;
   isDarkMode = false;
@@ -25,7 +25,10 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.isDarkMode = this.themeService.isDark;
+    this.isDarkMode = this.themeService.isDark; // Keep initial theme check here
+  }
+
+  ionViewWillEnter() { // Ionic lifecycle hook
     this.loadProfile();
   }
 

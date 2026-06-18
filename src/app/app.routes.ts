@@ -23,10 +23,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/onboarding/registration/registration.component').then(m => m.RegistrationComponent)
       },
       {
-        path: 'merchant-registration',
-        loadComponent: () => import('./features/onboarding/merchant-registration/merchant-registration.component').then(m => m.MerchantRegistrationComponent)
-      },
-      {
         path: 'academic-enrollment',
         loadComponent: () => import('./features/onboarding/academic-enrollment/academic-enrollment.component').then(m => m.AcademicEnrollmentComponent)
       },
@@ -76,8 +72,4 @@ export const routes: Routes = [
       }
     ]
   },
-  {
-    path: 'merchant',
-    loadChildren: () => import('./features/merchant/merchant.routes').then(m => m.merchantRoutes)
-  }
 ];

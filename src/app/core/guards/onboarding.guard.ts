@@ -24,7 +24,7 @@ export class OnboardingGuard implements CanActivate {
 
     const profile: StudentProfile = JSON.parse(profileStr);
 
-    if (profile.statutKYC === 'VALIDATED' || profile.isOnboardingComplete) {
+    if (profile.kycStatus === 'VALIDATED' || profile.isOnboardingComplete) {
       return true;
     }
 

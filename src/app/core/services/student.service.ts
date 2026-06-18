@@ -16,7 +16,7 @@ export class StudentService {
   }
 
   registerStudentUnified(formData: FormData): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/users/register/student`, formData);
+    return this.http.post<any>(this.apiUrl, formData); // Pointing to POST /students
   }
 
   getActiveYear(): Observable<any> {

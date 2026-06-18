@@ -5,6 +5,12 @@ import { IonicModule, NavController } from '@ionic/angular'; // Import NavContro
 import { Router } from '@angular/router'; // Keep Router for now if still needed elsewhere
 import { OnboardingService } from '../../../core/services/onboarding.service';
 import { StudentProfile } from '../../../core/models/student.model';
+import {
+  InscriptionAnnuelleRequest,
+  StatutInscription,
+  StudentNiveau,
+  SourceVerification
+} from '../../../core/models/inscription-annuelle.model'; // Import models and enums
 
 @Component({
   selector: 'app-academic-enrollment',
@@ -42,7 +48,7 @@ export class AcademicEnrollmentComponent implements OnInit {
     this.studentProfile = JSON.parse(profileStr);
 
     // Vérifier si l'étudiant a déjà une université et un matricule dans son profil
-    if (!this.studentProfile?.universiteTrackingId || !this.studentProfile?.matricule) {
+    if (!this.studentProfile?.universiteTrackingId || !this.studentProfile?.studentIdNumber) {
       this.errorMessage = "Votre profil est incomplet. Veuillez contacter l'administration.";
       this.isLoadingData = false;
       return;
@@ -86,15 +92,24 @@ export class AcademicEnrollmentComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    const payload = {
+    const payload: InscriptionAnnuelleRequest = { // Explicitly type payload as InscriptionAnnuelleRequest
       studentTrackingId: this.studentProfile.trackingId,
-      universiteTrackingId: this.studentProfile.universiteTrackingId, // Vient du profil
-      scolariteYearTrackingId: this.enrollmentData.scolariteYearTrackingId,
-      matricule: this.studentProfile.matricule, // Vient du profil
-      studyLevel: this.enrollmentData.niveauEtude, // Nouveau nom
+      academicYearLabel: this.activeYear.label, // Assuming activeYear has a label
+      studyLevel: this.enrollmentData.niveauEtude as StudentNiveau, // Cast to StudentNiveau enum
+      totalValidatedCredits: 0, // Default or fetch from profile if available
+      highSchoolGrade: 0, // Default or fetch from profile if available
+      isScholarshipHolder: this.studentProfile.isEligible, // Assuming isEligible maps to isScholarshipHolder
+      scholarshipType: undefined, // Or a default value if not scholarship holder
+      status: StatutInscription.EN_ATTENTE, // Default status
+      source: SourceVerification.MANUELLE, // Default source
+      // other fields as needed
     };
+    
+    // Check if the studentProfile has studentIdNumber and assign it
+    // InscriptionAnnuelleRequest does not have studentIdNumber directly. It's part of StudentProfile.
+    // So no direct assignment needed here.
 
-    this.onboardingService.submitAcademicInfo(this.studentProfile.trackingId, payload).subscribe({
+    this.onboardingService.submitAcademicInfo(payload).subscribe({ // Pass only payload
       next: (res: any) => {
         this.isSubmitting = false;
         

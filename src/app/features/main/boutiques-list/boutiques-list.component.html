@@ -66,12 +66,8 @@
             </div>
             
             <p class="text-sm text-slate-500 dark:text-slate-400 flex items-start mb-2">
-              <svg class="w-4 h-4 mr-1.5 mt-0.5 flex-shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <svg class="w-4 h-4 mr-1.5 mt-0.5 flex-shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 01118 0z" /></svg>
               {{ boutique.description }}
-            </p>
-            <p *ngIf="boutique.telephone" class="text-sm text-slate-500 dark:text-slate-400 flex items-center">
-              <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-              {{ boutique.telephone }}
             </p>
           </div>
 
@@ -121,20 +117,19 @@
           <div *ngIf="!isLoadingProduits && produits.length > 0" class="space-y-4">
             
             <div *ngFor="let p of produits" class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden flex animate-fade-in-up">
-              <!-- Placeholder d'image si dispo, sinon carré coloré -->
+              <!-- No image placeholder as imageUrl removed from model -->
               <div class="w-24 h-full min-h-[100px] bg-slate-200 dark:bg-slate-700 flex-shrink-0 relative">
-                <img *ngIf="p.imageUrl" [src]="p.imageUrl" class="absolute inset-0 w-full h-full object-cover" alt="Produit">
-                <div *ngIf="!p.imageUrl" class="absolute inset-0 flex items-center justify-center">
+                 <div class="absolute inset-0 flex items-center justify-center">
                   <svg class="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                 </div>
               </div>
               
               <div class="p-3 flex-1 flex flex-col justify-center">
-                <h4 class="font-bold text-slate-900 dark:text-white mb-1">{{ p.nom }}</h4>
+                <h4 class="font-bold text-slate-900 dark:text-white mb-1">{{ p.name }}</h4>
                 <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mb-2">{{ p.description }}</p>
                 <div class="mt-auto">
                   <span class="inline-block px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 text-xs font-black rounded-lg">
-                    {{ p.prix | number:'1.0-0':'fr-FR' }} FCFA
+                    {{ p.price | number:'1.0-0':'fr-FR' }} FCFA
                   </span>
                 </div>
               </div>

@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Wallet } from '../models/wallet.model';
-import { Transaction } from '../models/transaction.model';
+import { WalletResponse } from '../models/wallet.model'; // Import WalletResponse
+import { Page } from '../models/page.model'; // Import Page
+import { TransactionRequest, TransactionResponse } from '../models/transaction.model'; // Import TransactionRequest and TransactionResponse
 
 @Injectable({
   providedIn: 'root'
@@ -13,19 +14,19 @@ export class WalletService {
 
   constructor(private http: HttpClient) {}
 
-  getMyWallet(walletTrackingId: string): Observable<Wallet> {
-    return this.http.get<Wallet>(`${this.apiUrl}/${walletTrackingId}`);
+  getMyWallet(walletTrackingId: string): Observable<WalletResponse> {
+    return this.http.get<WalletResponse>(`${this.apiUrl}/${walletTrackingId}`);
   }
 
-  getRecentTransactions(studentTrackingId: string, limit: number = 5): Observable<{content: Transaction[]}> {
-    return this.http.get<{content: Transaction[]}>(`${environment.apiUrl}/transactions/student/${studentTrackingId}?page=0&size=${limit}`);
+  getRecentTransactions(studentTrackingId: string, page: number = 0, size: number = 10): Observable<Page<TransactionResponse>> {
+    return this.http.get<Page<TransactionResponse>>(`${environment.apiUrl}/transactions/student/${studentTrackingId}?page=${page}&size=${size}`);
   }
 
-  pay(payload: any): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/transactions`, payload);
+  pay(request: TransactionRequest): Observable<TransactionResponse> {
+    return this.http.post<TransactionResponse>(`${environment.apiUrl}/transactions`, request);
   }
 
-  getBoutiqueTransactions(boutiqueTrackingId: string, limit: number = 5): Observable<{content: Transaction[]}> {
-    return this.http.get<{content: Transaction[]}>(`${environment.apiUrl}/transactions/boutique/${boutiqueTrackingId}?page=0&size=${limit}`);
+  getBoutiqueTransactions(boutiqueTrackingId: string, limit: number = 5): Observable<Page<TransactionResponse>> {
+    return this.http.get<Page<TransactionResponse>>(`${environment.apiUrl}/transactions/boutique/${boutiqueTrackingId}?page=0&size=${limit}`);
   }
 }

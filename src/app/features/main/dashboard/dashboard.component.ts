@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ViewWillEnter } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { WalletService } from '../../../core/services/wallet.service';
-import { Wallet } from '../../../core/models/wallet.model';
-import { Transaction } from '../../../core/models/transaction.model';
+import { WalletResponse } from '../../../core/models/wallet.model';
+import { Page } from '../../../core/models/page.model';
+import { TransactionResponse } from '../../../core/models/transaction.model';
 import { StudentProfile } from '../../../core/models/student.model';
 
 @Component({
@@ -14,10 +15,10 @@ import { StudentProfile } from '../../../core/models/student.model';
   standalone: true,
   imports: [CommonModule, IonicModule, RouterModule]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, ViewWillEnter {
 
-  wallet: Wallet | null = null;
-  recentTransactions: Transaction[] = [];
+  wallet: WalletResponse | null = null;
+  recentTransactions: TransactionResponse[] = [];
   studentName = '';
   
   isLoading = true;
@@ -26,6 +27,10 @@ export class DashboardComponent implements OnInit {
   constructor(private walletService: WalletService) { }
 
   ngOnInit() {
+    // Keep this empty or for very initial setup that doesn't need to re-run
+  }
+
+  ionViewWillEnter() { // Ionic lifecycle hook
     this.loadProfile();
     this.loadDashboardData();
   }
@@ -34,7 +39,7 @@ export class DashboardComponent implements OnInit {
     const profileStr = localStorage.getItem('student_profile');
     if (profileStr) {
       const profile: StudentProfile = JSON.parse(profileStr);
-      this.studentName = profile.prenom || 'Étudiant';
+      this.studentName = profile.firstName || 'Étudiant'; // Updated field
     }
   }
 
@@ -51,21 +56,19 @@ export class DashboardComponent implements OnInit {
     const profile: StudentProfile = JSON.parse(profileStr);
 
     if (!profile.walletTrackingId) {
-      // Si on n'a pas de walletTrackingId, on utilise juste la balance de StudentResponse
-      this.wallet = {
-        trackingId: 'N/A',
-        solde: profile.balance || 0,
-        statutWallet: 'ACTIF',
-        proprietaireTrackingId: profile.trackingId,
-        typeProprietaire: 'ETUDIANT'
-      };
-      this.loadTransactions(profile.trackingId);
+      // If no walletTrackingId, it means the student doesn't have a wallet yet or an issue.
+      // The UI should reflect this, not construct a partial wallet.
+      this.isLoading = false;
+      this.errorMessage = "Portefeuille non trouvé pour cet étudiant.";
       return;
     }
 
+    // Since getStudentWallet returns StudentProfile, we need to extract the walletTrackingId
+    // and then call getMyWallet with that ID, or ensure getStudentWallet returns WalletResponse
+    // Directly calling getMyWallet with walletTrackingId is the most straightforward.
     this.walletService.getMyWallet(profile.walletTrackingId).subscribe({
-      next: (w) => {
-        this.wallet = w;
+      next: (walletResponse) => {
+        this.wallet = walletResponse;
         this.loadTransactions(profile.trackingId);
       },
       error: (err) => {
@@ -77,7 +80,7 @@ export class DashboardComponent implements OnInit {
 
   loadTransactions(studentTrackingId: string) {
     this.walletService.getRecentTransactions(studentTrackingId, 5).subscribe({
-      next: (res) => {
+      next: (res: Page<TransactionResponse>) => { // Updated type
         this.recentTransactions = res.content || [];
         this.isLoading = false;
       },
