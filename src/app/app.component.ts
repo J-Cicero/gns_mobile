@@ -28,9 +28,10 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class AppComponent {
   public studentPages = [
-    { title: 'Mon Wallet', url: '/student/wallet', icon: 'wallet' },
-    { title: 'Mes Documents', url: '/student/documents', icon: 'document-text' },
-    { title: 'Mon Profil', url: '/student/profile', icon: 'person' },
+    { title: 'Dashboard', url: '/main/dashboard', icon: 'home' },
+    { title: 'Boutiques', url: '/main/boutiques', icon: 'wallet' },
+    { title: 'Historique', url: '/main/history', icon: 'document-text' },
+    { title: 'Mon Profil', url: '/main/profile', icon: 'person' },
   ];
 
   public merchantPages: any[] = [
@@ -63,14 +64,20 @@ export class AppComponent {
   }
 
   updateMenuVisibility(url: string) {
-    if (url.includes('/login') || url.includes('/register') || url.includes('/waiting') || url.includes('/documents')) {
+    const isPublic = url.includes('/login') || url.includes('/register') || url.includes('/onboarding');
+    if (isPublic) {
       this.showMenu = false;
+      this.userRole = null;
     } else {
       this.showMenu = true;
-      if (url.includes('/student')) {
+      // Detect role from stored profile or URL
+      const profileStr = localStorage.getItem('student_profile');
+      if (profileStr) {
         this.userRole = 'ETUDIANT';
       } else if (url.includes('/merchant')) {
         this.userRole = 'COMMERCANT';
+      } else {
+        this.userRole = 'ETUDIANT'; // default for /main/
       }
     }
   }

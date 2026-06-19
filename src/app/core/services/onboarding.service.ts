@@ -13,7 +13,7 @@ export class OnboardingService {
 
   registerStudent(request: StudentRequest, ribFile?: File, mandatFile?: File): Observable<any> {
     const formData = new FormData();
-    formData.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }));
+    formData.append('student', new Blob([JSON.stringify(request)], { type: 'application/json' }));
     
     if (ribFile) {
       formData.append('rib', ribFile);

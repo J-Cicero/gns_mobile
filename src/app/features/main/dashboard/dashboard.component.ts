@@ -7,20 +7,23 @@ import { WalletResponse } from '../../../core/models/wallet.model';
 import { Page } from '../../../core/models/page.model';
 import { TransactionResponse } from '../../../core/models/transaction.model';
 import { StudentProfile } from '../../../core/models/student.model';
+import { QRCodeComponent } from 'angularx-qrcode';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, RouterModule]
+  imports: [CommonModule, IonicModule, RouterModule, QRCodeComponent]
 })
 export class DashboardComponent implements OnInit, ViewWillEnter {
 
   wallet: WalletResponse | null = null;
   recentTransactions: TransactionResponse[] = [];
   studentName = '';
-  
+  studentTrackingId = '';
+  isQrModalOpen = false;
+
   isLoading = true;
   errorMessage = '';
 
@@ -40,6 +43,7 @@ export class DashboardComponent implements OnInit, ViewWillEnter {
     if (profileStr) {
       const profile: StudentProfile = JSON.parse(profileStr);
       this.studentName = profile.firstName || 'Étudiant'; // Updated field
+      this.studentTrackingId = profile.trackingId; // Added for QR Code
     }
   }
 
@@ -56,37 +60,41 @@ export class DashboardComponent implements OnInit, ViewWillEnter {
     const profile: StudentProfile = JSON.parse(profileStr);
 
     if (!profile.walletTrackingId) {
-      // If no walletTrackingId, it means the student doesn't have a wallet yet or an issue.
-      // The UI should reflect this, not construct a partial wallet.
+      // Pas de walletTrackingId en cache : afficher un wallet vide sans bloquer
+      this.wallet = { trackingId: '', walletType: 'STUDENT' as any, status: 'INACTIF' as any, fundingLevel: 'NORMAL' as any, balance: 0, limitAmount: 0, currency: 'FCFA', createdAt: '' };
       this.isLoading = false;
-      this.errorMessage = "Portefeuille non trouvé pour cet étudiant.";
+      this.loadTransactions(profile.trackingId);
       return;
     }
 
-    // Since getStudentWallet returns StudentProfile, we need to extract the walletTrackingId
-    // and then call getMyWallet with that ID, or ensure getStudentWallet returns WalletResponse
-    // Directly calling getMyWallet with walletTrackingId is the most straightforward.
     this.walletService.getMyWallet(profile.walletTrackingId).subscribe({
       next: (walletResponse) => {
         this.wallet = walletResponse;
+        // Force balance to 0 if null/undefined from backend
+        if (this.wallet && (this.wallet.balance === null || this.wallet.balance === undefined)) {
+          (this.wallet as any).balance = 0;
+        }
         this.loadTransactions(profile.trackingId);
       },
-      error: (err) => {
+      error: () => {
+        // En cas d'erreur réseau, afficher un wallet à 0
+        this.wallet = { trackingId: profile.walletTrackingId!, walletType: 'STUDENT' as any, status: 'INACTIF' as any, fundingLevel: 'NORMAL' as any, balance: 0, limitAmount: 0, currency: 'FCFA', createdAt: '' };
         this.isLoading = false;
-        this.errorMessage = "Impossible de charger les données du portefeuille.";
+        this.loadTransactions(profile.trackingId);
       }
     });
   }
 
   loadTransactions(studentTrackingId: string) {
+    if (!studentTrackingId) { this.isLoading = false; return; }
     this.walletService.getRecentTransactions(studentTrackingId, 5).subscribe({
-      next: (res: Page<TransactionResponse>) => { // Updated type
-        this.recentTransactions = res.content || [];
+      next: (res: Page<TransactionResponse>) => {
+        this.recentTransactions = res?.content || [];
         this.isLoading = false;
       },
-      error: (err) => {
+      error: () => {
+        this.recentTransactions = [];
         this.isLoading = false;
-        this.errorMessage = "Impossible de charger les transactions.";
       }
     });
   }

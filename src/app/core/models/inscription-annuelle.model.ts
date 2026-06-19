@@ -1,11 +1,9 @@
 export enum StudentNiveau {
-  L1 = 'L1',
-  L2 = 'L2',
-  L3 = 'L3',
-  M1 = 'M1',
-  M2 = 'M2',
-  DOCTORAT = 'DOCTORAT',
-  AUTRE = 'AUTRE',
+  L1_ANNEE = 'L1_ANNEE',
+  L2_ANNEE = 'L2_ANNEE',
+  L3_ANNEE = 'L3_ANNEE',
+  L4_ANNEE = 'L4_ANNEE',
+  L5_ANNEE = 'L5_ANNEE'
 }
 
 export enum TypeBourse {

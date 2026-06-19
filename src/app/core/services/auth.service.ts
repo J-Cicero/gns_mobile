@@ -10,32 +10,31 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(credentials: any): Observable<any> {
-    // Étape 1 : Appel à /users/login pour obtenir le token et l'ID
     return this.http.post<any>(`${environment.apiUrl}/users/login`, credentials).pipe(
       switchMap(res => {
         if (res && res.token && res.trackingId) {
           localStorage.setItem('access_token', res.token);
-          // Étape 2 : Récupérer le profil étudiant complet avec le trackingId
           return this.http.get<any>(`${environment.apiUrl}/students/${res.trackingId}`).pipe(
             tap(student => {
               const profileToStore = {
                 ...student,
-                // Directement les noms de champs du backend, car student.model.ts est maintenant aligné
                 trackingId: student.trackingId,
                 lastName: student.lastName,
                 firstName: student.firstName,
                 email: student.email,
                 phoneNumber: student.phoneNumber,
                 studentIdNumber: student.studentIdNumber,
-                universiteTrackingId: student.universite?.trackingId || null,
-                universiteFullName: student.universite?.fullName || 'Non renseigné',
+                universiteTrackingId: student.universiteTrackingId || null,
+                universiteFullName: student.universiteFullName || 'Non renseigné',
                 birthDate: student.birthDate,
                 birthPlace: student.birthPlace,
                 kycStatus: student.kycStatus, // Utilise directement kycStatus
                 isActive: student.isActive, // Ajout de isActive
+                walletTrackingId: student.walletTrackingId,
+                balance: student.balance,
                 isEligible: true, // Garder comme logique frontend dérivée
                 isOnboardingComplete: student.kycStatus === 'VALIDATED' // Garder comme logique frontend dérivée
               };
@@ -93,11 +92,11 @@ export class AuthService {
             return this.http.get<any>(`${environment.apiUrl}/students/${trackingId}`).pipe(
               map(student => {
                 const kycStatus = student.kycStatus || 'PENDING';
-                
+
                 const currentProfile = JSON.parse(localStorage.getItem('student_profile') || '{}');
                 localStorage.setItem('student_profile', JSON.stringify({
-                  ...currentProfile, 
-                  ...student, 
+                  ...currentProfile,
+                  ...student,
                   statutKYC: kycStatus,
                   isOnboardingComplete: kycStatus === 'VALIDATED'
                 }));
@@ -114,10 +113,10 @@ export class AuthService {
         );
       }),
       catchError((err: any) => {
-         if (err.status === 404) {
-             return of('/student/waiting');
-         }
-         return of('/auth/login');
+        if (err.status === 404) {
+          return of('/student/waiting');
+        }
+        return of('/auth/login');
       })
     );
   }

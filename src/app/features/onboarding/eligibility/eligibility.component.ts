@@ -53,11 +53,11 @@ export class EligibilityComponent implements OnInit {
 
     this.onboardingService.checkEligibility(inscriptionId).subscribe({
       next: (res) => {
-        // Supposons que le backend renvoie l'inscription mise à jour avec isEligible (ou estInscritDefinitif)
-        if (res && res.estInscritDefinitif) {
+        // Le backend renvoie isFullyEnrolled suite au refactoring
+        if (res && res.isFullyEnrolled) {
           this.status = 'ELIGIBLE';
           // Mettre à jour le profil local
-          const updatedProfile = { ...profile, isEligible: true, isOnboardingComplete: true };
+          const updatedProfile = { ...profile, isEligible: res.isEligibleForScholarship, isOnboardingComplete: true };
           localStorage.setItem('student_profile', JSON.stringify(updatedProfile));
           
           // Après 2 secondes, rediriger vers le dashboard
