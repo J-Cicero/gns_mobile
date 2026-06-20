@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, NavController } from '@ionic/angular'; // Import NavController
-import { Router } from '@angular/router'; // Keep Router for now if still needed elsewhere
+import { IonicModule, NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { OnboardingService } from '../../../core/services/onboarding.service';
+import { forkJoin } from 'rxjs';
 import { StudentProfile } from '../../../core/models/student.model';
 import {
   InscriptionAnnuelleRequest,
@@ -22,12 +23,16 @@ import {
 export class AcademicEnrollmentComponent implements OnInit {
 
   enrollmentData = {
-    niveauEtude: '', // Renommé de faculte
-    scolariteYearTrackingId: '' // Rempli automatiquement
+    niveauEtude: '', 
+    scolariteYearTrackingId: ''
   };
 
   activeYear: any = null;
-  studentProfile: StudentProfile | null = null; // Pour stocker les infos de l'étudiant
+  studentProfile: StudentProfile | null = null; 
+
+  allDocumentsRequis: any[] = [];
+  filteredDocumentsRequis: any[] = [];
+  selectedFiles: { [key: string]: File } = {};
 
   isSubmitting = false;
   isLoadingData = true;
@@ -47,14 +52,38 @@ export class AcademicEnrollmentComponent implements OnInit {
     }
     this.studentProfile = JSON.parse(profileStr);
 
+    this.loadActiveYear();
+
     // Vérifier si l'étudiant a déjà une université et un matricule dans son profil
     if (!this.studentProfile?.universiteTrackingId || !this.studentProfile?.studentIdNumber) {
-      this.errorMessage = "Votre profil est incomplet. Veuillez contacter l'administration.";
+      this.errorMessage = "Votre profil est incomplet (Université ou Matricule manquant). Veuillez recréer un compte pour tester correctement.";
       this.isLoadingData = false;
       return;
     }
 
-    this.loadActiveYear();
+    this.loadDocumentsRequis();
+  }
+
+  loadDocumentsRequis() {
+    this.onboardingService.getDocumentRequis().subscribe({
+      next: (docs) => {
+        this.allDocumentsRequis = docs;
+      },
+      error: (err) => console.error('Erreur chargement documents requis', err)
+    });
+  }
+
+  onNiveauChange() {
+    this.filteredDocumentsRequis = this.allDocumentsRequis.filter(doc => 
+      doc.studentNiveau === null || doc.studentNiveau === undefined || doc.studentNiveau === this.enrollmentData.niveauEtude
+    );
+    this.selectedFiles = {};
+  }
+
+  onFileSelected(event: any, typeDocument: string) {
+    if (event.target.files.length > 0) {
+      this.selectedFiles[typeDocument] = event.target.files[0];
+    }
   }
 
   loadActiveYear() {
@@ -89,46 +118,71 @@ export class AcademicEnrollmentComponent implements OnInit {
       return;
     }
 
+    if (this.filteredDocumentsRequis.length > 0) {
+      const missingDocs = this.filteredDocumentsRequis.filter(doc => !this.selectedFiles[doc.typeDocument]);
+      if (missingDocs.length > 0) {
+         this.errorMessage = "Veuillez uploader tous les documents requis.";
+         return;
+      }
+    }
+
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    const payload: InscriptionAnnuelleRequest = { // Explicitly type payload as InscriptionAnnuelleRequest
+    const payload: InscriptionAnnuelleRequest = { 
       studentTrackingId: this.studentProfile.trackingId,
-      academicYearLabel: this.activeYear.label, // Assuming activeYear has a label
-      studyLevel: this.enrollmentData.niveauEtude as StudentNiveau, // Cast to StudentNiveau enum
-      totalValidatedCredits: 0, // Default or fetch from profile if available
-      highSchoolGrade: 0, // Default or fetch from profile if available
-      isScholarshipHolder: this.studentProfile.isEligible, // Assuming isEligible maps to isScholarshipHolder
-      scholarshipType: undefined, // Or a default value if not scholarship holder
-      status: StatutInscription.EN_ATTENTE, // Default status
-      source: SourceVerification.MANUELLE, // Default source
-      // other fields as needed
+      academicYearLabel: this.activeYear.label,
+      studyLevel: this.enrollmentData.niveauEtude as StudentNiveau,
+      totalValidatedCredits: 0,
+      highSchoolGrade: 0,
+      isScholarshipHolder: this.studentProfile.isEligible,
+      scholarshipType: undefined,
+      status: StatutInscription.EN_ATTENTE,
+      source: SourceVerification.MANUELLE,
     };
-    
-    // Check if the studentProfile has studentIdNumber and assign it
-    // InscriptionAnnuelleRequest does not have studentIdNumber directly. It's part of StudentProfile.
-    // So no direct assignment needed here.
 
-    this.onboardingService.submitAcademicInfo(payload).subscribe({ // Pass only payload
+    this.onboardingService.submitAcademicInfo(payload).subscribe({
       next: (res: any) => {
-        this.isSubmitting = false;
-        
-        if (res && res.trackingId) {
-          localStorage.setItem('inscription_tracking_id', res.trackingId);
-        }
+        const trackingId = res.trackingId;
+        localStorage.setItem('inscription_tracking_id', trackingId);
 
-        const updatedProfile = {
-          ...this.studentProfile,
-          isOnboardingComplete: true
-        };
-        localStorage.setItem('student_profile', JSON.stringify(updatedProfile));
-        
-        this.navCtrl.navigateRoot('/onboarding/eligibility'); // Use navCtrl
+        if (this.filteredDocumentsRequis.length > 0) {
+           const uploadRequests = this.filteredDocumentsRequis.map(doc => 
+              this.onboardingService.uploadDocument(this.selectedFiles[doc.typeDocument], this.studentProfile!.trackingId, trackingId, doc.typeDocument)
+           );
+           
+           forkJoin(uploadRequests).subscribe({
+              next: () => {
+                 this.validerInscription(trackingId);
+              },
+              error: (err: any) => {
+                 this.isSubmitting = false;
+                 this.errorMessage = "Erreur lors de l'upload des documents.";
+              }
+           });
+        } else {
+           this.validerInscription(trackingId);
+        }
       },
       error: (err: any) => {
         this.isSubmitting = false;
         this.errorMessage = err.error?.message || "Erreur lors de l'enregistrement académique.";
       }
+    });
+  }
+
+  validerInscription(trackingId: string) {
+    this.onboardingService.validerInscription(trackingId).subscribe({
+       next: () => {
+          this.isSubmitting = false;
+          const updatedProfile = { ...this.studentProfile, isOnboardingComplete: true };
+          localStorage.setItem('student_profile', JSON.stringify(updatedProfile));
+          this.navCtrl.navigateRoot('/onboarding/eligibility');
+       },
+       error: (err: any) => {
+          this.isSubmitting = false;
+          this.errorMessage = err.error?.message || "Erreur lors de la validation de l'inscription.";
+       }
     });
   }
 

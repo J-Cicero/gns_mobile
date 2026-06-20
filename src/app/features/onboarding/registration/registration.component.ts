@@ -132,7 +132,7 @@ export class RegistrationComponent implements OnInit {
         email: this.registrationData.email,
         phoneNumber: this.registrationData.telephone,
         password: this.registrationData.motDePasse,
-        studentIdNumber: this.registrationData.studentIdNumber,
+        studentNumber: this.registrationData.studentIdNumber,
         universiteTrackingId: this.registrationData.universiteTrackingId,
         bankTrackingId: this.registrationData.bankTrackingId,
         accountNumber: this.registrationData.accountNumber,

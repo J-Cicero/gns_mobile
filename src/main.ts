@@ -3,6 +3,10 @@ import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } 
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './app/core/interceptors/auth.interceptor';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
+registerLocaleData(localeFr);
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';

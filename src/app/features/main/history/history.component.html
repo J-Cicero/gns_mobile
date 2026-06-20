@@ -60,7 +60,7 @@
                 'text-slate-900 dark:text-white': tx.senderName === 'Moi',
                 'text-emerald-600 dark:text-emerald-400': tx.receiverName === 'Moi'
               }">
-              <span *ngIf="tx.receiverName === 'Moi'">+</span><span *ngIf="tx.senderName === 'Moi'">-</span>{{ tx.senderName === 'Moi' ? tx.amountDebited : tx.amountCredited | number:'1.0-0':'fr-FR' }}
+              <span *ngIf="tx.receiverName === 'Moi'">+</span><span *ngIf="tx.senderName === 'Moi'">-</span>{{ tx.senderName === 'Moi' ? tx.amountDebited : tx.amountCredited | number:'1.0-0':'fr' }}
             </p>
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">{{ tx.status }}</p>
           </div>

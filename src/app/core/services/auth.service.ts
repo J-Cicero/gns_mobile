@@ -26,7 +26,7 @@ export class AuthService {
                 firstName: student.firstName,
                 email: student.email,
                 phoneNumber: student.phoneNumber,
-                studentIdNumber: student.studentIdNumber,
+                studentIdNumber: student.studentNumber || student.studentIdNumber,
                 universiteTrackingId: student.universiteTrackingId || null,
                 universiteFullName: student.universiteFullName || 'Non renseigné',
                 birthDate: student.birthDate,
@@ -78,10 +78,11 @@ export class AuthService {
           return of('/student/waiting');
         }
 
-        return this.http.get<any[]>(`${environment.apiUrl}/inscriptions/student/${trackingId}`).pipe(
-          catchError((_: any) => of([] as any[])),
-          switchMap((inscriptions: any[]) => {
-            const activeInscription = inscriptions.find((i: any) => i.scolariteYearTrackingId === activeYear.trackingId);
+        return this.http.get<any>(`${environment.apiUrl}/inscriptions/student/${trackingId}`).pipe(
+          catchError((_: any) => of({ content: [] })),
+          switchMap((response: any) => {
+            const inscriptionsArray = Array.isArray(response) ? response : (response?.content || []);
+            const activeInscription = inscriptionsArray.find((i: any) => i.academicYearLabel === activeYear.label);
 
             if (!activeInscription) {
               return of('/onboarding/academic-enrollment');

@@ -43,7 +43,7 @@
           
           <div class="mb-6">
             <h2 class="text-4xl font-black tracking-tight flex items-baseline">
-              {{ (wallet.balance !== undefined && wallet.balance !== null ? wallet.balance : 0) | number:'1.0-0':'fr-FR' }} <span class="text-lg font-bold ml-1 text-indigo-200">FCFA</span>
+              {{ (wallet.balance !== undefined && wallet.balance !== null ? wallet.balance : 0) | number:'1.0-0':'fr' }} <span class="text-lg font-bold ml-1 text-indigo-200">FCFA</span>
             </h2>
           </div>
 
@@ -118,7 +118,7 @@
                   'text-slate-900 dark:text-white': tx.senderName === 'Moi',
                   'text-emerald-600 dark:text-emerald-400': tx.receiverName === 'Moi'
                 }">
-                <span *ngIf="tx.receiverName === 'Moi'">+</span><span *ngIf="tx.senderName === 'Moi'">-</span>{{ tx.senderName === 'Moi' ? tx.amountDebited : tx.amountCredited | number:'1.0-0':'fr-FR' }}
+                <span *ngIf="tx.receiverName === 'Moi'">+</span><span *ngIf="tx.senderName === 'Moi'">-</span>{{ tx.senderName === 'Moi' ? tx.amountDebited : tx.amountCredited | number:'1.0-0':'fr' }}
               </p>
               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{{ tx.status }}</p>
             </div>
@@ -129,32 +129,32 @@
   </div>
 
   <!-- QR Code Modal -->
-  <ion-modal [isOpen]="isQrModalOpen" (didDismiss)="isQrModalOpen = false" [initialBreakpoint]="0.75" [breakpoints]="[0, 0.75]" handleBehavior="cycle">
+  <ion-modal [isOpen]="isQrModalOpen" (didDismiss)="isQrModalOpen = false">
     <ng-template>
-      <ion-content [scrollY]="false" style="--background: #f8fafc;">
-        <div class="flex flex-col items-center justify-center pt-8 pb-6 px-6 h-full">
-          
-          <h2 class="text-2xl font-black text-slate-900 mb-2 text-center">Mon Code QR</h2>
-          <p class="text-sm text-slate-500 text-center mb-6 px-4">
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="bg-slate-50 dark:bg-slate-900">
+          <ion-title class="text-slate-900 dark:text-white font-black">Mon Code QR</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="isQrModalOpen = false" class="text-slate-500 font-bold">Fermer</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding" style="--background: #f8fafc; --background-dark: #0f172a;">
+        <div class="flex flex-col items-center justify-center pt-4 pb-6 h-full bg-slate-50 dark:bg-slate-900">
+          <p class="text-sm text-slate-500 dark:text-slate-400 text-center mb-6 px-4">
             Présentez ce code au commerçant pour recevoir un paiement.
           </p>
           
-          <!-- QR inside forced-white box -->
-          <div style="background: white; padding: 16px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.10);">
+          <div class="bg-white p-4 rounded-2xl shadow-xl flex items-center justify-center">
             <qrcode *ngIf="studentTrackingId"
               [qrdata]="'{\u0022type\u0022:\u0022PAYMENT\u0022,\u0022senderTrackingId\u0022:\u0022' + studentTrackingId + '\u0022}'"
-              [width]="220"
-              [colorDark]="'#1e1b4b'"
-              [colorLight]="'#ffffff'"
+              [width]="240"
               [errorCorrectionLevel]="'M'">
             </qrcode>
           </div>
 
-          <p class="mt-4 text-xs font-mono text-slate-400 tracking-widest text-center break-all">{{ studentTrackingId }}</p>
+          <p class="mt-6 text-xs font-mono text-slate-400 dark:text-slate-500 tracking-widest text-center break-all px-8">{{ studentTrackingId }}</p>
 
-          <button (click)="isQrModalOpen = false" class="mt-6 w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold text-sm">
-            Fermer
-          </button>
         </div>
       </ion-content>
     </ng-template>

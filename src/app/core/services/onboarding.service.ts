@@ -44,4 +44,21 @@ export class OnboardingService {
   getActiveScolariteYear(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/scolarite-years/active`);
   }
+
+  getDocumentRequis(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/documents-requis`);
+  }
+
+  uploadDocument(fichier: File, studentTrackingId: string, inscriptionTrackingId: string, typeDocument: string): Observable<any> {
+    const formData = new FormData();
+    formData.append('fichier', fichier);
+    formData.append('studentTrackingId', studentTrackingId);
+    formData.append('inscriptionTrackingId', inscriptionTrackingId);
+    formData.append('typeDocument', typeDocument);
+    return this.http.post<any>(`${environment.apiUrl}/students/documents/upload`, formData);
+  }
+
+  validerInscription(inscriptionTrackingId: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/inscriptions/${inscriptionTrackingId}/valider`, {});
+  }
 }
