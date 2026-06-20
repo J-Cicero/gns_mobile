@@ -1,10 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { 
-  IonApp, IonRouterOutlet, IonSplitPane, IonMenu, IonContent, IonList, 
-  IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonToggle
-} from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   homeOutline, homeSharp, walletOutline, walletSharp, documentTextOutline, documentTextSharp,
@@ -21,9 +17,7 @@ import { Router, NavigationEnd } from '@angular/router';
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [
-    CommonModule, RouterLink, RouterLinkActive,
-    IonApp, IonRouterOutlet, IonSplitPane, IonMenu, IonContent, IonList, 
-    IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonToggle
+    CommonModule, IonApp, IonRouterOutlet
   ],
 })
 export class AppComponent {
