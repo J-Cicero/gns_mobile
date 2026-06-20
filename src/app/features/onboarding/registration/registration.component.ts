@@ -14,15 +14,16 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class RegistrationComponent implements OnInit {
 
+  currentStep = 1;
   registrationData = {
     nom: '',
     prenom: '',
     email: '',
     telephone: '',
     motDePasse: '',
-    pinCode: '', // Correction: Ajout de pinCode à registrationData
-    birthDate: '', // Nouveau champ
-    birthPlace: '', // Nouveau champ
+    pinCode: '',
+    birthDate: '',
+    birthPlace: '',
     studentIdNumber: '',
     universiteTrackingId: '',
     bankTrackingId: '',
@@ -86,63 +87,88 @@ export class RegistrationComponent implements OnInit {
     this.navCtrl.navigateRoot('/auth/login');
   }
 
-  onSubmit() {
-    if (!this.registrationData.nom || !this.registrationData.prenom || !this.registrationData.email || !this.registrationData.motDePasse || !this.registrationData.studentIdNumber || !this.registrationData.universiteTrackingId) {
-      this.errorMessage = 'Veuillez remplir les informations de base obligatoires.';
-      return;
-    }
-    
-    if (this.registrationData.bankTrackingId && !this.registrationData.accountNumber) {
-      this.errorMessage = 'Veuillez fournir un numéro de compte pour la banque sélectionnée.';
-      return;
-    }
-
-    this.isSubmitting = true;
+  nextStep() {
     this.errorMessage = '';
-
-    const payload = {
-      lastName: this.registrationData.nom,
-      firstName: this.registrationData.prenom,
-      email: this.registrationData.email,
-      phoneNumber: this.registrationData.telephone,
-      password: this.registrationData.motDePasse,
-      studentIdNumber: this.registrationData.studentIdNumber,
-      universiteTrackingId: this.registrationData.universiteTrackingId,
-      bankTrackingId: this.registrationData.bankTrackingId,
-      accountNumber: this.registrationData.accountNumber,
-      birthDate: this.registrationData.birthDate ? `${this.registrationData.birthDate}T00:00:00` : undefined, // Ajout du format horaire
-      birthPlace: this.registrationData.birthPlace,
-      pinCodeHash: this.registrationData.pinCode
-    };
-
-    this.onboardingService.registerStudent(payload, this.ribFile || undefined, this.mandatFile || undefined).subscribe({
-      next: (res: any) => {
-        this.authService.login({
-          email: this.registrationData.email,
-          password: this.registrationData.motDePasse
-        }).subscribe({
-          next: (loginRes: any) => {
-            this.isSubmitting = false;
-            const profile = JSON.parse(localStorage.getItem('student_profile') || '{}');
-            profile.isOnboardingComplete = false;
-            profile.isEligible = false;
-            localStorage.setItem('student_profile', JSON.stringify(profile));
-            
-            this.navCtrl.navigateRoot('/onboarding/academic-enrollment');
-          },
-          error: (err: any) => {
-            this.isSubmitting = false;
-            this.errorMessage = "Compte créé mais connexion automatique échouée. Veuillez vous connecter.";
-            setTimeout(() => this.navCtrl.navigateRoot('/auth/login'), 2000);
-          }
-        });
-      },
-      error: (err: any) => {
-        this.isSubmitting = false;
-        this.errorMessage = err.error?.message || 'Erreur lors de la création du compte. Veuillez réessayer.';
+    if (this.currentStep === 1) {
+      if (!this.registrationData.nom || !this.registrationData.prenom || !this.registrationData.email || !this.registrationData.motDePasse || !this.registrationData.pinCode) {
+        this.errorMessage = 'Veuillez remplir vos informations personnelles.';
+        return;
       }
-    });
+      this.currentStep = 2;
+    } else if (this.currentStep === 2) {
+      // Bank is optional, but if selected, account number is required
+      if (this.registrationData.bankTrackingId && !this.registrationData.accountNumber) {
+        this.errorMessage = 'Veuillez fournir un numéro de compte pour la banque sélectionnée.';
+        return;
+      }
+      if (this.registrationData.bankTrackingId && (!this.ribFile || !this.mandatFile)) {
+        this.errorMessage = 'Veuillez fournir le RIB et le Mandat Signé.';
+        return;
+      }
+      this.currentStep = 3;
+    }
+  }
+
+  prevStep() {
+    this.errorMessage = '';
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
+
+  onSubmit() {
+    if (this.currentStep === 3) {
+      if (!this.registrationData.studentIdNumber || !this.registrationData.universiteTrackingId) {
+        this.errorMessage = 'Veuillez remplir vos informations académiques.';
+        return;
+      }
+
+      this.isSubmitting = true;
+      this.errorMessage = '';
+
+      const payload = {
+        lastName: this.registrationData.nom,
+        firstName: this.registrationData.prenom,
+        email: this.registrationData.email,
+        phoneNumber: this.registrationData.telephone,
+        password: this.registrationData.motDePasse,
+        studentIdNumber: this.registrationData.studentIdNumber,
+        universiteTrackingId: this.registrationData.universiteTrackingId,
+        bankTrackingId: this.registrationData.bankTrackingId,
+        accountNumber: this.registrationData.accountNumber,
+        birthDate: this.registrationData.birthDate ? `${this.registrationData.birthDate}T00:00:00` : undefined,
+        birthPlace: this.registrationData.birthPlace,
+        pinCodeHash: this.registrationData.pinCode
+      };
+
+      this.onboardingService.registerStudent(payload, this.ribFile || undefined, this.mandatFile || undefined).subscribe({
+        next: (res: any) => {
+          this.authService.login({
+            email: this.registrationData.email,
+            password: this.registrationData.motDePasse
+          }).subscribe({
+            next: (loginRes: any) => {
+              this.isSubmitting = false;
+              const profile = JSON.parse(localStorage.getItem('student_profile') || '{}');
+              profile.isOnboardingComplete = false;
+              profile.isEligible = false;
+              localStorage.setItem('student_profile', JSON.stringify(profile));
+              
+              this.navCtrl.navigateRoot('/onboarding/academic-enrollment');
+            },
+            error: (err: any) => {
+              this.isSubmitting = false;
+              this.errorMessage = "Compte créé mais connexion automatique échouée. Veuillez vous connecter.";
+              setTimeout(() => this.navCtrl.navigateRoot('/auth/login'), 2000);
+            }
+          });
+        },
+        error: (err: any) => {
+          this.isSubmitting = false;
+          this.errorMessage = err.error?.message || 'Erreur lors de la création du compte. Veuillez réessayer.';
+        }
+      });
+    }
   }
 
 }
-

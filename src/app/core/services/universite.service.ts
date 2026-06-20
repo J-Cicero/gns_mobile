@@ -16,4 +16,21 @@ export class UniversiteService {
   getAll(): Observable<Page<UniversiteResponse>> {
     return this.http.get<Page<UniversiteResponse>>(this.apiUrl);
   }
+
+
+  findByTrackingId(trackingId: any): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${trackingId}`);
+  }
+
+  updateEtat(trackingId: any, data: any): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/etat/${trackingId}`, data);
+  }
+
+  getSummaryStats(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/summary-stats`);
+  }
+
+  delete(trackingId: any): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${trackingId}`);
+  }
 }

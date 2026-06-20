@@ -25,7 +25,7 @@ export class LoginComponent {
   }
 
   goToRegister() {
-    this.navCtrl.navigateRoot('/onboarding/account-type-selection');
+    this.navCtrl.navigateRoot('/onboarding/registration');
   }
 
   onLogin() {

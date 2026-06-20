@@ -18,4 +18,9 @@ export class BanqueService {
   getAllBanques(): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/banques`);
   }
+
+
+  uploadRibDocument(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/upload-rib`, data);
+  }
 }

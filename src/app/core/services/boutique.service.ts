@@ -19,4 +19,37 @@ export class BoutiqueService {
   getProduitsByBoutique(boutiqueTrackingId: string, page: number = 0, size: number = 10): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/products/boutique/${boutiqueTrackingId}?page=${page}&size=${size}`);
   }
+
+
+  findByTrackingId(trackingId: any): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${trackingId}`);
+  }
+
+  updateTrackingid(trackingId: any, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${trackingId}`, data);
+  }
+
+  delete(trackingId: any): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${trackingId}`);
+  }
+
+  getMerchantMerchanttrackingid(merchantTrackingId: any): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/merchant/${merchantTrackingId}`);
+  }
+
+  getWalletWallettrackingid(walletTrackingId: any): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/wallet/${walletTrackingId}`);
+  }
+
+  getKycStatutkyc(statutKYC: any): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/kyc/${statutKYC}`);
+  }
+
+  getLowQuotaCount(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/stats/low-quota-count`);
+  }
+
+  getBoutiquesEnAlerte(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/alertes-quota`);
+  }
 }

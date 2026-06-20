@@ -14,4 +14,13 @@ export class ScolariteYearService {
   getActiveYear(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/active`);
   }
+
+
+  getByTrackingId(trackingId: any): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${trackingId}`);
+  }
+
+  cloturer(trackingId: any, data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${trackingId}/cloturer`, data);
+  }
 }
