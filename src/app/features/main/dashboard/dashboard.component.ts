@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit, ViewWillEnter {
   recentTransactions: TransactionResponse[] = [];
   studentName = '';
   studentTrackingId = '';
+  qrCodeData = '';
   isQrModalOpen = false;
 
   isLoading = true;
@@ -44,6 +45,7 @@ export class DashboardComponent implements OnInit, ViewWillEnter {
       const profile: StudentProfile = JSON.parse(profileStr);
       this.studentName = profile.firstName || 'Étudiant'; // Updated field
       this.studentTrackingId = profile.trackingId; // Added for QR Code
+      this.qrCodeData = JSON.stringify({ type: 'PAYMENT', senderTrackingId: this.studentTrackingId });
     }
   }
 

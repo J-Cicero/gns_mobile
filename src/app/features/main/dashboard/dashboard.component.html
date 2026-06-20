@@ -129,7 +129,7 @@
   </div>
 
   <!-- QR Code Modal -->
-  <ion-modal [isOpen]="isQrModalOpen" (didDismiss)="isQrModalOpen = false" [initialBreakpoint]="0.75" [breakpoints]="[0, 0.75, 1]">
+  <ion-modal [isOpen]="isQrModalOpen" (didDismiss)="isQrModalOpen = false">
     <ng-template>
       <ion-header class="ion-no-border">
         <ion-toolbar class="bg-slate-50 dark:bg-slate-900">
@@ -147,7 +147,7 @@
           
           <div class="bg-white p-4 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center justify-center">
             <qrcode *ngIf="studentTrackingId"
-              [qrdata]="'{\u0022type\u0022:\u0022PAYMENT\u0022,\u0022senderTrackingId\u0022:\u0022' + studentTrackingId + '\u0022}'"
+              [qrdata]="qrCodeData"
               [width]="240"
               [errorCorrectionLevel]="'M'">
             </qrcode>
