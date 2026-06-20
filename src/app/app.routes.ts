@@ -35,6 +35,7 @@ export const routes: Routes = [
   {
     path: 'main',
     canActivate: [OnboardingGuard],
+    loadComponent: () => import('./features/main/tabs/tabs.component').then(m => m.TabsComponent),
     children: [
       {
         path: 'dashboard',
@@ -55,6 +56,11 @@ export const routes: Routes = [
       {
         path: 'boutiques',
         loadComponent: () => import('./features/main/boutiques-list/boutiques-list.component').then(m => m.BoutiquesListComponent)
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
       }
     ]
   },
