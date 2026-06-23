@@ -14,7 +14,7 @@ export class UniversiteService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Page<UniversiteResponse>> {
-    return this.http.get<Page<UniversiteResponse>>(this.apiUrl);
+    return this.http.get<Page<UniversiteResponse>>(`${this.apiUrl}/actives`);
   }
 
 
