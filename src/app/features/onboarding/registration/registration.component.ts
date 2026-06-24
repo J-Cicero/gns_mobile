@@ -21,7 +21,6 @@ export class RegistrationComponent implements OnInit {
     email: '',
     telephone: '',
     motDePasse: '',
-    pinCode: '',
     birthDate: '',
     birthPlace: '',
     studentIdNumber: '',
@@ -37,6 +36,11 @@ export class RegistrationComponent implements OnInit {
 
   isSubmitting = false;
   errorMessage = '';
+  showPassword = false;
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 
   constructor(
     private navCtrl: NavController,
@@ -47,6 +51,25 @@ export class RegistrationComponent implements OnInit {
   ngOnInit() {
     this.loadUniversites();
     this.loadBanques();
+
+    // Restauration de l'état en cas de rafraîchissement (ex: lors du choix de fichier sur mobile)
+    const savedState = sessionStorage.getItem('studentRegistrationState');
+    if (savedState) {
+      try {
+        const state = JSON.parse(savedState);
+        this.currentStep = state.currentStep || 1;
+        this.registrationData = state.registrationData || this.registrationData;
+      } catch (e) {
+        console.error('Erreur lecture state', e);
+      }
+    }
+  }
+
+  saveState() {
+    sessionStorage.setItem('studentRegistrationState', JSON.stringify({
+      currentStep: this.currentStep,
+      registrationData: this.registrationData
+    }));
   }
 
   loadUniversites() {
@@ -90,11 +113,12 @@ export class RegistrationComponent implements OnInit {
   nextStep() {
     this.errorMessage = '';
     if (this.currentStep === 1) {
-      if (!this.registrationData.nom || !this.registrationData.prenom || !this.registrationData.email || !this.registrationData.motDePasse || !this.registrationData.pinCode) {
+      if (!this.registrationData.nom || !this.registrationData.prenom || !this.registrationData.email || !this.registrationData.motDePasse) {
         this.errorMessage = 'Veuillez remplir vos informations personnelles.';
         return;
       }
       this.currentStep = 2;
+      this.saveState();
     } else if (this.currentStep === 2) {
       // Bank is optional, but if selected, account number is required
       if (this.registrationData.bankTrackingId && !this.registrationData.accountNumber) {
@@ -106,6 +130,7 @@ export class RegistrationComponent implements OnInit {
         return;
       }
       this.currentStep = 3;
+      this.saveState();
     }
   }
 
@@ -113,6 +138,7 @@ export class RegistrationComponent implements OnInit {
     this.errorMessage = '';
     if (this.currentStep > 1) {
       this.currentStep--;
+      this.saveState();
     }
   }
 
@@ -137,12 +163,12 @@ export class RegistrationComponent implements OnInit {
         bankTrackingId: this.registrationData.bankTrackingId,
         accountNumber: this.registrationData.accountNumber,
         birthDate: this.registrationData.birthDate ? `${this.registrationData.birthDate}T00:00:00` : undefined,
-        birthPlace: this.registrationData.birthPlace,
-        pinCodeHash: this.registrationData.pinCode
+        birthPlace: this.registrationData.birthPlace
       };
 
       this.onboardingService.registerStudent(payload, this.ribFile || undefined, this.mandatFile || undefined).subscribe({
         next: (res: any) => {
+          sessionStorage.removeItem('studentRegistrationState'); // Nettoyage
           this.authService.login({
             email: this.registrationData.email,
             password: this.registrationData.motDePasse

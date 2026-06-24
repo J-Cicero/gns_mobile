@@ -5,7 +5,8 @@
     <div *ngIf="step === 1" class="step-container fade-in">
       <div class="brand-section">
         <div class="premium-logo" style="margin-bottom: 1rem;">
-          <img src="assets/logo-studcash.png" alt="studCASH Logo" style="height: 60px; width: auto; object-fit: contain;">
+          <img src="assets/studcash-logo.png" alt="studCASH Logo"
+            style="height: 60px; width: auto; object-fit: contain;">
         </div>
         <h1 class="brand-title">Bienvenue</h1>
         <p class="brand-tagline">Comment souhaitez-vous utiliser StudCash ?</p>
@@ -52,18 +53,20 @@
       </div>
 
       <div class="card-form-section">
-        
+
         <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
           <ion-item class="premium-input" lines="none">
             <ion-icon name="card-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="text" label="Matricule Universitaire" labelPlacement="floating" [(ngModel)]="registerData.matricule"></ion-input>
+            <ion-input type="text" label="Matricule Universitaire" labelPlacement="floating"
+              [(ngModel)]="registerData.matricule"></ion-input>
           </ion-item>
         </div>
 
         <div class="input-glow-wrapper" *ngIf="selectedRole === 'COMMERCANT'">
           <ion-item class="premium-input" lines="none">
             <ion-icon name="storefront-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="text" label="Nom de la Boutique" labelPlacement="floating" [(ngModel)]="registerData.nomBoutique"></ion-input>
+            <ion-input type="text" label="Nom de la Boutique" labelPlacement="floating"
+              [(ngModel)]="registerData.nomBoutique"></ion-input>
           </ion-item>
         </div>
 
@@ -77,28 +80,32 @@
         <div class="input-glow-wrapper">
           <ion-item class="premium-input" lines="none">
             <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="text" label="Prénom" labelPlacement="floating" [(ngModel)]="registerData.prenom"></ion-input>
+            <ion-input type="text" label="Prénom" labelPlacement="floating"
+              [(ngModel)]="registerData.prenom"></ion-input>
           </ion-item>
         </div>
 
         <div class="input-glow-wrapper">
           <ion-item class="premium-input" lines="none">
             <ion-icon name="call-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="tel" label="Téléphone" labelPlacement="floating" [(ngModel)]="registerData.telephone"></ion-input>
+            <ion-input type="tel" label="Téléphone" labelPlacement="floating"
+              [(ngModel)]="registerData.telephone"></ion-input>
           </ion-item>
         </div>
 
         <div class="input-glow-wrapper">
           <ion-item class="premium-input" lines="none">
             <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="email" label="Adresse Email" labelPlacement="floating" [(ngModel)]="registerData.email"></ion-input>
+            <ion-input type="email" label="Adresse Email" labelPlacement="floating"
+              [(ngModel)]="registerData.email"></ion-input>
           </ion-item>
         </div>
 
         <div class="input-glow-wrapper">
           <ion-item class="premium-input" lines="none">
             <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="password" label="Créer un mot de passe" labelPlacement="floating" [(ngModel)]="registerData.password"></ion-input>
+            <ion-input type="password" label="Créer un mot de passe" labelPlacement="floating"
+              [(ngModel)]="registerData.password"></ion-input>
           </ion-item>
         </div>
 
@@ -123,15 +130,17 @@
 
       <div class="brand-section" style="margin-top: 1vh; margin-bottom: 2rem;">
         <h1 class="brand-title">Liaisons</h1>
-        <p class="brand-tagline">{{ selectedRole === 'ETUDIANT' ? 'Université et Banque d\'affiliation' : 'Banque d\'affiliation' }}</p>
+        <p class="brand-tagline">{{ selectedRole === 'ETUDIANT' ? 'Université et Banque d\'affiliation' : 'Banque
+          d\'affiliation' }}</p>
       </div>
 
       <div class="card-form-section">
-        
+
         <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
           <ion-item class="premium-input" lines="none">
             <ion-icon name="business-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-select label="Université" labelPlacement="floating" [(ngModel)]="registerData.universiteTrackingId" interface="action-sheet">
+            <ion-select label="Université" labelPlacement="floating" [(ngModel)]="registerData.universiteTrackingId"
+              interface="action-sheet">
               <ion-select-option *ngFor="let u of universites" [value]="u.trackingId">{{ u.nom }}</ion-select-option>
             </ion-select>
           </ion-item>
@@ -140,7 +149,8 @@
         <div class="input-glow-wrapper">
           <ion-item class="premium-input" lines="none">
             <ion-icon name="business-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-select label="Banque d'affiliation" labelPlacement="floating" [(ngModel)]="registerData.banqueTrackingId" interface="action-sheet">
+            <ion-select label="Banque d'affiliation" labelPlacement="floating"
+              [(ngModel)]="registerData.banqueTrackingId" interface="action-sheet">
               <ion-select-option *ngFor="let b of banques" [value]="b.trackingId">{{ b.nom }}</ion-select-option>
             </ion-select>
           </ion-item>
@@ -149,7 +159,8 @@
         <div class="input-glow-wrapper">
           <ion-item class="premium-input" lines="none">
             <ion-icon name="card-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="text" label="Numéro de compte bancaire" labelPlacement="floating" [(ngModel)]="registerData.numeroCompte"></ion-input>
+            <ion-input type="text" label="Numéro de compte bancaire" labelPlacement="floating"
+              [(ngModel)]="registerData.numeroCompte"></ion-input>
           </ion-item>
         </div>
 
@@ -174,20 +185,25 @@
 
       <div class="brand-section" style="margin-top: 1vh; margin-bottom: 2rem;">
         <h1 class="brand-title">Justificatifs</h1>
-        <p class="brand-tagline">{{ selectedRole === 'ETUDIANT' ? 'Importez votre RIB et Mandat' : 'Importez votre RIB' }}</p>
+        <p class="brand-tagline">{{ selectedRole === 'ETUDIANT' ? 'Importez votre RIB et Mandat' : 'Importez votre RIB'
+          }}</p>
       </div>
 
       <div class="card-form-section">
-        
-        <div class="upload-zone" style="margin-bottom: 1.5rem; text-align: center; border: 1px dashed #ccc; border-radius: 12px; padding: 1.5rem; position: relative;">
-          <input type="file" (change)="onFileSelected($event, 'rib')" accept="image/*,.pdf" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
+
+        <div class="upload-zone"
+          style="margin-bottom: 1.5rem; text-align: center; border: 1px dashed #ccc; border-radius: 12px; padding: 1.5rem; position: relative;">
+          <input type="file" (change)="onFileSelected($event, 'rib')" accept="image/*,.pdf"
+            style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
           <ion-icon name="cloud-upload-outline" style="font-size: 2.5rem; color: #2563eb;"></ion-icon>
           <h3 style="margin-top: 10px; font-weight: bold;">Uploader le RIB</h3>
           <p style="font-size: 0.8rem; color: #64748b;">{{ ribFile ? ribFile.name : 'Format PDF ou Image' }}</p>
         </div>
 
-        <div class="upload-zone" *ngIf="selectedRole === 'ETUDIANT'" style="margin-bottom: 1.5rem; text-align: center; border: 1px dashed #ccc; border-radius: 12px; padding: 1.5rem; position: relative;">
-          <input type="file" (change)="onFileSelected($event, 'mandat')" accept="image/*,.pdf" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
+        <div class="upload-zone" *ngIf="selectedRole === 'ETUDIANT'"
+          style="margin-bottom: 1.5rem; text-align: center; border: 1px dashed #ccc; border-radius: 12px; padding: 1.5rem; position: relative;">
+          <input type="file" (change)="onFileSelected($event, 'mandat')" accept="image/*,.pdf"
+            style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
           <ion-icon name="cloud-upload-outline" style="font-size: 2.5rem; color: #2563eb;"></ion-icon>
           <h3 style="margin-top: 10px; font-weight: bold;">Uploader le Mandat</h3>
           <p style="font-size: 0.8rem; color: #64748b;">{{ mandatFile ? mandatFile.name : 'Format PDF ou Image' }}</p>
@@ -198,9 +214,11 @@
           <span>{{ errorMessage }}</span>
         </div>
 
-        <ion-button expand="block" class="premium-btn success-btn" (click)="submitRegistration()" [disabled]="isLoading">
+        <ion-button expand="block" class="premium-btn success-btn" (click)="submitRegistration()"
+          [disabled]="isLoading">
           <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
-          <span *ngIf="!isLoading">Terminer l'inscription <ion-icon name="checkmark-outline" slot="end"></ion-icon></span>
+          <span *ngIf="!isLoading">Terminer l'inscription <ion-icon name="checkmark-outline"
+              slot="end"></ion-icon></span>
         </ion-button>
 
       </div>

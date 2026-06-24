@@ -7,14 +7,14 @@ import { WalletResponse } from '../../../core/models/wallet.model';
 import { Page } from '../../../core/models/page.model';
 import { TransactionResponse } from '../../../core/models/transaction.model';
 import { StudentProfile } from '../../../core/models/student.model';
-import { QRCodeComponent } from 'angularx-qrcode';
+
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, RouterModule, QRCodeComponent]
+  imports: [CommonModule, IonicModule, RouterModule]
 })
 export class DashboardComponent implements OnInit, ViewWillEnter {
 

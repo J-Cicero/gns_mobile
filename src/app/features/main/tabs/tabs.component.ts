@@ -18,7 +18,7 @@ import { homeOutline, mapOutline, timeOutline, personOutline, qrCodeOutline } fr
           <ion-label class="text-xs font-medium">Historique</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="scanner" class="bg-indigo-600 dark:bg-indigo-500 rounded-full w-14 h-14 -mt-6 mx-2 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center border-4 border-slate-50 dark:border-slate-900 transform transition-transform active:scale-95">
+        <ion-tab-button tab="qr" class="bg-indigo-600 dark:bg-indigo-500 rounded-full w-14 h-14 -mt-6 mx-2 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center border-4 border-slate-50 dark:border-slate-900 transform transition-transform active:scale-95">
           <ion-icon name="qr-code-outline" class="text-2xl m-0"></ion-icon>
         </ion-tab-button>
 

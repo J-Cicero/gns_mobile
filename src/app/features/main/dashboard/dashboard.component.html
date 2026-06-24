@@ -49,7 +49,7 @@
 
           <div class="flex justify-between items-end">
             <div></div> <!-- Removed ID text -->
-            <button (click)="isQrModalOpen = true" class="w-12 h-12 bg-white text-indigo-600 rounded-2xl flex items-center justify-center shadow-lg hover:scale-105 transition-transform active:scale-95">
+            <button routerLink="/main/qr" class="w-12 h-12 bg-white text-indigo-600 rounded-2xl flex items-center justify-center shadow-lg hover:scale-105 transition-transform active:scale-95">
               <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <!-- QR Code icon -->
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
@@ -61,7 +61,7 @@
 
       <!-- Action Buttons -->
       <div class="grid grid-cols-3 gap-4 mb-8 animate-fade-in-up" style="animation-delay: 100ms;">
-        <div (click)="isQrModalOpen = true" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center text-center active:bg-slate-50 dark:active:bg-slate-700 transition-colors">
+        <div routerLink="/main/qr" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center text-center active:bg-slate-50 dark:active:bg-slate-700 transition-colors">
           <div class="w-10 h-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mb-2 text-indigo-600 dark:text-indigo-400">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
@@ -127,41 +127,4 @@
       </div>
     </div>
   </div>
-
-  <!-- QR Code Modal -->
-  <ion-modal [isOpen]="isQrModalOpen" (didDismiss)="isQrModalOpen = false">
-    <ng-template>
-      <ion-header class="ion-no-border">
-        <ion-toolbar class="bg-slate-50 dark:bg-slate-900">
-          <ion-title class="text-slate-900 dark:text-white font-black">Mon Code QR</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="isQrModalOpen = false" class="text-slate-500 font-bold">Fermer</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding bg-slate-50 dark:bg-slate-900">
-        <div class="flex flex-col items-center justify-center py-8">
-          <p class="text-sm text-slate-500 dark:text-slate-400 text-center mb-8 px-4 font-medium">
-            Présentez ce code au commerçant pour recevoir un paiement.
-          </p>
-          
-          <div class="bg-white p-4 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 flex items-center justify-center">
-            <qrcode *ngIf="studentTrackingId"
-              [qrdata]="qrCodeData"
-              [width]="240"
-              [errorCorrectionLevel]="'M'">
-            </qrcode>
-            <div *ngIf="!studentTrackingId" class="w-[240px] h-[240px] flex items-center justify-center bg-slate-100 rounded-xl">
-              <span class="text-slate-400 font-bold">Code Indisponible</span>
-            </div>
-          </div>
-
-          <div class="mt-8 px-6 py-3 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
-            <p class="text-xs font-mono text-slate-600 dark:text-slate-400 font-bold tracking-widest text-center">{{ studentTrackingId || 'ID INCONNU' }}</p>
-          </div>
-        </div>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
-
 </ion-content>

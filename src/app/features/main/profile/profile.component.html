@@ -16,7 +16,7 @@
       <!-- Profile Header -->
       <div class="flex flex-col items-center mb-8 animate-fade-in-up">
         <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30 border-4 border-white dark:border-slate-800">
-          <span class="text-3xl font-black text-white">{{ profile.firstName.charAt(0) | uppercase }}{{ profile.lastName.charAt(0) | uppercase }}</span>
+          <span class="text-3xl font-black text-white">{{ (profile.firstName || '').charAt(0) | uppercase }}{{ (profile.lastName || '').charAt(0) | uppercase }}</span>
         </div>
         <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">{{ profile.firstName }} {{ profile.lastName }}</h2>
         <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ profile.email }}</p>

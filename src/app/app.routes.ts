@@ -42,8 +42,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/main/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
       {
-        path: 'scanner',
-        loadComponent: () => import('./features/main/scanner/scanner.component').then(m => m.ScannerComponent)
+        path: 'qr',
+        loadComponent: () => import('./features/main/qr/qr.component').then(m => m.QrComponent)
       },
       {
         path: 'history',
@@ -63,19 +63,5 @@ export const routes: Routes = [
         pathMatch: 'full'
       }
     ]
-  },
-  // Anciennes routes conservées pour le marchand si besoin
-  {
-    path: 'student',
-    children: [
-      {
-        path: 'waiting',
-        loadComponent: () => import('./features/onboarding/waiting-year/waiting-year.component').then(m => m.WaitingYearComponent)
-      },
-      {
-        path: '',
-        loadChildren: () => import('./features/student/student.routes').then(m => m.studentRoutes)
-      }
-    ]
-  },
+  }
 ];

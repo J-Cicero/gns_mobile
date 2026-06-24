@@ -20,8 +20,5 @@ export class AccountTypeSelectionComponent implements OnInit {
     this.navCtrl.navigateRoot('/onboarding/registration');
   }
 
-  goToMerchantRegistration() {
-    this.navCtrl.navigateRoot('/onboarding/merchant-registration');
-  }
 
 }
