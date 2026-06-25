@@ -26,9 +26,9 @@ import { AuthService } from '../../../core/services/auth.service';
           </div>
 
           <div class="qr-wrapper">
-            <!-- Vrai QR code avec Tracking ID -->
-            <div class="qr-actual">
-              <qrcode [qrdata]="trackingId || 'GNS-INVALID-QR'" [width]="200" [errorCorrectionLevel]="'M'" elementType="img"></qrcode>
+            <!-- Vrai QR code avec JSON formaté -->
+            <div class="qr-actual" style="display: block; width: 200px; height: 200px;">
+              <qrcode [qrdata]="qrPayload" [width]="200" [errorCorrectionLevel]="'M'" elementType="canvas"></qrcode>
             </div>
             <div class="qr-overlay-logo">
               <ion-icon name="flash"></ion-icon>
@@ -165,6 +165,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class QrComponent implements OnInit {
   public trackingId: string | null = '';
   public userName: string = 'Chargement...';
+  public qrPayload: string = 'GNS-INVALID-QR';
   
   private authService = inject(AuthService);
 
@@ -187,6 +188,10 @@ export class QrComponent implements OnInit {
       this.userName = `${profile.firstName} ${profile.lastName}`;
     } else {
       this.userName = "Étudiant GNS"; 
+    }
+
+    if (this.trackingId) {
+      this.qrPayload = JSON.stringify({ type: "PAYMENT", studentId: this.trackingId });
     }
   }
 

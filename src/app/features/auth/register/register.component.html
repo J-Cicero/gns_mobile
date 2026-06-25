@@ -109,6 +109,22 @@
           </ion-item>
         </div>
 
+        <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
+          <ion-item class="premium-input" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="password" inputmode="numeric" maxlength="6" label="PIN de paiement (4-6 chiffres)" labelPlacement="floating"
+              [(ngModel)]="registerData.transactionPin"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
+          <ion-item class="premium-input" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="password" inputmode="numeric" maxlength="6" label="Confirmer le PIN" labelPlacement="floating"
+              [(ngModel)]="registerData.confirmTransactionPin"></ion-input>
+          </ion-item>
+        </div>
+
         <div *ngIf="errorMessage" class="premium-error-box">
           <ion-icon name="alert-circle"></ion-icon>
           <span>{{ errorMessage }}</span>

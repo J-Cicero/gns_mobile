@@ -26,7 +26,9 @@ export class RegistrationComponent implements OnInit {
     studentIdNumber: '',
     universiteTrackingId: '',
     bankTrackingId: '',
-    accountNumber: ''
+    accountNumber: '',
+    transactionPin: '',
+    confirmTransactionPin: ''
   };
 
   universites: any[] = [];
@@ -113,8 +115,12 @@ export class RegistrationComponent implements OnInit {
   nextStep() {
     this.errorMessage = '';
     if (this.currentStep === 1) {
-      if (!this.registrationData.nom || !this.registrationData.prenom || !this.registrationData.email || !this.registrationData.motDePasse) {
-        this.errorMessage = 'Veuillez remplir vos informations personnelles.';
+      if (!this.registrationData.nom || !this.registrationData.prenom || !this.registrationData.email || !this.registrationData.motDePasse || !this.registrationData.transactionPin) {
+        this.errorMessage = 'Veuillez remplir vos informations personnelles et votre PIN de paiement.';
+        return;
+      }
+      if (this.registrationData.transactionPin !== this.registrationData.confirmTransactionPin || !/^\d{4,6}$/.test(this.registrationData.transactionPin)) {
+        this.errorMessage = 'Le code PIN doit comporter 4 à 6 chiffres et correspondre à sa confirmation.';
         return;
       }
       this.currentStep = 2;
@@ -162,6 +168,7 @@ export class RegistrationComponent implements OnInit {
         universiteTrackingId: this.registrationData.universiteTrackingId,
         bankTrackingId: this.registrationData.bankTrackingId,
         accountNumber: this.registrationData.accountNumber,
+        transactionPin: this.registrationData.transactionPin,
         birthDate: this.registrationData.birthDate ? `${this.registrationData.birthDate}T00:00:00` : undefined,
         birthPlace: this.registrationData.birthPlace
       };

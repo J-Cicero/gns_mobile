@@ -41,8 +41,6 @@ export class AppComponent {
   private router = inject(Router);
 
   constructor() {
-    // Force Dark Mode globally
-    document.body.classList.add('dark');
     
     addIcons({ 
       homeOutline, homeSharp, walletOutline, walletSharp, documentTextOutline, documentTextSharp,

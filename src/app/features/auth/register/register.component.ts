@@ -32,7 +32,9 @@ export class RegisterComponent implements OnInit {
     numeroCompte: '',
     nomBoutique: '',
     email: '',
-    password: ''
+    password: '',
+    transactionPin: '',
+    confirmTransactionPin: ''
   };
 
   ribFile: File | null = null;
@@ -82,8 +84,8 @@ export class RegisterComponent implements OnInit {
 
   loadUniversites() {
     this.universiteService.getUniversites().subscribe({
-      next: (data) => this.universites = data.content || data,
-      error: (err) => console.error("Erreur chargement universités", err)
+      next: (data: any) => this.universites = data.content || data,
+      error: (err: any) => console.error("Erreur chargement universités", err)
     });
   }
 
@@ -107,8 +109,12 @@ export class RegisterComponent implements OnInit {
     // Validation Etape 2 (Identité)
     if (this.step === 2) {
       if (this.selectedRole === 'ETUDIANT') {
-        if (!this.registerData.nom || !this.registerData.prenom || !this.registerData.email || !this.registerData.password || !this.registerData.matricule || !this.registerData.telephone) {
+        if (!this.registerData.nom || !this.registerData.prenom || !this.registerData.email || !this.registerData.password || !this.registerData.matricule || !this.registerData.telephone || !this.registerData.transactionPin) {
           this.errorMessage = "Veuillez remplir tous les champs.";
+          return;
+        }
+        if (this.registerData.transactionPin !== this.registerData.confirmTransactionPin || !/^\d{4,6}$/.test(this.registerData.transactionPin)) {
+          this.errorMessage = "Le code PIN doit comporter 4 à 6 chiffres et les deux saisies doivent correspondre.";
           return;
         }
         this.step = 3;
@@ -172,6 +178,7 @@ export class RegisterComponent implements OnInit {
         telephone: this.registerData.telephone,
         email: this.registerData.email,
         password: this.registerData.password,
+        transactionPin: this.registerData.transactionPin,
         matricule: this.registerData.matricule,
         universiteTrackingId: this.registerData.universiteTrackingId,
         banqueTrackingId: this.registerData.banqueTrackingId,
@@ -212,7 +219,7 @@ export class RegisterComponent implements OnInit {
           this.isLoading = false;
           this.navCtrl.navigateRoot('/login');
         },
-        error: (err) => {
+        error: (err: any) => {
           this.isLoading = false;
           this.errorMessage = err.error?.message || "Une erreur est survenue lors de l'inscription.";
         }

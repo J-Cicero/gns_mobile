@@ -32,8 +32,10 @@ export class ThemeService {
   private applyTheme() {
     if (this.isDarkMode) {
       this.document.documentElement.classList.add('dark');
+      this.document.body.classList.add('dark');
     } else {
       this.document.documentElement.classList.remove('dark');
+      this.document.body.classList.remove('dark');
     }
   }
 

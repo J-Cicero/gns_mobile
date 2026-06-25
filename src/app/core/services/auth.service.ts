@@ -12,6 +12,10 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
+  registerMerchantUnified(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/merchants/unified-registration`, formData);
+  }
+
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/users/login`, credentials).pipe(
       switchMap(res => {

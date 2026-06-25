@@ -22,10 +22,6 @@ export class WalletService {
     return this.http.get<Page<TransactionResponse>>(`${environment.apiUrl}/transactions/student/${studentTrackingId}?page=${page}&size=${size}`);
   }
 
-  pay(request: TransactionRequest): Observable<TransactionResponse> {
-    return this.http.post<TransactionResponse>(`${environment.apiUrl}/transactions`, request);
-  }
-
   getBoutiqueTransactions(boutiqueTrackingId: string, limit: number = 5): Observable<Page<TransactionResponse>> {
     return this.http.get<Page<TransactionResponse>>(`${environment.apiUrl}/transactions/boutique/${boutiqueTrackingId}?page=0&size=${limit}`);
   }
