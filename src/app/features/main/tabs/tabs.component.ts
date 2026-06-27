@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/angular/standalone';
+import { Component, EnvironmentInjector, inject } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { homeOutline, mapOutline, timeOutline, personOutline, qrCodeOutline } from 'ionicons/icons';
 
@@ -7,31 +7,30 @@ import { homeOutline, mapOutline, timeOutline, personOutline, qrCodeOutline } fr
   selector: 'app-tabs',
   template: `
     <ion-tabs>
-      <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar 
         slot="bottom" 
         class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
 
-        <ion-tab-button tab="dashboard" href="/main/dashboard" class="text-slate-500 dark:text-slate-400">
+        <ion-tab-button tab="dashboard" class="text-slate-500 dark:text-slate-400">
           <ion-icon name="home-outline"></ion-icon>
           <ion-label class="text-xs font-medium">Accueil</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="history" href="/main/history" class="text-slate-500 dark:text-slate-400">
+        <ion-tab-button tab="history" class="text-slate-500 dark:text-slate-400">
           <ion-icon name="time-outline"></ion-icon>
           <ion-label class="text-xs font-medium">Historique</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="qr" href="/main/qr" class="bg-indigo-600 dark:bg-indigo-500 rounded-full w-14 h-14 -mt-6 mx-2 text-white shadow-lg flex items-center justify-center">
+        <ion-tab-button tab="qr" class="bg-indigo-600 dark:bg-indigo-500 rounded-full w-14 h-14 -mt-6 mx-2 text-white shadow-lg flex items-center justify-center">
           <ion-icon name="qr-code-outline" class="text-2xl"></ion-icon>
         </ion-tab-button>
 
-        <ion-tab-button tab="boutiques" href="/main/boutiques" class="text-slate-500 dark:text-slate-400">
+        <ion-tab-button tab="boutiques" class="text-slate-500 dark:text-slate-400">
           <ion-icon name="map-outline"></ion-icon>
           <ion-label class="text-xs font-medium">Boutiques</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="profile" href="/main/profile" class="text-slate-500 dark:text-slate-400">
+        <ion-tab-button tab="profile" class="text-slate-500 dark:text-slate-400">
           <ion-icon name="person-outline"></ion-icon>
           <ion-label class="text-xs font-medium">Profil</ion-label>
         </ion-tab-button>
@@ -51,9 +50,11 @@ import { homeOutline, mapOutline, timeOutline, personOutline, qrCodeOutline } fr
     }
   `],
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet],
+  imports: [IonicModule],
 })
 export class TabsComponent {
+  public environmentInjector = inject(EnvironmentInjector);
+
   constructor() {
     addIcons({
       homeOutline,

@@ -92,6 +92,12 @@ export class AuthService {
               return of('/onboarding/academic-enrollment');
             }
 
+            if (activeInscription.status === 'EN_ATTENTE' || activeInscription.status === 'DOCUMENTS_EN_COURS' || activeInscription.status === 'VERIFIE_UL') {
+               return of('/onboarding/eligibility?status=PENDING');
+            } else if (activeInscription.status === 'REJETEE') {
+               return of('/onboarding/eligibility?status=REJECTED');
+            }
+
             localStorage.setItem('inscription_tracking_id', activeInscription.trackingId);
 
             return this.http.get<any>(`${environment.apiUrl}/students/${trackingId}`).pipe(
@@ -106,11 +112,8 @@ export class AuthService {
                   isOnboardingComplete: kycStatus === 'VALIDATED'
                 }));
 
-                if (kycStatus === 'VALIDATED') {
-                  return '/main/dashboard';
-                } else {
-                  return `/onboarding/eligibility?status=${kycStatus}`;
-                }
+                // KYC validation no longer blocks dashboard access
+                return '/main/dashboard';
               }),
               catchError((_: any) => of('/onboarding/eligibility'))
             );

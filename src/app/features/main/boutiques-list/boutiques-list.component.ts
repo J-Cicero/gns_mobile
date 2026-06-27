@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  IonContent, IonRefresher, IonRefresherContent, IonModal
+  IonContent, IonRefresher, IonRefresherContent, IonModal, ToastController
 } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -31,7 +31,10 @@ export class BoutiquesListComponent implements OnInit {
   isLoadingProduits = false;
   isModalOpen = false;
 
-  constructor(private boutiqueService: BoutiqueService) { }
+  constructor(
+    private boutiqueService: BoutiqueService,
+    private toastController: ToastController
+  ) { }
 
   ngOnInit() {
     this.loadBoutiques();
@@ -85,7 +88,7 @@ export class BoutiquesListComponent implements OnInit {
     }, 300);
   }
 
-  locateBoutique(boutique: Boutique, event?: Event) {
+  async locateBoutique(boutique: Boutique, event?: Event) {
     if (event) event.stopPropagation();
     
     if (boutique.latitude && boutique.longitude) {
@@ -93,7 +96,13 @@ export class BoutiquesListComponent implements OnInit {
       const url = `https://www.google.com/maps/search/?api=1&query=${boutique.latitude},${boutique.longitude}`;
       window.open(url, '_system');
     } else {
-      alert("Les coordonnées GPS ne sont pas disponibles pour cette boutique.");
+      const toast = await this.toastController.create({
+        message: 'Les coordonnées GPS ne sont pas disponibles pour cette boutique.',
+        duration: 3000,
+        color: 'warning',
+        position: 'bottom'
+      });
+      await toast.present();
     }
   }
 
