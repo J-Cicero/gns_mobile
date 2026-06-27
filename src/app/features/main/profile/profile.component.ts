@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ViewWillEnter } from '@ionic/angular';
+import {
+  IonContent, ViewWillEnter
+} from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
 import { StudentProfile } from '../../../core/models/student.model';
 import { ThemeService } from '../../../core/services/theme.service';
@@ -11,7 +13,10 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, RouterModule]
+  imports: [
+    CommonModule, RouterModule,
+    IonContent
+  ]
 })
 export class ProfileComponent implements OnInit, ViewWillEnter {
 

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { StudentProfile } from '../models/student.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,23 +12,18 @@ export class OnboardingGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean {
     
-    // Récupérer le profil étudiant (dans un cas réel via un AuthService)
+    // Vérifier la présence du token JWT (authentification)
+    const token = localStorage.getItem('access_token');
     const profileStr = localStorage.getItem('student_profile');
     
-    if (!profileStr) {
-      // Si pas de profil, retour au login
+    if (!token && !profileStr) {
+      // Aucune session → redirection vers login
       this.router.navigate(['/auth/login']);
       return false;
     }
 
-    const profile: StudentProfile = JSON.parse(profileStr);
-
-    if (profile.kycStatus === 'VALIDATED' || profile.isOnboardingComplete) {
-      return true;
-    }
-
-    // Sinon, on redirige vers l'évaluation pour qu'il trouve la bonne page
-    this.router.navigate(['/auth/login']);
-    return false;
+    // Si l'une des deux clés est présente, on laisse passer
+    // La vérification KYC détaillée se fait dans les pages individuelles
+    return true;
   }
 }

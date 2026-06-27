@@ -1,18 +1,13 @@
-<ion-content class="bg-slate-50 dark:bg-slate-900">
+<ion-content class="bg-slate-50 dark:bg-slate-900" style="--background: transparent;">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="flex flex-col min-h-screen">
+  <div class="flex flex-col h-full">
     
     <!-- Header -->
     <div class="px-6 py-6 sticky top-0 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md z-10 border-b border-slate-200/50 dark:border-slate-800/50">
       <div class="flex items-center mb-4">
-        <button routerLink="/main/dashboard" class="w-10 h-10 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mr-4 shadow-sm border border-slate-200 dark:border-slate-700 active:bg-slate-100 dark:active:bg-slate-700 transition-colors">
-          <svg class="w-5 h-5 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
         <h1 class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Boutiques Partenaires</h1>
       </div>
       
@@ -92,7 +87,7 @@
   <!-- Modal Détails Produits -->
   <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()" [initialBreakpoint]="0.9" [breakpoints]="[0, 0.9, 1]">
     <ng-template>
-      <ion-content class="bg-slate-50 dark:bg-slate-900">
+      <ion-content class="bg-slate-50 dark:bg-slate-900" style="--background: transparent;">
         
         <div class="px-6 py-6 sticky top-0 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md z-10 border-b border-slate-200/50 dark:border-slate-800/50 flex justify-between items-start">
           <div>

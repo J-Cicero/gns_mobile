@@ -24,16 +24,6 @@
   --ion-border-color: #e2e8f0;           
 }
 
-/* --- DARK MODE --- */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ion-background-color: #0f172a;       // Bleu nuit très profond (Fond général)
-    --ion-item-background: #1e293b;        // Bleu nuit un peu plus clair (Pour les inputs/cartes)
-    --ion-text-color: #f8fafc;             // Texte blanc cassé (très lisible)
-    --ion-text-color-step-150: #94a3b8;    // Gris bleuté pour les sous-titres
-    --ion-border-color: #334155;           // Bordures discrètes
-  }
-}
 
 .dark {
   --ion-background-color: #0f172a;

@@ -1,6 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonLabel, IonButton
+} from '@ionic/angular/standalone';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { addIcons } from 'ionicons';
 import { qrCodeOutline, refreshOutline, shareSocialOutline } from 'ionicons/icons';
@@ -9,7 +11,10 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-student-qr',
   standalone: true,
-  imports: [CommonModule, IonicModule, QRCodeComponent],
+  imports: [
+    CommonModule, QRCodeComponent,
+    IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonLabel, IonButton
+  ],
   template: `
     <ion-header class="ion-no-border">
       <ion-toolbar>

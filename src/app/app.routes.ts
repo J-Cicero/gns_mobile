@@ -35,47 +35,33 @@ export const routes: Routes = [
   {
     path: 'main',
     canActivate: [OnboardingGuard],
-    loadComponent: () =>
-      import('./features/main/tabs/tabs.component')
-        .then(m => m.TabsComponent),
-
+    loadComponent: () => import('./features/main/tabs/tabs.component').then(m => m.TabsComponent),
     children: [
       {
         path: 'dashboard',
-        loadComponent: () =>
-          import('./features/main/dashboard/dashboard.component')
-            .then(m => m.DashboardComponent)
+        loadComponent: () => import('./features/main/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
         path: 'history',
-        loadComponent: () =>
-          import('./features/main/history/history.component')
-            .then(m => m.HistoryComponent)
+        loadComponent: () => import('./features/main/history/history.component').then((m) => m.HistoryComponent),
       },
       {
         path: 'qr',
-        loadComponent: () =>
-          import('./features/main/qr/qr.component')
-            .then(m => m.QrComponent)
+        loadComponent: () => import('./features/main/qr/qr.component').then((m) => m.QrComponent),
       },
       {
         path: 'boutiques',
-        loadComponent: () =>
-          import('./features/main/boutiques-list/boutiques-list.component')
-            .then(m => m.BoutiquesListComponent)
+        loadComponent: () => import('./features/main/boutiques-list/boutiques-list.component').then((m) => m.BoutiquesListComponent),
       },
       {
         path: 'profile',
-        loadComponent: () =>
-          import('./features/main/profile/profile.component')
-            .then(m => m.ProfileComponent)
+        loadComponent: () => import('./features/main/profile/profile.component').then((m) => m.ProfileComponent),
       },
-
       {
         path: '',
         redirectTo: 'dashboard',
-        pathMatch: 'full'
-      }
+        pathMatch: 'full',
+      },
     ]
   }
 ];

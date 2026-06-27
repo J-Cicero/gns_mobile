@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ViewWillEnter } from '@ionic/angular';
+import {
+  IonContent, IonRefresher, IonRefresherContent, ViewWillEnter
+} from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { WalletService } from '../../../core/services/wallet.service';
 import { WalletResponse } from '../../../core/models/wallet.model';
@@ -14,7 +16,10 @@ import { StudentProfile } from '../../../core/models/student.model';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, RouterModule]
+  imports: [
+    CommonModule, RouterModule,
+    IonContent, IonRefresher, IonRefresherContent
+  ]
 })
 export class DashboardComponent implements OnInit, ViewWillEnter {
 
@@ -78,10 +83,11 @@ export class DashboardComponent implements OnInit, ViewWillEnter {
         }
         this.loadTransactions(profile.trackingId);
       },
-      error: () => {
+      error: (err) => {
         // En cas d'erreur réseau, afficher un wallet à 0
         this.wallet = { trackingId: profile.walletTrackingId!, walletType: 'STUDENT' as any, status: 'INACTIF' as any, fundingLevel: 'NORMAL' as any, balance: 0, limitAmount: 0, currency: 'FCFA', createdAt: '' };
         this.isLoading = false;
+        this.errorMessage = "Le serveur est inaccessible. Veuillez vérifier que votre backend (port 8080) est en cours d'exécution.";
         this.loadTransactions(profile.trackingId);
       }
     });

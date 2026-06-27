@@ -102,7 +102,7 @@ export class AuthService {
                 localStorage.setItem('student_profile', JSON.stringify({
                   ...currentProfile,
                   ...student,
-                  statutKYC: kycStatus,
+                  kycStatus: kycStatus,
                   isOnboardingComplete: kycStatus === 'VALIDATED'
                 }));
 

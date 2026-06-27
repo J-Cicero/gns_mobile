@@ -166,7 +166,11 @@ export class AcademicEnrollmentComponent implements OnInit {
       },
       error: (err: any) => {
         this.isSubmitting = false;
-        this.errorMessage = err.error?.message || "Erreur lors de l'enregistrement académique.";
+        let msg = err.error?.message || "Erreur lors de l'enregistrement académique.";
+        if (msg.includes('could not execute statement') || msg.includes('SQL') || msg.includes('constraint')) {
+          msg = "Erreur système lors de l'enregistrement. Veuillez réessayer ou contacter le support.";
+        }
+        this.errorMessage = msg;
       }
     });
   }

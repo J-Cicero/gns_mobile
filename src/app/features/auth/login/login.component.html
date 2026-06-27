@@ -1,9 +1,9 @@
-<ion-content scroll-y="false" class="premium-auth-content">
+<ion-content scroll-y="false" class="premium-auth-content" style="--background: var(--ion-background-color, #ffffff);">
   <div class="auth-wrapper">
 
     <div class="brand-section">
       <div class="premium-logo flex justify-center">
-        <img src="assets/studcash-logo.png" alt="studCASH Logo" style="height: 60px; width: auto; object-fit: contain;">
+        <img src="assets/studcash-logo.png" alt="studCASH Logo" class="mix-blend-multiply" style="height: 60px; width: auto; object-fit: contain;">
       </div>
       <p class="brand-tagline">Gérez vos finances en toute liberté</p>
     </div>
@@ -21,8 +21,9 @@
       <div class="input-glow-wrapper">
         <ion-item class="premium-input" lines="none">
           <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
-          <ion-input type="password" label="Mot de passe" labelPlacement="floating" [(ngModel)]="credentials.password">
+          <ion-input [type]="showPassword ? 'text' : 'password'" label="Mot de passe" labelPlacement="floating" [(ngModel)]="credentials.password">
           </ion-input>
+          <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="end" class="input-icon" style="cursor: pointer; z-index: 10;" (click)="togglePasswordVisibility()"></ion-icon>
         </ion-item>
       </div>
 

@@ -53,8 +53,8 @@ export class EligibilityComponent implements OnInit {
 
     this.onboardingService.checkEligibility(inscriptionId).subscribe({
       next: (res) => {
-        // Le backend renvoie isFullyEnrolled suite au refactoring
-        if (res && res.isFullyEnrolled) {
+        // Le backend renvoie status suite au refactoring
+        if (res && res.status === 'ACTIVE') {
           this.status = 'ELIGIBLE';
           // Mettre à jour le profil local
           const updatedProfile = { ...profile, isEligible: res.isEligibleForScholarship, isOnboardingComplete: true };

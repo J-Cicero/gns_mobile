@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonContent, IonRefresher, IonRefresherContent, IonInfiniteScroll, IonInfiniteScrollContent
+} from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { WalletService } from '../../../core/services/wallet.service';
 import { TransactionResponse } from '../../../core/models/transaction.model'; // Updated import
@@ -12,12 +14,16 @@ import { StudentProfile } from '../../../core/models/student.model'; // Import S
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, RouterModule]
+  imports: [
+    CommonModule, RouterModule,
+    IonContent, IonRefresher, IonRefresherContent, IonInfiniteScroll, IonInfiniteScrollContent
+  ]
 })
 export class HistoryComponent implements OnInit {
 
   transactions: TransactionResponse[] = []; // Updated type
   isLoading = true;
+  errorMessage = '';
   page = 0;
   private readonly PAGE_SIZE = 10; // Define page size
   hasMore = true;
@@ -53,6 +59,7 @@ export class HistoryComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         this.hasMore = false;
+        this.errorMessage = "Le serveur est inaccessible (port 8080 fermé).";
         if (event) event.target.complete();
       }
     });

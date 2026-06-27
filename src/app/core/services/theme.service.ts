@@ -31,11 +31,9 @@ export class ThemeService {
 
   private applyTheme() {
     if (this.isDarkMode) {
-      this.document.documentElement.classList.add('dark');
-      this.document.body.classList.add('dark');
+      this.document.documentElement.classList.add('dark', 'ion-palette-dark');
     } else {
-      this.document.documentElement.classList.remove('dark');
-      this.document.body.classList.remove('dark');
+      this.document.documentElement.classList.remove('dark', 'ion-palette-dark');
     }
   }
 
