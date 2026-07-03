@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit, ViewWillEnter {
 
     if (!profile.walletTrackingId) {
       // Pas de walletTrackingId en cache : afficher un wallet vide sans bloquer
-      this.wallet = { trackingId: '', walletType: 'STUDENT' as any, status: 'INACTIF' as any, fundingLevel: 'NORMAL' as any, balance: 0, limitAmount: 0, currency: 'FCFA', createdAt: '' };
+      this.wallet = { trackingId: '', typeWallet: 'STUDENT' as any, statutWallet: 'INACTIF' as any, niveauSolde: 'NORMAL' as any, solde: 0, plafond: 0, currency: 'FCFA', createdAt: '' };
       this.isLoading = false;
       this.loadTransactions(profile.trackingId);
       return;
@@ -78,16 +78,16 @@ export class DashboardComponent implements OnInit, ViewWillEnter {
       next: (walletResponse) => {
         this.wallet = walletResponse;
         // Force balance to 0 if null/undefined from backend
-        if (this.wallet && (this.wallet.balance === null || this.wallet.balance === undefined)) {
-          (this.wallet as any).balance = 0;
+        if (this.wallet && (this.wallet.solde === null || this.wallet.solde === undefined)) {
+          (this.wallet as any).solde = 0;
         }
         this.loadTransactions(profile.trackingId);
       },
       error: (err) => {
         // En cas d'erreur réseau, afficher un wallet à 0
-        this.wallet = { trackingId: profile.walletTrackingId!, walletType: 'STUDENT' as any, status: 'INACTIF' as any, fundingLevel: 'NORMAL' as any, balance: 0, limitAmount: 0, currency: 'FCFA', createdAt: '' };
+        this.wallet = { trackingId: profile.walletTrackingId!, typeWallet: 'STUDENT' as any, statutWallet: 'INACTIF' as any, niveauSolde: 'NORMAL' as any, solde: 0, plafond: 0, currency: 'FCFA', createdAt: '' };
         this.isLoading = false;
-        this.errorMessage = "Le serveur est inaccessible. Veuillez vérifier que votre backend (port 8080) est en cours d'exécution.";
+        this.errorMessage = "Le serveur est temporairement inaccessible. Veuillez réessayer plus tard.";
         this.loadTransactions(profile.trackingId);
       }
     });

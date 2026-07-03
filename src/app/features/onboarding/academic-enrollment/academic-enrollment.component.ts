@@ -23,12 +23,12 @@ import {
 export class AcademicEnrollmentComponent implements OnInit {
 
   enrollmentData = {
-    niveauEtude: '', 
+    niveauEtude: '',
     scolariteYearTrackingId: ''
   };
 
   activeYear: any = null;
-  studentProfile: StudentProfile | null = null; 
+  studentProfile: StudentProfile | null = null;
 
   allDocumentsRequis: any[] = [];
   filteredDocumentsRequis: any[] = [];
@@ -74,7 +74,7 @@ export class AcademicEnrollmentComponent implements OnInit {
   }
 
   onNiveauChange() {
-    this.filteredDocumentsRequis = this.allDocumentsRequis.filter(doc => 
+    this.filteredDocumentsRequis = this.allDocumentsRequis.filter(doc =>
       doc.studentNiveau === null || doc.studentNiveau === undefined || doc.studentNiveau === this.enrollmentData.niveauEtude
     );
     this.selectedFiles = {};
@@ -121,15 +121,15 @@ export class AcademicEnrollmentComponent implements OnInit {
     if (this.filteredDocumentsRequis.length > 0) {
       const missingDocs = this.filteredDocumentsRequis.filter(doc => !this.selectedFiles[doc.typeDocument]);
       if (missingDocs.length > 0) {
-         this.errorMessage = "Veuillez uploader tous les documents requis.";
-         return;
+        this.errorMessage = "Veuillez uploader tous les documents requis.";
+        return;
       }
     }
 
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    const payload: InscriptionAnnuelleRequest = { 
+    const payload: InscriptionAnnuelleRequest = {
       studentTrackingId: this.studentProfile.trackingId,
       academicYearLabel: this.activeYear.label,
       studyLevel: this.enrollmentData.niveauEtude as StudentNiveau,
@@ -147,46 +147,42 @@ export class AcademicEnrollmentComponent implements OnInit {
         localStorage.setItem('inscription_tracking_id', trackingId);
 
         if (this.filteredDocumentsRequis.length > 0) {
-           const uploadRequests = this.filteredDocumentsRequis.map(doc => 
-              this.onboardingService.uploadDocument(this.selectedFiles[doc.typeDocument], this.studentProfile!.trackingId, trackingId, doc.typeDocument)
-           );
-           
-           forkJoin(uploadRequests).subscribe({
-              next: () => {
-                 this.validerInscription(trackingId);
-              },
-              error: (err: any) => {
-                 this.isSubmitting = false;
-                 this.errorMessage = "Erreur lors de l'upload des documents.";
-              }
-           });
+          const uploadRequests = this.filteredDocumentsRequis.map(doc =>
+            this.onboardingService.uploadDocument(this.selectedFiles[doc.typeDocument], this.studentProfile!.trackingId, trackingId, doc.typeDocument)
+          );
+
+          forkJoin(uploadRequests).subscribe({
+            next: () => {
+              this.validerInscription(trackingId);
+            },
+            error: (err: any) => {
+              this.isSubmitting = false;
+              this.errorMessage = "Erreur lors de l'upload des documents.";
+            }
+          });
         } else {
-           this.validerInscription(trackingId);
+          this.validerInscription(trackingId);
         }
       },
       error: (err: any) => {
         this.isSubmitting = false;
-        let msg = err.error?.message || "Erreur lors de l'enregistrement académique.";
-        if (msg.includes('could not execute statement') || msg.includes('SQL') || msg.includes('constraint')) {
-          msg = "Erreur système lors de l'enregistrement. Veuillez réessayer ou contacter le support.";
-        }
-        this.errorMessage = msg;
+        this.errorMessage = err.error?.message || "Erreur lors de l'enregistrement académique.";
       }
     });
   }
 
   validerInscription(trackingId: string) {
     this.onboardingService.validerInscription(trackingId).subscribe({
-       next: () => {
-          this.isSubmitting = false;
-          const updatedProfile = { ...this.studentProfile, isOnboardingComplete: true };
-          localStorage.setItem('student_profile', JSON.stringify(updatedProfile));
-          this.navCtrl.navigateRoot('/onboarding/eligibility');
-       },
-       error: (err: any) => {
-          this.isSubmitting = false;
-          this.errorMessage = err.error?.message || "Erreur lors de la validation de l'inscription.";
-       }
+      next: () => {
+        this.isSubmitting = false;
+        const updatedProfile = { ...this.studentProfile, isOnboardingComplete: true };
+        localStorage.setItem('student_profile', JSON.stringify(updatedProfile));
+        this.navCtrl.navigateRoot('/onboarding/eligibility');
+      },
+      error: (err: any) => {
+        this.isSubmitting = false;
+        this.errorMessage = err.error?.message || "Erreur lors de la validation de l'inscription.";
+      }
     });
   }
 

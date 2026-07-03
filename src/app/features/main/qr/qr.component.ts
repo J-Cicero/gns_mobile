@@ -35,9 +35,7 @@ import { AuthService } from '../../../core/services/auth.service';
             <div class="qr-actual" style="display: block; width: 200px; height: 200px;">
               <qrcode [qrdata]="qrPayload" [width]="200" [errorCorrectionLevel]="'M'" elementType="canvas"></qrcode>
             </div>
-            <div class="qr-overlay-logo">
-              <ion-icon name="flash"></ion-icon>
-            </div>
+
           </div>
 
           <div class="tracking-id-badge">
@@ -107,24 +105,7 @@ import { AuthService } from '../../../core/services/auth.service';
       font-size: 200px;
       color: var(--ion-background-color, #0f172a);
     }
-    .qr-overlay-logo {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #6366f1;
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 4px solid white;
-    }
-    .qr-overlay-logo ion-icon {
-      font-size: 24px;
-      color: var(--ion-text-color, white);
-    }
+
     .tracking-id-badge {
       background: #f1f5f9;
       padding: 8px 16px;

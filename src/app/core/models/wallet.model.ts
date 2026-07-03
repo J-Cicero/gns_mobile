@@ -20,11 +20,11 @@ export enum WalletFundingLevel {
 
 export interface WalletResponse {
   trackingId: string;
-  walletType: WalletType;
-  status: WalletStatus;
-  fundingLevel: WalletFundingLevel;
-  balance: number; // BigDecimal from backend -> number
-  limitAmount: number; // BigDecimal from backend -> number
+  typeWallet: WalletType;
+  statutWallet: WalletStatus;
+  niveauSolde: WalletFundingLevel;
+  solde: number; // BigDecimal from backend -> number
+  plafond: number; // BigDecimal from backend -> number
   currency: string;
   createdAt: string; // LocalDateTime from backend -> string
   studentTrackingId?: string; // UUID from backend -> string (if wallet is for a student)

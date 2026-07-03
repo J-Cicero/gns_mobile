@@ -59,7 +59,7 @@ export class HistoryComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         this.hasMore = false;
-        this.errorMessage = "Le serveur est inaccessible (port 8080 fermé).";
+        this.errorMessage = "Le serveur est temporairement inaccessible. Veuillez réessayer plus tard.";
         if (event) event.target.complete();
       }
     });

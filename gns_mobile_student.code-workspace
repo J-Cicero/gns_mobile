@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../gns_mobile_merchant"
+		},
+		{
+			"path": "../gns_front"
+		},
+		{
+			"path": "../gns"
+		}
+	],
+	"settings": {}
+}
