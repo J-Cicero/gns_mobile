@@ -103,7 +103,7 @@
  <!-- STEP 2: Informations Bancaires -->
  <div *ngIf="currentStep === 2" class="space-y-5 animate-fade-in">
  <h3 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-200 pb-2">Informations Bancaires</h3>
- <p class="text-sm text-slate-500 mb-4">Ces informations ne vous seront demandées qu'une seule fois pour la création de votre compte GNS. <span class="text-amber-700 font-bold">Facultatif : Si la sélection d'un fichier fait redémarrer votre téléphone, vous pouvez laisser la banque vide et l'ajouter plus tard.</span></p>
+ <p class="text-sm text-slate-500 mb-4">Ces informations ne vous seront demandées qu'une seule fois pour la création de votre compte GNS.</p>
  
  <div>
  <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Banque</label>
@@ -114,11 +114,7 @@
  </select>
  </div>
 
- <div *ngIf="registrationData.bankTrackingId" class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
- <p class="text-xs text-amber-700 font-bold">
- Attention: Si le navigateur se ferme lorsque vous choisissez un fichier, décochez la banque et cliquez sur Continuer sans RIB.
- </p>
- </div>
+
 
  <div *ngIf="registrationData.bankTrackingId">
  <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Numéro de Compte</label>

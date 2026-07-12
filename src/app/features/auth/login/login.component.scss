@@ -7,7 +7,7 @@ ion-content {
 .auth-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 100%;
   width: 100%; // Prend 100% de la largeur de l'appareil
   padding: 2rem 1.5rem; // Marges naturelles à gauche et à droite pour le mobile
   box-sizing: border-box;

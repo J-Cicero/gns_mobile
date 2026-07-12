@@ -34,4 +34,8 @@ export class CardService {
   createTrackingidDeclareLost(trackingId: any, data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/${trackingId}/declare-lost`, data);
   }
+
+  demanderCarte(studentTrackingId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/demander/${studentTrackingId}`, {});
+  }
 }

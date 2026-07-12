@@ -83,7 +83,7 @@ export class RegisterComponent implements OnInit {
   }
 
   loadUniversites() {
-    this.universiteService.getUniversites().subscribe({
+    this.universiteService.getAll().subscribe({
       next: (data: any) => this.universites = data.content || data,
       error: (err: any) => console.error("Erreur chargement universités", err)
     });
