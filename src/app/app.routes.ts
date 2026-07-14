@@ -4,7 +4,7 @@ import { OnboardingGuard } from './core/guards/onboarding.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'main/dashboard',
+    redirectTo: 'auth/login',
     pathMatch: 'full'
   },
   {

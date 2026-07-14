@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, NavController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -24,13 +24,12 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
-  constructor(private authService: AuthService, private router: Router, private navCtrl: NavController) {
-    // Enregistrement des icônes pour Angular / Ionic moderne
+  constructor(private authService: AuthService, private router: Router) {
     addIcons({ personOutline, lockClosedOutline, flash, arrowForward, alertCircle, eyeOutline, eyeOffOutline });
   }
 
   goToRegister() {
-    this.navCtrl.navigateRoot('/onboarding/registration');
+    this.router.navigate(['/onboarding/registration']);
   }
 
   onLogin() {
@@ -45,10 +44,10 @@ export class LoginComponent {
         this.isLoading = false;
         if (res.roles === 'ETUDIANT') {
           this.authService.evaluateStudentOnboardingState().subscribe(route => {
-            this.navCtrl.navigateRoot(route);
+            this.router.navigate([route]);
           });
         } else if (res.roles === 'COMMERCANT') {
-          this.navCtrl.navigateRoot('/merchant');
+          this.router.navigate(['/merchant']);
         } else {
           this.errorMessage = 'Rôle non autorisé sur mobile.';
         }

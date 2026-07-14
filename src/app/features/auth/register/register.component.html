@@ -1,244 +1,238 @@
-<ion-content scroll-y="true" class="premium-auth-content">
-  <div class="auth-wrapper">
+<div class="ion-page">
+<ion-content scroll-y="true" class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white">
+  <div class="px-6 py-12 flex flex-col min-h-full">
 
-    <!-- Etape 1: Choix Profil -->
-    <div *ngIf="step === 1" class="step-container fade-in">
-      <div class="brand-section">
-        <div class="premium-logo" style="margin-bottom: 1rem; display: flex; justify-content: center;">
-          <img src="assets/logos/logo-studcash-1.png" alt="studCASH Logo" class="mix-blend-multiply"
-            style="height: 120px; width: auto; object-fit: contain;">
+    <!-- Step 1: Choix Profil -->
+    <div *ngIf="step === 1" class="flex-1 flex flex-col justify-center animate-fade-in">
+      <div class="mb-10 text-center">
+        <div class="w-24 h-24 mx-auto bg-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30">
+          <svg class="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
         </div>
-        <h1 class="brand-title">Bienvenue</h1>
-        <p class="brand-tagline">Comment souhaitez-vous utiliser StudCash ?</p>
+        <h1 class="text-3xl font-extrabold tracking-tight">Bienvenue</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">Comment souhaitez-vous utiliser l'application ?</p>
       </div>
 
-      <div class="role-card" (click)="selectRole('ETUDIANT')">
-        <div class="role-icon-box student-icon">
-          <ion-icon name="person-outline"></ion-icon>
+      <div class="space-y-4 max-w-sm w-full mx-auto">
+        <div (click)="selectRole('ETUDIANT')" 
+             class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center cursor-pointer hover:border-blue-500 hover:ring-2 hover:ring-blue-500/20 transition-all group">
+          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-600 transition-colors">
+            <ion-icon name="person-outline" class="text-xl text-blue-600 dark:text-blue-400 group-hover:text-white"></ion-icon>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-bold text-slate-900 dark:text-white">Je suis Étudiant</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Recevez votre bourse et payez facilement.</p>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="text-slate-400 group-hover:text-blue-500"></ion-icon>
         </div>
-        <div class="role-info">
-          <h3>Je suis Étudiant</h3>
-          <p>Recevez votre bourse et payez facilement.</p>
+
+        <div (click)="selectRole('COMMERCANT')" 
+             class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center cursor-pointer hover:border-blue-500 hover:ring-2 hover:ring-blue-500/20 transition-all group">
+          <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center mr-4 group-hover:bg-indigo-600 transition-colors">
+            <ion-icon name="storefront-outline" class="text-xl text-indigo-600 dark:text-indigo-400 group-hover:text-white"></ion-icon>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-bold text-slate-900 dark:text-white">Je suis Marchand</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Encaissez les paiements des étudiants.</p>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="text-slate-400 group-hover:text-indigo-500"></ion-icon>
         </div>
-        <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
       </div>
 
-      <div class="role-card" (click)="selectRole('COMMERCANT')">
-        <div class="role-icon-box merchant-icon">
-          <ion-icon name="storefront-outline"></ion-icon>
-        </div>
-        <div class="role-info">
-          <h3>Je suis Marchand</h3>
-          <p>Encaissez les paiements des étudiants.</p>
-        </div>
-        <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
-      </div>
-
-      <div class="switch-auth-link">
-        <p>Déjà un compte ? <a (click)="goToLogin()" style="cursor: pointer;">Se connecter</a></p>
-      </div>
-    </div>
-
-
-    <!-- Etape 2: Identité -->
-    <div *ngIf="step === 2" class="step-container fade-in">
-      <div class="back-header" (click)="goBack()">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-        <span>Changer de profil</span>
-      </div>
-
-      <div class="brand-section" style="margin-top: 1vh; margin-bottom: 2rem;">
-        <h1 class="brand-title">Identité {{ selectedRole === 'ETUDIANT' ? 'Étudiant' : 'Marchand' }}</h1>
-        <p class="brand-tagline">Veuillez remplir vos informations</p>
-      </div>
-
-      <div class="card-form-section">
-
-        <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="card-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="text" label="Matricule Universitaire" labelPlacement="floating"
-              [(ngModel)]="registerData.matricule"></ion-input>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper" *ngIf="selectedRole === 'COMMERCANT'">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="storefront-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="text" label="Nom de la Boutique" labelPlacement="floating"
-              [(ngModel)]="registerData.nomBoutique"></ion-input>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="text" label="Nom" labelPlacement="floating" [(ngModel)]="registerData.nom"></ion-input>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="text" label="Prénom" labelPlacement="floating"
-              [(ngModel)]="registerData.prenom"></ion-input>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="call-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="tel" label="Téléphone" labelPlacement="floating"
-              [(ngModel)]="registerData.telephone"></ion-input>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="email" label="Adresse Email" labelPlacement="floating"
-              [(ngModel)]="registerData.email"></ion-input>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="password" label="Créer un mot de passe" labelPlacement="floating"
-              [(ngModel)]="registerData.password"></ion-input>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="password" inputmode="numeric" maxlength="6" label="PIN de paiement (4-6 chiffres)" labelPlacement="floating"
-              [(ngModel)]="registerData.transactionPin"></ion-input>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="password" inputmode="numeric" maxlength="6" label="Confirmer le PIN" labelPlacement="floating"
-              [(ngModel)]="registerData.confirmTransactionPin"></ion-input>
-          </ion-item>
-        </div>
-
-        <div *ngIf="errorMessage" class="premium-error-box">
-          <ion-icon name="alert-circle"></ion-icon>
-          <span>{{ errorMessage }}</span>
-        </div>
-
-        <ion-button expand="block" class="premium-btn" (click)="nextStep()">
-          <span>Suivant <ion-icon name="arrow-forward" slot="end"></ion-icon></span>
-        </ion-button>
-
+      <div class="mt-8 text-center">
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Déjà un compte ? 
+          <a routerLink="/auth/login" routerDirection="back" class="font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">Se connecter</a>
+        </p>
       </div>
     </div>
 
-    <!-- Etape 3: Banque & Université (Étudiants uniquement) -->
-    <div *ngIf="step === 3" class="step-container fade-in">
-      <div class="back-header" (click)="goBack()">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-        <span>Retour</span>
+    <!-- Error Box -->
+    <div *ngIf="errorMessage && step > 1" class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-start">
+      <svg class="w-5 h-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-sm font-bold text-red-700 dark:text-red-400">{{ errorMessage }}</p>
+    </div>
+
+    <!-- Step 2: Identité -->
+    <div *ngIf="step === 2" class="flex-1 flex flex-col animate-fade-in-up">
+      <div class="mb-8">
+        <button (click)="goBack()" class="flex items-center text-sm font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors mb-4">
+          <ion-icon name="arrow-back-outline" class="mr-2 text-lg"></ion-icon>
+          Changer de profil
+        </button>
+        <h1 class="text-3xl font-extrabold tracking-tight">Identité {{ selectedRole === 'ETUDIANT' ? 'Étudiant' : 'Marchand' }}</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">Veuillez remplir vos informations</p>
       </div>
 
-      <div class="brand-section" style="margin-top: 1vh; margin-bottom: 2rem;">
-        <h1 class="brand-title">Liaisons</h1>
-        <p class="brand-tagline">{{ selectedRole === 'ETUDIANT' ? 'Université et Banque d\'affiliation' : 'Banque
-          d\'affiliation' }}</p>
+      <div class="space-y-4 flex-1">
+        <div *ngIf="selectedRole === 'ETUDIANT'">
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Matricule Universitaire</label>
+          <input type="text" [(ngModel)]="registerData.matricule" name="matricule"
+                 class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400" 
+                 placeholder="Ex: 20230001">
+        </div>
+
+        <div *ngIf="selectedRole === 'COMMERCANT'">
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Nom de la Boutique</label>
+          <input type="text" [(ngModel)]="registerData.nomBoutique" name="nomBoutique"
+                 class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400" 
+                 placeholder="Ex: Chez Marie">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Nom</label>
+            <input type="text" [(ngModel)]="registerData.nom" name="nom"
+                   class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400" 
+                   placeholder="Nom">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Prénom</label>
+            <input type="text" [(ngModel)]="registerData.prenom" name="prenom"
+                   class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400" 
+                   placeholder="Prénom">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Téléphone</label>
+          <input type="tel" [(ngModel)]="registerData.telephone" name="telephone"
+                 class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400" 
+                 placeholder="Numéro">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Email</label>
+          <input type="email" [(ngModel)]="registerData.email" name="email"
+                 class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400" 
+                 placeholder="exemple@email.com">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Mot de passe</label>
+          <input type="password" [(ngModel)]="registerData.password" name="password"
+                 class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400" 
+                 placeholder="••••••••">
+        </div>
+
+        <div *ngIf="selectedRole === 'ETUDIANT'">
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">PIN de paiement (4-6 chiffres)</label>
+          <input type="password" inputmode="numeric" maxlength="6" [(ngModel)]="registerData.transactionPin" name="transactionPin"
+                 class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400 tracking-widest" 
+                 placeholder="••••">
+        </div>
+
+        <div *ngIf="selectedRole === 'ETUDIANT'">
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Confirmer le PIN</label>
+          <input type="password" inputmode="numeric" maxlength="6" [(ngModel)]="registerData.confirmTransactionPin" name="confirmTransactionPin"
+                 class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400 tracking-widest" 
+                 placeholder="••••">
+        </div>
       </div>
 
-      <div class="card-form-section">
-
-        <div class="input-glow-wrapper" *ngIf="selectedRole === 'ETUDIANT'">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="business-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-select label="Université" labelPlacement="floating" [(ngModel)]="registerData.universiteTrackingId"
-              interface="action-sheet">
-              <ion-select-option *ngFor="let u of universites" [value]="u.trackingId">{{ u.nom }}</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="business-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-select label="Banque d'affiliation" labelPlacement="floating"
-              [(ngModel)]="registerData.banqueTrackingId" interface="action-sheet">
-              <ion-select-option *ngFor="let b of banques" [value]="b.trackingId">{{ b.nom }}</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </div>
-
-        <div class="input-glow-wrapper">
-          <ion-item class="premium-input" lines="none">
-            <ion-icon name="card-outline" slot="start" class="input-icon"></ion-icon>
-            <ion-input type="text" label="Numéro de compte bancaire" labelPlacement="floating"
-              [(ngModel)]="registerData.numeroCompte"></ion-input>
-          </ion-item>
-        </div>
-
-        <div *ngIf="errorMessage" class="premium-error-box">
-          <ion-icon name="alert-circle"></ion-icon>
-          <span>{{ errorMessage }}</span>
-        </div>
-
-        <ion-button expand="block" class="premium-btn" (click)="nextStep()">
-          <span>Suivant <ion-icon name="arrow-forward" slot="end"></ion-icon></span>
-        </ion-button>
-
+      <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 pb-4">
+        <button (click)="nextStep()" 
+                class="w-full py-4 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-[0.98] flex items-center justify-center">
+          Suivant <ion-icon name="arrow-forward-outline" class="ml-2"></ion-icon>
+        </button>
       </div>
     </div>
 
-    <!-- Etape 4: Justificatifs (Étudiants uniquement) -->
-    <div *ngIf="step === 4" class="step-container fade-in">
-      <div class="back-header" (click)="goBack()">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-        <span>Retour</span>
+    <!-- Step 3: Banque & Université -->
+    <div *ngIf="step === 3" class="flex-1 flex flex-col animate-fade-in-up">
+      <div class="mb-8">
+        <button (click)="goBack()" class="flex items-center text-sm font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors mb-4">
+          <ion-icon name="arrow-back-outline" class="mr-2 text-lg"></ion-icon>
+          Retour
+        </button>
+        <h1 class="text-3xl font-extrabold tracking-tight">Liaisons</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">{{ selectedRole === 'ETUDIANT' ? "Université et Banque d'affiliation" : "Banque d'affiliation" }}</p>
       </div>
 
-      <div class="brand-section" style="margin-top: 1vh; margin-bottom: 2rem;">
-        <h1 class="brand-title">Justificatifs</h1>
-        <p class="brand-tagline">{{ selectedRole === 'ETUDIANT' ? 'Importez votre RIB et Mandat' : 'Importez votre RIB'
-          }}</p>
+      <div class="space-y-4 flex-1">
+        <div *ngIf="selectedRole === 'ETUDIANT'">
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Université</label>
+          <select [(ngModel)]="registerData.universiteTrackingId" name="universiteTrackingId"
+                  class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 dark:text-white">
+            <option value="" disabled selected>Sélectionner votre université</option>
+            <option *ngFor="let u of universites" [value]="u.trackingId">{{ u.nom }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Banque d'affiliation</label>
+          <select [(ngModel)]="registerData.banqueTrackingId" name="banqueTrackingId"
+                  class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 dark:text-white">
+            <option value="" disabled selected>Sélectionner une banque</option>
+            <option *ngFor="let b of banques" [value]="b.trackingId">{{ b.nom }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Numéro de compte bancaire</label>
+          <input type="text" [(ngModel)]="registerData.numeroCompte" name="numeroCompte"
+                 class="w-full px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400" 
+                 placeholder="Ex: 0123456789">
+        </div>
       </div>
 
-      <div class="card-form-section">
+      <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 pb-4">
+        <button (click)="nextStep()" 
+                class="w-full py-4 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-[0.98] flex items-center justify-center">
+          Suivant <ion-icon name="arrow-forward-outline" class="ml-2"></ion-icon>
+        </button>
+      </div>
+    </div>
 
-        <div class="upload-zone"
-          style="margin-bottom: 1.5rem; text-align: center; border: 1px dashed #ccc; border-radius: 12px; padding: 1.5rem; position: relative;">
-          <input type="file" (change)="onFileSelected($event, 'rib')" accept="image/*,.pdf"
-            style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
-          <ion-icon name="cloud-upload-outline" style="font-size: 2.5rem; color: #2563eb;"></ion-icon>
-          <h3 style="margin-top: 10px; font-weight: bold;">Uploader le RIB</h3>
-          <p style="font-size: 0.8rem; color: #64748b;">{{ ribFile ? ribFile.name : 'Format PDF ou Image' }}</p>
+    <!-- Step 4: Justificatifs -->
+    <div *ngIf="step === 4" class="flex-1 flex flex-col animate-fade-in-up">
+      <div class="mb-8">
+        <button (click)="goBack()" class="flex items-center text-sm font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors mb-4">
+          <ion-icon name="arrow-back-outline" class="mr-2 text-lg"></ion-icon>
+          Retour
+        </button>
+        <h1 class="text-3xl font-extrabold tracking-tight">Justificatifs</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">{{ selectedRole === 'ETUDIANT' ? 'Importez votre RIB et Mandat' : 'Importez votre RIB' }}</p>
+      </div>
+
+      <div class="space-y-5 flex-1">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Uploader le RIB</label>
+          <div class="relative border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl p-6 text-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+            <input type="file" (change)="onFileSelected($event, 'rib')" accept="image/*,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            <ion-icon name="cloud-upload-outline" class="text-4xl text-blue-500 mb-2"></ion-icon>
+            <h3 class="font-bold text-slate-900 dark:text-white">{{ ribFile ? ribFile.name : 'Sélectionner un fichier' }}</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Format PDF ou Image (JPG/PNG)</p>
+          </div>
         </div>
 
-        <div class="upload-zone" *ngIf="selectedRole === 'ETUDIANT'"
-          style="margin-bottom: 1.5rem; text-align: center; border: 1px dashed #ccc; border-radius: 12px; padding: 1.5rem; position: relative;">
-          <input type="file" (change)="onFileSelected($event, 'mandat')" accept="image/*,.pdf"
-            style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
-          <ion-icon name="cloud-upload-outline" style="font-size: 2.5rem; color: #2563eb;"></ion-icon>
-          <h3 style="margin-top: 10px; font-weight: bold;">Uploader le Mandat</h3>
-          <p style="font-size: 0.8rem; color: #64748b;">{{ mandatFile ? mandatFile.name : 'Format PDF ou Image' }}</p>
+        <div *ngIf="selectedRole === 'ETUDIANT'">
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Uploader le Mandat</label>
+          <div class="relative border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl p-6 text-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+            <input type="file" (change)="onFileSelected($event, 'mandat')" accept="image/*,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            <ion-icon name="document-outline" class="text-4xl text-blue-500 mb-2"></ion-icon>
+            <h3 class="font-bold text-slate-900 dark:text-white">{{ mandatFile ? mandatFile.name : 'Sélectionner un fichier' }}</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Format PDF ou Image (JPG/PNG)</p>
+          </div>
         </div>
+      </div>
 
-        <div *ngIf="errorMessage" class="premium-error-box">
-          <ion-icon name="alert-circle"></ion-icon>
-          <span>{{ errorMessage }}</span>
-        </div>
-
-        <ion-button expand="block" class="premium-btn success-btn" (click)="submitRegistration()"
-          [disabled]="isLoading">
-          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
-          <span *ngIf="!isLoading">Terminer l'inscription <ion-icon name="checkmark-outline"
-              slot="end"></ion-icon></span>
-        </ion-button>
-
+      <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 pb-4">
+        <button (click)="submitRegistration()" [disabled]="isLoading" 
+                class="w-full py-4 px-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg shadow-green-500/30 transition-all active:scale-[0.98] disabled:opacity-70 flex items-center justify-center">
+          <svg *ngIf="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span *ngIf="!isLoading">Terminer l'inscription <ion-icon name="checkmark-outline" class="ml-2"></ion-icon></span>
+          <span *ngIf="isLoading">Inscription...</span>
+        </button>
       </div>
     </div>
 
   </div>
 </ion-content>
+</div>
