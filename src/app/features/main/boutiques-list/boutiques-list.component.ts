@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  IonContent, IonRefresher, IonRefresherContent, IonModal, ToastController
-} from '@ionic/angular/standalone';
+  IonContent, IonRefresher, IonRefresherContent, IonModal, ToastController } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BoutiqueService } from '../../../core/services/boutique.service';

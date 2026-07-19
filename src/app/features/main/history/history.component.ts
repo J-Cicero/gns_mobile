@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonContent, IonRefresher, IonRefresherContent, IonInfiniteScroll, IonInfiniteScrollContent
-} from '@ionic/angular/standalone';
+ } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { WalletService } from '../../../core/services/wallet.service';
 import { TransactionResponse } from '../../../core/models/transaction.model'; // Updated import

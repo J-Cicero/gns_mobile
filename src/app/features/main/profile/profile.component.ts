@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonContent, ViewWillEnter
-} from '@ionic/angular/standalone';
+ } from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
 import { StudentProfile } from '../../../core/models/student.model';
 import { ThemeService } from '../../../core/services/theme.service';
