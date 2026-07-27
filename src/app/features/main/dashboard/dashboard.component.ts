@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit, ViewWillEnter {
   isQrModalOpen = false;
 
   isLoading = true;
+  isLoadingTransactions = false; // ✅ Loader séparé pour les transactions
   errorMessage = '';
 
   constructor(private walletService: WalletService) { }
@@ -95,14 +96,17 @@ export class DashboardComponent implements OnInit, ViewWillEnter {
 
   loadTransactions(studentTrackingId: string) {
     if (!studentTrackingId) { this.isLoading = false; return; }
-    this.walletService.getRecentTransactions(studentTrackingId, 5).subscribe({
+    this.isLoadingTransactions = true; // ✅ Activer le loader transactions
+    this.walletService.getRecentTransactions(studentTrackingId, 0, 5).subscribe({
       next: (res: Page<TransactionResponse>) => {
         this.recentTransactions = res?.content || [];
         this.isLoading = false;
+        this.isLoadingTransactions = false;
       },
       error: () => {
         this.recentTransactions = [];
         this.isLoading = false;
+        this.isLoadingTransactions = false;
       }
     });
   }

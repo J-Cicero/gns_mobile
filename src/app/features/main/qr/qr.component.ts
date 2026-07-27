@@ -31,30 +31,13 @@ import { AuthService } from '../../../core/services/auth.service';
           </div>
 
           <div class="qr-wrapper">
-            <!-- Vrai QR code avec JSON formaté -->
             <div class="qr-actual" style="display: block; width: 200px; height: 200px;">
               <qrcode [qrdata]="qrPayload" [width]="200" [errorCorrectionLevel]="'M'" elementType="canvas"></qrcode>
             </div>
-
           </div>
 
-          <div class="tracking-id-badge">
-            <code>{{ trackingId }}</code>
-          </div>
-
+          <!-- ✅ Suppression du tracking ID affiché en clair -->
           <p class="expiry-note">Ce code est unique à votre profil boursier.</p>
-        </div>
-
-        <div class="actions-grid">
-          <ion-button fill="clear" class="action-btn" (click)="refreshQr()">
-            <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
-            <ion-label>Actualiser</ion-label>
-          </ion-button>
-          
-          <ion-button fill="clear" class="action-btn">
-            <ion-icon name="share-social-outline" slot="icon-only"></ion-icon>
-            <ion-label>Partager</ion-label>
-          </ion-button>
         </div>
       </div>
     </ion-content>

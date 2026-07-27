@@ -89,17 +89,23 @@ export class BoutiquesListComponent implements OnInit {
 
   async locateBoutique(boutique: Boutique, event?: Event) {
     if (event) event.stopPropagation();
-    
+
     if (boutique.latitude && boutique.longitude) {
-      // Ouverture de l'intent Google Maps
-      const url = `https://www.google.com/maps/search/?api=1&query=${boutique.latitude},${boutique.longitude}`;
-      window.open(url, '_system');
+      // ✅ Ouvrir Google Maps avec le trajet de navigation (depuis position actuelle → boutique)
+      // Le format `dir/` ouvre directement les directions dans Google Maps
+      const destination = `${boutique.latitude},${boutique.longitude}`;
+      const label = encodeURIComponent(boutique.name || 'Boutique');
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destination}&destination_place_id=&travelmode=walking`;
+
+      // Sur mobile Capacitor, _system ouvre le navigateur natif
+      window.open(mapsUrl, '_system');
     } else {
       const toast = await this.toastController.create({
-        message: 'Les coordonnées GPS ne sont pas disponibles pour cette boutique.',
+        message: `📍 "${boutique.name}" n'a pas encore partagé sa localisation GPS.`,
         duration: 3000,
         color: 'warning',
-        position: 'bottom'
+        position: 'top',
+        buttons: [{ icon: 'close', role: 'cancel' }]
       });
       await toast.present();
     }
