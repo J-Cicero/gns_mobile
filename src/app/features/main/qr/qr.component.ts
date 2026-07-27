@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonLabel, IonButton
+  IonHeader, IonToolbar, IonTitle, IonContent
 } from '@ionic/angular/standalone';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { addIcons } from 'ionicons';
@@ -13,7 +13,7 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [
     CommonModule, QRCodeComponent,
-    IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonLabel, IonButton
+    IonHeader, IonToolbar, IonTitle, IonContent
   ],
   template: `
     <ion-header class="ion-no-border">
