@@ -91,17 +91,14 @@ export class BoutiquesListComponent implements OnInit {
     if (event) event.stopPropagation();
 
     if (boutique.latitude && boutique.longitude) {
-      // ✅ Ouvrir Google Maps avec le trajet de navigation (depuis position actuelle → boutique)
-      // Le format `dir/` ouvre directement les directions dans Google Maps
       const destination = `${boutique.latitude},${boutique.longitude}`;
-      const label = encodeURIComponent(boutique.name || 'Boutique');
-      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destination}&destination_place_id=&travelmode=walking`;
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=walking`;
 
-      // Sur mobile Capacitor, _system ouvre le navigateur natif
-      window.open(mapsUrl, '_system');
+      const target = (window as any).Capacitor ? '_system' : '_blank';
+      window.open(mapsUrl, target);
     } else {
       const toast = await this.toastController.create({
-        message: `📍 "${boutique.name}" n'a pas encore partagé sa localisation GPS.`,
+        message: `📍 "${boutique.name}" n'a pas encore renseigné sa position GPS.`,
         duration: 3000,
         color: 'warning',
         position: 'top',

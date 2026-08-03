@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -37,5 +38,12 @@ export class CardService {
 
   demanderCarte(studentTrackingId: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/demander/${studentTrackingId}`, {});
+  }
+
+  getCardPrice(): Observable<number> {
+    return this.http.get<any>(`${environment.apiUrl}/parametres-gns/type/FRAIS_CREATION_CARTE`).pipe(
+      map(res => res?.valeurParametre ? Number(res.valeurParametre) : 4000),
+      catchError(() => of(4000))
+    );
   }
 }

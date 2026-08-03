@@ -92,7 +92,7 @@
                   <svg *ngIf="!isLoadingCard" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                   </svg>
-                  <span *ngIf="!isLoadingCard">Demander ma carte &nbsp;&mdash;&nbsp; 4 000 FCFA</span>
+                  <span *ngIf="!isLoadingCard">Demander ma carte &nbsp;&mdash;&nbsp; {{ cardPrice | number:'1.0-0' }} FCFA</span>
                   <span *ngIf="isLoadingCard">Envoi en cours...</span>
                 </button>
               </div>

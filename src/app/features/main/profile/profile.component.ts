@@ -31,6 +31,8 @@ export class ProfileComponent implements OnInit, ViewWillEnter {
   cardStatusLabel: string = '';
   cardStatusSteps: { label: string; done: boolean; active: boolean }[] = [];
 
+  cardPrice: number = 4000;
+
   constructor(
     private router: Router,
     private themeService: ThemeService,
@@ -41,6 +43,14 @@ export class ProfileComponent implements OnInit, ViewWillEnter {
 
   ngOnInit() {
     this.isDarkMode = this.themeService.isDark;
+    this.loadCardPrice();
+  }
+
+  loadCardPrice() {
+    this.cardService.getCardPrice().subscribe({
+      next: (price) => this.cardPrice = price || 4000,
+      error: () => this.cardPrice = 4000
+    });
   }
 
   ionViewWillEnter() {
@@ -133,7 +143,7 @@ export class ProfileComponent implements OnInit, ViewWillEnter {
           // Recharger pour afficher la carte existante
           this.loadCard();
         } else if (err.status === 402 || errMsg.toLowerCase().includes('solde') || errMsg.toLowerCase().includes('insuffi')) {
-          await this.showToast('❌ Solde insuffisant pour la demande de carte (4 000 FCFA requis).', 'danger');
+          await this.showToast(`❌ Solde insuffisant pour la demande de carte (${this.cardPrice} FCFA requis).`, 'danger');
         } else {
           this.cardErrorMessage = errMsg || "Erreur lors de la demande de carte.";
           await this.showToast(`❌ ${this.cardErrorMessage}`, 'danger');
