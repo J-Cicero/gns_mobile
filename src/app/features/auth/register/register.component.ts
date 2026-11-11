@@ -113,6 +113,10 @@ export class RegisterComponent implements OnInit {
           this.errorMessage = "Veuillez remplir tous les champs.";
           return;
         }
+        if (this.registerData.matricule.trim().length !== 6) {
+          this.errorMessage = "Le matricule étudiant doit comporter exactement 6 caractères.";
+          return;
+        }
         if (this.registerData.transactionPin !== this.registerData.confirmTransactionPin || !/^\d{4,6}$/.test(this.registerData.transactionPin)) {
           this.errorMessage = "Le code PIN doit comporter 4 à 6 chiffres et les deux saisies doivent correspondre.";
           return;
