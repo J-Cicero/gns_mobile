@@ -56,9 +56,13 @@ export class BoutiquesListComponent implements OnInit {
   }
 
   filterBoutiques() {
-    const q = this.searchQuery.toLowerCase();
+    if (!this.searchQuery || !this.searchQuery.trim()) {
+      this.filteredBoutiques = this.boutiques;
+      return;
+    }
+    const q = this.searchQuery.trim().toLowerCase();
     this.filteredBoutiques = this.boutiques.filter(b => 
-      b.name.toLowerCase().includes(q) || 
+      (b.name && b.name.toLowerCase().includes(q)) || 
       (b.description && b.description.toLowerCase().includes(q))
     );
   }
