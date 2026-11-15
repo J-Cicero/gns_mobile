@@ -35,6 +35,8 @@ export class RegistrationComponent implements OnInit {
   banques: any[] = [];
   ribFile: File | null = null;
   mandatFile: File | null = null;
+  ribPreviewUrl: string | null = null;
+  mandatPreviewUrl: string | null = null;
 
   isSubmitting = false;
   errorMessage = '';
@@ -54,13 +56,25 @@ export class RegistrationComponent implements OnInit {
     this.loadUniversites();
     this.loadBanques();
 
-    // Restauration de l'état en cas de rafraîchissement (ex: lors du choix de fichier sur mobile)
+    // Restauration de l'état en cas de rafraîchissement (ex: ouverture caméra sur mobile)
     const savedState = sessionStorage.getItem('studentRegistrationState');
     if (savedState) {
       try {
         const state = JSON.parse(savedState);
         this.currentStep = state.currentStep || 1;
-        this.registrationData = state.registrationData || this.registrationData;
+        this.registrationData = { ...this.registrationData, ...(state.registrationData || {}) };
+        if (state.ribDataUrl && state.ribFileName) {
+          this.ribFile = this.dataUrlToFile(state.ribDataUrl, state.ribFileName, state.ribMimeType || 'image/jpeg');
+          if ((state.ribMimeType || '').startsWith('image/')) {
+            this.ribPreviewUrl = state.ribDataUrl;
+          }
+        }
+        if (state.mandatDataUrl && state.mandatFileName) {
+          this.mandatFile = this.dataUrlToFile(state.mandatDataUrl, state.mandatFileName, state.mandatMimeType || 'image/jpeg');
+          if ((state.mandatMimeType || '').startsWith('image/')) {
+            this.mandatPreviewUrl = state.mandatDataUrl;
+          }
+        }
       } catch (e) {
         console.error('Erreur lecture state', e);
       }
@@ -68,10 +82,94 @@ export class RegistrationComponent implements OnInit {
   }
 
   saveState() {
-    sessionStorage.setItem('studentRegistrationState', JSON.stringify({
-      currentStep: this.currentStep,
-      registrationData: this.registrationData
-    }));
+    try {
+      const existingRaw = sessionStorage.getItem('studentRegistrationState');
+      const existing = existingRaw ? JSON.parse(existingRaw) : {};
+      sessionStorage.setItem('studentRegistrationState', JSON.stringify({
+        ...existing,
+        currentStep: this.currentStep,
+        registrationData: this.registrationData
+      }));
+    } catch (e) {
+      console.warn('Impossible de sauvegarder studentRegistrationState', e);
+    }
+  }
+
+  private saveFileToState(prefix: 'rib' | 'mandat', dataUrl: string | null, fileName: string | null, mimeType: string | null) {
+    try {
+      const existingRaw = sessionStorage.getItem('studentRegistrationState');
+      const existing = existingRaw ? JSON.parse(existingRaw) : {};
+      existing.currentStep = this.currentStep;
+      existing.registrationData = this.registrationData;
+      existing[`${prefix}DataUrl`] = dataUrl;
+      existing[`${prefix}FileName`] = fileName;
+      existing[`${prefix}MimeType`] = mimeType;
+      sessionStorage.setItem('studentRegistrationState', JSON.stringify(existing));
+    } catch (e) {
+      console.warn('Stockage session limité pour le fichier', prefix, e);
+    }
+  }
+
+  private dataUrlToFile(dataUrl: string, filename: string, mimeType: string): File {
+    const arr = dataUrl.split(',');
+    const bstr = atob(arr[1] || '');
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mimeType });
+  }
+
+  private processSelectedFile(rawFile: File, prefix: 'rib' | 'mandat'): Promise<{ file: File; dataUrl: string | null }> {
+    return new Promise((resolve) => {
+      if (!rawFile.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = typeof reader.result === 'string' && rawFile.size <= 2 * 1024 * 1024 ? reader.result : null;
+          resolve({ file: rawFile, dataUrl });
+        };
+        reader.onerror = () => resolve({ file: rawFile, dataUrl: null });
+        reader.readAsDataURL(rawFile);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1600;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve({ file: rawFile, dataUrl: e.target.result });
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          const cleanName = `${prefix}_${Date.now()}.jpg`;
+          const compressedFile = this.dataUrlToFile(compressedDataUrl, cleanName, 'image/jpeg');
+          resolve({ file: compressedFile, dataUrl: compressedDataUrl });
+        };
+        img.onerror = () => resolve({ file: rawFile, dataUrl: null });
+        img.src = e.target.result;
+      };
+      reader.onerror = () => resolve({ file: rawFile, dataUrl: null });
+      reader.readAsDataURL(rawFile);
+    });
   }
 
   loadUniversites() {
@@ -96,15 +194,27 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
-  onRibSelected(event: any) {
-    if (event.target.files.length > 0) {
-      this.ribFile = event.target.files[0];
+  async onRibSelected(event: any) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const rawFile = input.files[0];
+      this.saveState();
+      const { file, dataUrl } = await this.processSelectedFile(rawFile, 'rib');
+      this.ribFile = file;
+      this.ribPreviewUrl = file.type.startsWith('image/') ? dataUrl : null;
+      this.saveFileToState('rib', dataUrl, file.name, file.type);
     }
   }
 
-  onMandatSelected(event: any) {
-    if (event.target.files.length > 0) {
-      this.mandatFile = event.target.files[0];
+  async onMandatSelected(event: any) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const rawFile = input.files[0];
+      this.saveState();
+      const { file, dataUrl } = await this.processSelectedFile(rawFile, 'mandat');
+      this.mandatFile = file;
+      this.mandatPreviewUrl = file.type.startsWith('image/') ? dataUrl : null;
+      this.saveFileToState('mandat', dataUrl, file.name, file.type);
     }
   }
 

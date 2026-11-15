@@ -33,21 +33,22 @@ export class AcademicEnrollmentComponent implements OnInit {
   allDocumentsRequis: any[] = [];
   filteredDocumentsRequis: any[] = [];
   selectedFiles: { [key: string]: File } = {};
+  filePreviews: { [key: string]: string | null } = {};
 
   isSubmitting = false;
   isLoadingData = true;
   errorMessage = '';
 
   constructor(
-    private router: Router, // Keep Router if still used for other navigation types (e.g. within tabs)
-    private navCtrl: NavController, // Inject NavController
+    private router: Router,
+    private navCtrl: NavController,
     private onboardingService: OnboardingService
   ) { }
 
   ngOnInit() {
     const profileStr = localStorage.getItem('student_profile');
     if (!profileStr) {
-      this.navCtrl.navigateRoot('/onboarding/registration'); // Use navCtrl
+      this.navCtrl.navigateRoot('/onboarding/registration');
       return;
     }
     this.studentProfile = JSON.parse(profileStr);
@@ -68,8 +69,113 @@ export class AcademicEnrollmentComponent implements OnInit {
     this.onboardingService.getDocumentRequis().subscribe({
       next: (docs) => {
         this.allDocumentsRequis = docs;
+        this.restoreSavedEnrollmentState();
       },
       error: (err) => console.error('Erreur chargement documents requis', err)
+    });
+  }
+
+  private restoreSavedEnrollmentState() {
+    try {
+      const savedRaw = sessionStorage.getItem('academicEnrollmentState');
+      if (!savedRaw) return;
+      const saved = JSON.parse(savedRaw);
+      if (saved.niveauEtude) {
+        this.enrollmentData.niveauEtude = saved.niveauEtude;
+        this.filteredDocumentsRequis = this.allDocumentsRequis.filter(doc =>
+          doc.studentNiveau === null || doc.studentNiveau === undefined || doc.studentNiveau === this.enrollmentData.niveauEtude
+        );
+      }
+      if (saved.files && typeof saved.files === 'object') {
+        Object.keys(saved.files).forEach(typeDoc => {
+          const item = saved.files[typeDoc];
+          if (item && item.dataUrl && item.fileName) {
+            this.selectedFiles[typeDoc] = this.dataUrlToFile(item.dataUrl, item.fileName, item.mimeType || 'image/jpeg');
+            if ((item.mimeType || '').startsWith('image/')) {
+              this.filePreviews[typeDoc] = item.dataUrl;
+            }
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('Impossible de restaurer academicEnrollmentState', e);
+    }
+  }
+
+  private saveEnrollmentState(typeDocument?: string, dataUrl?: string | null, fileName?: string, mimeType?: string) {
+    try {
+      const savedRaw = sessionStorage.getItem('academicEnrollmentState');
+      const saved = savedRaw ? JSON.parse(savedRaw) : { files: {} };
+      saved.niveauEtude = this.enrollmentData.niveauEtude;
+      if (!saved.files) saved.files = {};
+      if (typeDocument && fileName) {
+        saved.files[typeDocument] = { dataUrl, fileName, mimeType };
+      }
+      sessionStorage.setItem('academicEnrollmentState', JSON.stringify(saved));
+    } catch (e) {
+      console.warn('Stockage session limité pour academicEnrollmentState', e);
+    }
+  }
+
+  private dataUrlToFile(dataUrl: string, filename: string, mimeType: string): File {
+    const arr = dataUrl.split(',');
+    const bstr = atob(arr[1] || '');
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mimeType });
+  }
+
+  private processSelectedFile(rawFile: File, prefix: string): Promise<{ file: File; dataUrl: string | null }> {
+    return new Promise((resolve) => {
+      if (!rawFile.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = typeof reader.result === 'string' && rawFile.size <= 2 * 1024 * 1024 ? reader.result : null;
+          resolve({ file: rawFile, dataUrl });
+        };
+        reader.onerror = () => resolve({ file: rawFile, dataUrl: null });
+        reader.readAsDataURL(rawFile);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1600;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve({ file: rawFile, dataUrl: e.target.result });
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          const cleanName = `${prefix.toLowerCase()}_${Date.now()}.jpg`;
+          const compressedFile = this.dataUrlToFile(compressedDataUrl, cleanName, 'image/jpeg');
+          resolve({ file: compressedFile, dataUrl: compressedDataUrl });
+        };
+        img.onerror = () => resolve({ file: rawFile, dataUrl: null });
+        img.src = e.target.result;
+      };
+      reader.onerror = () => resolve({ file: rawFile, dataUrl: null });
+      reader.readAsDataURL(rawFile);
     });
   }
 
@@ -78,11 +184,21 @@ export class AcademicEnrollmentComponent implements OnInit {
       doc.studentNiveau === null || doc.studentNiveau === undefined || doc.studentNiveau === this.enrollmentData.niveauEtude
     );
     this.selectedFiles = {};
+    this.filePreviews = {};
+    sessionStorage.setItem('academicEnrollmentState', JSON.stringify({
+      niveauEtude: this.enrollmentData.niveauEtude,
+      files: {}
+    }));
   }
 
-  onFileSelected(event: any, typeDocument: string) {
-    if (event.target.files.length > 0) {
-      this.selectedFiles[typeDocument] = event.target.files[0];
+  async onFileSelected(event: any, typeDocument: string) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const rawFile = input.files[0];
+      const { file, dataUrl } = await this.processSelectedFile(rawFile, typeDocument);
+      this.selectedFiles[typeDocument] = file;
+      this.filePreviews[typeDocument] = file.type.startsWith('image/') ? dataUrl : null;
+      this.saveEnrollmentState(typeDocument, dataUrl, file.name, file.type);
     }
   }
 
@@ -174,6 +290,7 @@ export class AcademicEnrollmentComponent implements OnInit {
   validerInscription(trackingId: string) {
     this.onboardingService.validerInscription(trackingId).subscribe({
       next: () => {
+        sessionStorage.removeItem('academicEnrollmentState');
         this.isSubmitting = false;
         const updatedProfile = { ...this.studentProfile, isOnboardingComplete: true };
         localStorage.setItem('student_profile', JSON.stringify(updatedProfile));
