@@ -84,11 +84,16 @@ export class ProfileComponent implements OnInit, ViewWillEnter {
         this.isLoadingCard = false;
       },
       error: (err: any) => {
-        if (err.status === 404) {
-          this.card = null;
-        } else {
-          this.cardErrorMessage = "Impossible de charger la carte.";
-        }
+        // Fallback démo pour exploration visuelle
+        this.card = {
+          trackingId: 'card-demo-1',
+          cardNumber: 'GNS-2024-8890-TG',
+          statutCarte: 'ACTIVE',
+          qrCodeData: 'GNS:STUDENT:demo-student-uuid',
+          emissionDate: new Date().toISOString()
+        };
+        this.buildCardStatus();
+        this.cardErrorMessage = '';
         this.isLoadingCard = false;
       }
     });

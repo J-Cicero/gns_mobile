@@ -17,7 +17,7 @@ export class OnboardingGuard implements CanActivate {
       return true;
     }
 
-    // Pas de session → redirection vers login
+    // Pas de session valide → redirection vers login
     this.router.navigate(['/auth/login']);
     return false;
   }

@@ -28,9 +28,13 @@ export interface StudentRequest {
   birthDate?: string;
   birthPlace?: string;
   studentIdNumber?: string;
+  studentNumber?: string;
+  transactionPin?: string;
   kycStatus?: 'PENDING' | 'VALIDATED' | 'REJECTED';
   walletTrackingId?: string;
   bankTrackingId?: string;
+  banqueTrackingId?: string;
   accountNumber?: string;
+  numeroCompte?: string;
   universiteTrackingId?: string;
 }

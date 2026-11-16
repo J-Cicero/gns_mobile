@@ -16,6 +16,11 @@ export class EligibilityComponent implements OnInit {
 
   status: 'CHECKING' | 'ELIGIBLE' | 'NOT_ELIGIBLE' | 'STANDBY_KYC' = 'CHECKING';
   errorMessage = '';
+  scholarshipLabel = 'Bourse Universitaire Nationale';
+  allocatedBudget: number = 36000;
+  readonly trancheMontant: number = 36000;
+  studentProfile: StudentProfile | null = null;
+  academicYearLabel: string = 'Année en cours';
 
   constructor(
     private router: Router,
@@ -24,6 +29,11 @@ export class EligibilityComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    const profileStr = localStorage.getItem('student_profile');
+    if (profileStr) {
+      this.studentProfile = JSON.parse(profileStr);
+    }
+
     this.route.queryParams.subscribe(params => {
        if (params['status'] === 'PENDING') {
            this.status = 'STANDBY_KYC';
@@ -43,6 +53,7 @@ export class EligibilityComponent implements OnInit {
       return;
     }
     const profile: StudentProfile = JSON.parse(profileStr);
+    this.studentProfile = profile;
 
     const inscriptionId = localStorage.getItem('inscription_tracking_id');
     if (!inscriptionId) {
@@ -53,28 +64,49 @@ export class EligibilityComponent implements OnInit {
 
     this.onboardingService.checkEligibility(inscriptionId).subscribe({
       next: (res) => {
-        // Le backend renvoie status suite au refactoring
-        if (res && res.status === 'ACTIVE') {
+        const isScholar = res && (res.isEligibleForScholarship === true || res.eligibleForScholarship === true);
+        this.academicYearLabel = res.academicYearLabel || '2024-2025';
+        
+        if (isScholar) {
           this.status = 'ELIGIBLE';
-          // Mettre à jour le profil local
-          const updatedProfile = { ...profile, isEligible: res.isEligibleForScholarship, isOnboardingComplete: true };
+          this.allocatedBudget = res.allocatedBudget || this.trancheMontant;
+          this.scholarshipLabel = 'Bourse Universitaire (Tranche officielle)';
+
+          const updatedProfile = { 
+            ...profile, 
+            isEligible: true, 
+            isOnboardingComplete: true,
+            scholarshipType: res.scholarshipType,
+            walletTrackingId: res.walletTrackingId || profile.walletTrackingId
+          };
           localStorage.setItem('student_profile', JSON.stringify(updatedProfile));
           
-          // Après 2 secondes, rediriger vers le dashboard
+          // Après 2.5 secondes, rediriger vers le dashboard
           setTimeout(() => {
             this.router.navigate(['/main/dashboard']);
-          }, 2000);
+          }, 2500);
         } else {
+          // Inscription active mais non boursier
           this.status = 'NOT_ELIGIBLE';
-          const updatedProfile = { ...profile, isEligible: false };
+          this.errorMessage = "Aucune attribution de bourse n'a été validée pour votre dossier cette année.";
+          const updatedProfile = { 
+            ...profile, 
+            isEligible: false, 
+            isOnboardingComplete: true,
+            walletTrackingId: res.walletTrackingId || profile.walletTrackingId 
+          };
           localStorage.setItem('student_profile', JSON.stringify(updatedProfile));
         }
       },
       error: (err) => {
         this.status = 'NOT_ELIGIBLE';
-        this.errorMessage = err.error?.message || "Erreur de connexion lors de la vérification.";
+        this.errorMessage = err.error?.message || "Erreur lors de la vérification avec l'université.";
       }
     });
+  }
+
+  continueAsRegular() {
+    this.router.navigate(['/main/dashboard']);
   }
 
   retry() {

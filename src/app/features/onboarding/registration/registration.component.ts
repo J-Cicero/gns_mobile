@@ -268,7 +268,7 @@ export class RegistrationComponent implements OnInit {
       this.isSubmitting = true;
       this.errorMessage = '';
 
-      const payload = {
+      const payload: any = {
         lastName: this.registrationData.nom,
         firstName: this.registrationData.prenom,
         email: this.registrationData.email,
@@ -276,6 +276,8 @@ export class RegistrationComponent implements OnInit {
         password: this.registrationData.motDePasse,
         studentNumber: this.registrationData.studentIdNumber,
         universiteTrackingId: this.registrationData.universiteTrackingId,
+        banqueTrackingId: this.registrationData.bankTrackingId || null,
+        numeroCompte: this.registrationData.accountNumber || null,
         bankTrackingId: this.registrationData.bankTrackingId,
         accountNumber: this.registrationData.accountNumber,
         transactionPin: this.registrationData.transactionPin,
