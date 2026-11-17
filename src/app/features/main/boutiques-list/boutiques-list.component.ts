@@ -49,13 +49,8 @@ export class BoutiquesListComponent implements OnInit {
         if (event) event.target.complete();
       },
       error: () => {
-        // Fallback boutiques partenaires pour découverte libre
-        this.boutiques = [
-          { trackingId: 'b-1', merchantTrackingId: 'm-1', name: 'Cafétéria Campus Nord', description: 'Repas complets, sandwichs et boissons fraîches', kycStatus: 'VALIDE' as any },
-          { trackingId: 'b-2', merchantTrackingId: 'm-2', name: 'Librairie & Papeterie Universitaire', description: 'Livres au programme, fournitures, photocopies', kycStatus: 'VALIDE' as any },
-          { trackingId: 'b-3', merchantTrackingId: 'm-3', name: 'Cyber & Impression Express', description: 'Impression de mémoires, thèses et reliures', kycStatus: 'VALIDE' as any }
-        ];
-        this.filteredBoutiques = [...this.boutiques];
+        this.boutiques = [];
+        this.filteredBoutiques = [];
         this.isLoading = false;
         if (event) event.target.complete();
       }
